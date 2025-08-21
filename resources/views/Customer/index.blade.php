@@ -32,26 +32,19 @@
                     </li>
                 </ul>
                 <form class="d-flex">
-                    @if (session('loginid') == 'null')
-                        <div>
-                            <a href="/CustomerLogin" type="submit" data-mdb-button-init data-mdb-ripple-init
-                                class="btn btn-primary btn-md" style="margin-right: 10px;">Sing In</a>
-                            <a href="/CustomerRegistration" type="submit" data-mdb-button-init data-mdb-ripple-init
-                                class="btn btn-primary btn-md" style="margin-right: 15px;">Registration</a>
-                        </div>
-                    @else
+                   
                         <div>
                             <h1><i class="fa-solid fa-circle-user" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal"></i></h1>
+                                    data-bs-target="#exampleModal"></i></h1>{{session('loginid')}}
                         </div>
-                    @endif
+                   
                 </form>
             </div>
         </div>
     </nav>
 
    
-
+<h1>Welcome to Customer</h1>
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -69,7 +62,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <form action="/CustomerLogout" method="get">
+                    <form action="/logout" method="get">
                         @csrf
                         <button type="submit" class="btn btn-danger">Logout</button>
                     </form>

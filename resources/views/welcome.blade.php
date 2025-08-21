@@ -15,11 +15,11 @@
       <div class="modal-body">
             <h3 style="text-align: center">Welcome to Shopping<br></h3>
             <p style="text-align: center">You are <br>
-                <a href="/CustomerLogin">
+                <a href="/login">
                     <button type="button" class="btn btn-primary" onclick="customer('Shopkeeper')">To Sell Product</button><br>
                 </a>
                 or  <br>
-                <a href="/CustomerLogin">
+                <a href="/login">
             <button type="button" class="btn btn-primary" onclick="customer('Customer')">To Buy Product</button><br>
             </a>
             </p>

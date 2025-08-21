@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\CustomerAndShopkeeper;
 use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -15,15 +16,11 @@ class CustomerController extends Controller
         return view("Customer.index");
     }
 
-    public function index()
-    {
-        return view("welcome");
-    }
     public function registration(Request $request)
     {
 
         if ($request->isMethod("post")) {
-
+           
             $validator = $request->validate([
                 "name" => "required",
                 "conformpassword" => [
@@ -41,18 +38,28 @@ class CustomerController extends Controller
                         ->symbols()
                         ->numbers()
                 ],
-                "email" => "required|email|unique:Customer,email",
+                "email" => "required|email|unique:CustomerAndShopkeeper,email",
                 "phone" => "required|max:10",
                 "address" => "required",
+                "city" => "required",
+                "state" => "required",
+                "country" => "required",
+                "pincode" => "required",
+                "gender" => "required",
             ]);
 
-            $customer = new Customer();
+            $customer = new CustomerAndShopkeeper();
             $customer->name = $request->name;
             $customer->address = $request->address;
-            $customer->password = Hash::make($request->password);
+            $customer->password = $request->password;
             $customer->email = $request->email;
             $customer->phone = $request->phone;
             $customer->rols = $request->rols;
+            $customer->city = $request->city;
+            $customer->state = $request->state;
+            $customer->country = $request->country;
+            $customer->pincode = $request->pincode;
+            $customer->gender = $request->gender;
             $customer->save();
 
             return redirect()->route("customerlogin");
@@ -62,27 +69,32 @@ class CustomerController extends Controller
 
     public function login(Request $request)
     {
-
         if ($request->isMethod("post")) {
 
             $validator = $request->validate([
                 "email" => "required",
                 "password" => "required",
             ]);
-            $customer = Customer::where("email", $request->email)->first();
+            $customer = CustomerAndShopkeeper::where("email", $request->email)
+                ->where("rols", $request->rols)
+                ->first();
 
-            if (empty($customer)) {
-                return redirect()->back()->with("notfound", "Customer not found")->withInput();
-            }
-
-            if (!Hash::check($request->password, $customer->password)) {
+            if (!empty($request->rols)) {
+                if (empty($customer)) {
+                    return redirect()->back()->with("notfound", $request->rols." not found")->withInput();
+                }
+            } 
+            
+            if ($request->password!=$customer->password) {
                 return redirect()->back()->with("passworderror", "The password is Invalid password")->withInput();
             }
 
-            if ($request->rols == "Customer") {
+            if ($customer->rols == "Customer") {
+                Session::put("loginid", $customer->name);
                 return redirect()->route("customerdashboard");
             } else {
-                return redirect()->route("customerdashboard");
+                Session::put("loginid", $customer->name);
+                return redirect()->route("shopkeeperdashboard");
             }
         }
         return view("login");
@@ -90,7 +102,7 @@ class CustomerController extends Controller
 
     public function logout(Request $request)
     {
-        Session::put("loginid", "null");
+        Session::forget("loginid", );
         return redirect()->route("customerlogin");
     }
 }
