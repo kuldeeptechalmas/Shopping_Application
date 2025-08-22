@@ -10,6 +10,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.4.1/dist/css/coreui.min.css" rel="stylesheet">
     <title>Admin</title>
     <script defer src="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.4.1/dist/js/coreui.bundle.min.js"></script>
@@ -36,7 +37,6 @@
                                 data-bs-target="#exampleModal"></i></h1>
                                 {{session('adminname')}}
                     </div>
-
                 </form>
             </div>
         </div>
@@ -133,22 +133,78 @@
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content">
+            <div class="modal-content" style="margin-left: 57%;margin-top: 14%;">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">User detail</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    @if (session('adminname'))
-                        {{session('adminname')}}
-                    @endif
+                    <form class="mx-1 mx-md-4" method="post" action="/registration">
+                        @csrf
+                        <div class="d-flex flex-row align-items-center mb-4">
+                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                                <label class="form-label" for="form3Example1c">Your Name</label>
+                                <input readonly type="text" id="name" value="{{old('name')}}" name='name'
+                                    class="form-control" />
+                                @error('name')
+                                    <div style="color:red;">{{$message}}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-row align-items-center mb-4">
+                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                                <label class="form-label" for="form3Example3c">Your Email</label>
+                                <input readonly type="text" id="email" value="{{old('email')}}" name="email"
+                                    class="form-control" />
+                                @error('email')
+                                    <div style="color:red;">{{$message}}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-row align-items-center mb-4">
+                            <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
+                                <label class="form-label" for="form3Example4c">Password</label>
+                                <input readonly type="password" id="password" name="password" class="form-control" />
+                                <i class="fa-solid fa-eye" id="passwordshow"
+                                    style="position:absolute;top: 62%;right: 5%;" onclick="passwordshow()"></i>
+                                <i class="fa-solid fa-eye-slash" hidden id="passwordhidden"
+                                    style="position:absolute;top: 62%;right: 5%;" onclick="passwordhidden()"></i>
+                            </div>
+                        </div>
+                        <input type="text" name="id" id="id" hidden>
+                        @error('password')
+                            <span style="color:red;">{{$message}}</span>
+                        @enderror
+
+                        <div class="d-flex flex-row align-items-center mb-4">
+                            <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
+                                <label class="form-label" for="form3Example4cd">Repeat your
+                                    password</label>
+                                <input readonly type="password" id="conpassword" name="conformpassword"
+                                    class="form-control" />
+                                <i class="fa-solid fa-eye" id="conformpasswordshow"
+                                    style="position:absolute;top: 62%;right: 5%;" onclick="conformpasswordshow()"></i>
+                                <i class="fa-solid fa-eye-slash" hidden id="conformpasswordhidden"
+                                    style="position:absolute;top: 62%;right: 5%;" onclick="conformpasswordhidden()"></i>
+                            </div>
+                        </div>
+                        @error('conformpassword')
+                            <span style="color:red;">{{$message}}</span>
+                        @enderror
+                    </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <form action="/adminlogout" method="get">
                         @csrf
                         <button type="submit" class="btn btn-danger">Logout</button>
                     </form>
+                    <button type="button" class="btn btn-info" onclick="datashow()">Can Change</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" onclick="update()">Save Change</button>
+
+
                 </div>
             </div>
         </div>
@@ -158,6 +214,93 @@
         crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
+
+        function update() {
+            $(document).ready(function () {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    type: 'post',
+                    url: "/adminupdate",
+                    data: {
+                        id: $('#id').val(),
+                        name: $('#name').val(),
+                        email: $('#email').val(),
+                        password: $('#password').val(),
+                        conformpassword: $('#conpassword').val()
+                    },
+                    success: function (res) {
+                            window.location.href = res.redirect_url;
+                    },
+                    error: function (e) {
+                        console.error("Error:", e);
+                    }
+                });
+            });
+        }
+
+        function datashow() {
+            $("#name").removeAttr('readonly');
+            $("#phone").removeAttr('readonly');
+            $("#address").removeAttr('readonly');
+            $("#city").removeAttr('readonly');
+            $("#state").removeAttr('readonly');
+            $("#country").removeAttr('readonly');
+            $("#pincode").removeAttr('readonly');
+            $("#email").removeAttr('readonly');
+            $("#password").removeAttr('readonly');
+            $("#conpassword").removeAttr('readonly');
+
+        }
+
+        // password 
+        function passwordshow() {
+            $("#passwordhidden").removeAttr("hidden");
+            $("#passwordshow").attr("hidden", true);
+            document.getElementById('password').type = 'text';
+        }
+        function passwordhidden() {
+            $("#passwordshow").removeAttr("hidden");
+            $("#passwordhidden").attr('hidden', true);
+            document.getElementById('password').type = 'password';
+        }
+
+        // config password
+        function conformpasswordshow() {
+            $("#conformpasswordhidden").removeAttr("hidden");
+            $("#conformpasswordshow").attr("hidden", true);
+            document.getElementById('conpassword').type = 'text';
+        }
+
+        function conformpasswordhidden() {
+            $("#conformpasswordshow").removeAttr("hidden");
+            $("#conformpasswordhidden").attr('hidden', true);
+            document.getElementById('conpassword').type = 'password';
+        }
+
+        $(document).ready(function () {
+
+            $.ajax({
+                type: 'GET',
+                url: "/adminruser",
+                data: { adminname: "{{session('adminname')}}" },
+                success: function (res) {
+                    console.log("Response:", res);
+                    document.getElementById('name').value = res[0]['name'];
+                    document.getElementById('email').value = res[0]['email'];
+                    document.getElementById('password').value = res[0]['password'];
+                    document.getElementById('conpassword').value = res[0]['password'];
+                    document.getElementById('id').value = res[0]['id'];
+                },
+                error: function (e) {
+                    console.error("Error:", e);
+                }
+            });
+        });
+
         $(document).ready(function () {
             $('#showCustomer').on('click', function () {
                 $('#CustomerOutput').toggle();

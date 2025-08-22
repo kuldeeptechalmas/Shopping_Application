@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Models\Customer;
 use App\Models\CustomerAndShopkeeper;
 use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 class CustomerController extends Controller
@@ -20,7 +22,7 @@ class CustomerController extends Controller
     {
 
         if ($request->isMethod("post")) {
-           
+
             $validator = $request->validate([
                 "name" => "required",
                 "conformpassword" => [
@@ -44,7 +46,7 @@ class CustomerController extends Controller
                 "city" => "required",
                 "state" => "required",
                 "country" => "required",
-                "pincode" => "required",
+                "pincode" => "required|max:6",
                 "gender" => "required",
             ]);
 
@@ -75,25 +77,33 @@ class CustomerController extends Controller
                 "email" => "required",
                 "password" => "required",
             ]);
-            $customer = CustomerAndShopkeeper::where("email", $request->email)
-                ->where("rols", $request->rols)
-                ->first();
 
-            if (!empty($request->rols)) {
-                if (empty($customer)) {
-                    return redirect()->back()->with("notfound", $request->rols." not found")->withInput();
+            $customer = CustomerAndShopkeeper::where("email", $request->email)->first();
+            $admin = Admin::where("email", $request->email)->first();
+
+            if ($admin) {
+                if ($request->password == $admin->password) {
+                    Session::put("adminname", $admin->name);
+                    return redirect()->route("admindashboard");
+                } else {
+                    return redirect()->back()->with("passworderror", "The password is Invalid password")->withInput();
                 }
-            } 
-            
-            if ($request->password!=$customer->password) {
+            }
+            if (!empty($customer->rols)) {
+                if (empty($customer)) {
+                    return redirect()->back()->with("notfound", $customer->rols . " not found")->withInput();
+                }
+            }
+
+            if ($request->password != $customer->password) {
                 return redirect()->back()->with("passworderror", "The password is Invalid password")->withInput();
             }
 
             if ($customer->rols == "Customer") {
-                Session::put("loginid", $customer->name);
+                Session::put("customerid", $customer->name);
                 return redirect()->route("customerdashboard");
             } else {
-                Session::put("loginid", $customer->name);
+                Session::put("shopkeeperid", $customer->name);
                 return redirect()->route("shopkeeperdashboard");
             }
         }
@@ -102,7 +112,72 @@ class CustomerController extends Controller
 
     public function logout(Request $request)
     {
-        Session::forget("loginid", );
+        if (Session::get("customerid")) {
+            Session::forget("customerid");
+        }
+        if (Session::get("shopkeeperid")) {
+            Session::forget("shopkeeperid");
+        }
         return redirect()->route("customerlogin");
     }
+
+    public function updateuser(Request $request)
+    {
+
+        $responce=$request->validate([
+            "name" => "required",
+            "conformpassword" => [
+                "required",
+                "same:password",
+                Password::min(8)->mixedCase()->symbols()->numbers()
+            ],
+            "password" => [
+                "required",
+                Password::min(8)->mixedCase()->symbols()->numbers()
+            ],
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('CustomerAndShopkeeper', 'email')->ignore($request->id),
+            ],
+            "phone" => "required|max:10",
+            "address" => "required",
+            "city" => "required",
+            "state" => "required",
+            "country" => "required",
+            "pincode" => "required|max:6",
+            "gender" => "required",
+        ]);
+
+        dd($responce);  
+
+        $customer = new CustomerAndShopkeeper();
+        $customer->update([
+            "name" => $request->name,
+            "address" => $request->address,
+            "password" => $request->password,
+            "email" => $request->email,
+            "phone" => $request->phone,
+            "city" => $request->city,
+            "state" => $request->state,
+            "country" => $request->country,
+            "pincode" => $request->pincode,
+            "gender" => $request->gender,
+        ]);
+
+        Session::put("customerid", $customer->name);
+
+        return response()->json([
+            'status' => 'success',
+            'redirect_url' => route('customerdashboard')
+        ]);
+    }
+
+    public function profileuser(Request $request)
+    {
+        $data = CustomerAndShopkeeper::where("name", $request->customerid)->get();
+        return response()->json($data);
+    }
+
+
 }

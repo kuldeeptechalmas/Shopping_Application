@@ -16,7 +16,7 @@ class AdminCheck
     public function handle(Request $request, Closure $next): Response
     {
         if(empty(session('adminname'))){
-            return redirect()->route('adminlogin');
+            return redirect()->route('customerlogin');
         }
         return $next($request);
     }

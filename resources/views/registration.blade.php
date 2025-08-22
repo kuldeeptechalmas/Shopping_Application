@@ -54,9 +54,9 @@
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                                 <label class="form-label" for="form3Example1c">Gender</label>
-                                                <input type="radio" id="form3Example1c" value="{{old('gender','male')}}"
+                                                <input type="radio" id="form3Example1c" value="male" {{old('gender') == 'male' ? 'checked' : ''}}
                                                     name="gender" />Male
-                                                <input type="radio" id="form3Example1c" value="{{old('gender','female')}}"
+                                                <input type="radio" id="form3Example1c" value="female" {{old('gender') == 'female' ? 'checked' : ''}}
                                                     name="gender" />Female
                                                 @error('gender')
                                                     <div style="color:red;">{{$message}}</div>
@@ -188,7 +188,6 @@
 
                                     <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
                                         class="img-fluid" alt="Sample image">
-
                                 </div>
                             </div>
                         </div>
@@ -205,6 +204,7 @@
     <script>
         document.getElementById("roles").value = sessionStorage.getItem("role");
         document.getElementById("rolesname").textContent = document.getElementById("rolesname").textContent + sessionStorage.getItem("role");
+        
         // password 
         function passwordshow() {
             $("#passwordhidden").removeAttr("hidden");

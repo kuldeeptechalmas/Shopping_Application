@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\AdminCheck;
+use App\Http\Middleware\AskeCustomerorShopkeeper;
 use App\Http\Middleware\AuthCheck;
 use App\Http\Middleware\CheckRoles;
 use App\Http\Middleware\CheckSession;
@@ -74,5 +75,6 @@ class Kernel extends HttpKernel
         "shopkeeperCheck"=>ShopkeeperCheck::class,
         "checkroles"=>CheckRoles::class,
         "checksession"=>CheckSession::class,
+        "admin"=>AskeCustomerorShopkeeper::class,
     ];
 }
