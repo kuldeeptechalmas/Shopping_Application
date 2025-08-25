@@ -38,7 +38,6 @@
                     </li>
                 </ul>
                 <form class="d-flex">
-
                     <div>
                         <h1><i class="fa-solid fa-circle-user" data-bs-toggle="modal"
                                 data-bs-target="#exampleModal"></i></h1>{{session('customerid')}}
@@ -66,11 +65,11 @@
                         <div class="d-flex flex-row align-items-center mb-4">
                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                 <label class="form-label" for="form3Example1c">Your Name</label>
-                                <input readonly type="text" id="name" value="{{old('name')}}" name='name'
+                                <input  type="text" id="name" value="{{old('name')}}" name='name'
                                     class="form-control" />
-                                
-                                    <div style="color:red;" id="ename" hidden></div>
-                                
+
+                                <div style="color:red;" id="ename" hidden></div>
+
                             </div>
                         </div>
 
@@ -79,29 +78,31 @@
                         <div class="d-flex flex-row align-items-center mb-4">
                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                 <label class="form-label" for="form3Example1c">Phone No</label>
-                                <input readonly type="text" id="phone" value="{{old('phone')}}" name="phone"
+                                <input  type="text" id="phone" value="{{old('phone')}}" name="phone"
                                     class="form-control" />
-                                
-                                    <div style="color:red;" id="ephone" hidden></div>
-                                
+
+                                <div style="color:red;" id="ephone" hidden></div>
+
                             </div>
                         </div>
 
                         <div class="d-flex flex-row align-items-center mb-4">
                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                 <label class="form-label" for="form3Example1c">Gender</label>
-                                <input type="radio" id="gender1" value="male" name="gender" {{old('gender') == 'male' ? 'checked' : ''}} />Male
-                                <input type="radio" id="gender2" value="female" name="gender" {{old('gender') == 'female' ? 'checked' : ''}} />Female
-                                
-                                    <div style="color:red;" id="egender" hidden></div>
-                                
+                                <input type="radio" id="gender1" value="male" name="gender" {{old('gender') == 'male'
+    ? 'checked' : '' }} />Male
+                                <input type="radio" id="gender2" value="female" name="gender" {{old('gender') == 'female'
+    ? 'checked' : '' }} />Female
+
+                                <div style="color:red;" id="egender" hidden></div>
+
                             </div>
                         </div>
 
                         <div class="d-flex flex-row align-items-center mb-4">
                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                 <label class="form-label" for="form3Example1c">Address</label>
-                                <input readonly type="text" id="address" value="{{old('address')}}" name="address"
+                                <input  type="text" id="address" value="{{old('address')}}" name="address"
                                     class="form-control" />
                                 <div style="color:red;" id="eaddress" hidden></div>
                             </div>
@@ -110,17 +111,17 @@
                         <div class="d-flex flex-row align-items-center mb-4">
                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                 <label class="form-label" for="form3Example1c">City</label>
-                                <input readonly type="text" id="city" value="{{old('city')}}" name="city"
+                                <input  type="text" id="city" value="{{old('city')}}" name="city"
                                     class="form-control" />
                                 <div style="color:red;" id="ecity" hidden></div>
                             </div>
                         </div>
-                        
+
                         <div class="d-flex flex-row align-items-center mb-4">
                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                 <label class="form-label" for="form3Example1c">State</label>
-                                <input readonly type="text" id="state" value="{{old('state')}}" name="state"
-                                class="form-control" />
+                                <input  type="text" id="state" value="{{old('state')}}" name="state"
+                                    class="form-control" />
                                 <div style="color:red;" id="estate" hidden></div>
                             </div>
                         </div>
@@ -129,8 +130,19 @@
                         <div class="d-flex flex-row align-items-center mb-4">
                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                 <label class="form-label" for="form3Example1c">Country</label>
-                                <input readonly type="text" id="country" value="{{old('country')}}" name="country"
-                                    class="form-control" />
+                                {{-- <input   type="text" id="country" value="{{old('country')}}" name="country"
+                                    class="form-control" /> --}}
+
+                                <select class="form-select" aria-label="Default select example"   id="country" value="{{old('country')}}" name="country">
+                                    <option selected>Select</option>
+                                    @if (isset($contrylist))
+                                        @foreach ($contrylist as $item)
+                                        <option value={{$item['name']}}>{{$item['name']}}</option>   
+                                        @endforeach
+                                    @endif
+                                    
+                                </select>
+
                                 <div style="color:red;" id="ecountry" hidden></div>
                             </div>
                         </div>
@@ -138,16 +150,16 @@
                         <div class="d-flex flex-row align-items-center mb-4">
                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                 <label class="form-label" for="form3Example1c">Pincode</label>
-                                <input readonly type="text" id="pincode" value="{{old('pincode')}}" name="pincode"
+                                <input   type="text" id="pincode" value="{{old('pincode')}}" name="pincode"
                                     class="form-control" />
-                               <div style="color:red;" id="epincode" hidden></div>
+                                <div style="color:red;" id="epincode" hidden></div>
                             </div>
                         </div>
 
                         <div class="d-flex flex-row align-items-center mb-4">
                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                 <label class="form-label" for="form3Example3c">Your Email</label>
-                                <input readonly type="text" id="email" value="{{old('email')}}" name="email"
+                                <input   type="text" id="email" value="{{old('email')}}" name="email"
                                     class="form-control" />
                                 <div style="color:red;" id="eemail" hidden></div>
                             </div>
@@ -156,7 +168,7 @@
                         <div class="d-flex flex-row align-items-center mb-4">
                             <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
                                 <label class="form-label" for="form3Example4c">Password</label>
-                                <input readonly type="password" id="password" name="password" class="form-control" />
+                                <input   type="password" id="password" name="password" class="form-control" />
                                 <i class="fa-solid fa-eye" id="passwordshow"
                                     style="position:absolute;top: 62%;right: 5%;" onclick="passwordshow()"></i>
                                 <i class="fa-solid fa-eye-slash" hidden id="passwordhidden"
@@ -170,7 +182,7 @@
                             <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
                                 <label class="form-label" for="form3Example4cd">Repeat your
                                     password</label>
-                                <input readonly type="password" id="conpassword" name="conformpassword"
+                                <input   type="password" id="conpassword" name="conformpassword"
                                     class="form-control" />
                                 <i class="fa-solid fa-eye" id="conformpasswordshow"
                                     style="position:absolute;top: 62%;right: 5%;" onclick="conformpasswordshow()"></i>
@@ -178,7 +190,7 @@
                                     style="position:absolute;top: 62%;right: 5%;" onclick="conformpasswordhidden()"></i>
                             </div>
                         </div>
-                       <div style="color:red;" id="econpassword" hidden></div>
+                        <div style="color:red;" id="econpassword" hidden></div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -186,7 +198,6 @@
                         @csrf
                         <button type="submit" class="btn btn-danger">Logout</button>
                     </form>
-                    <button type="button" class="btn btn-info" onclick="datashow()">Can Change</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary" onclick="update()">Save Change</button>
 
@@ -195,120 +206,96 @@
             </div>
         </div>
     </div>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
 
-$('#exampleModal').on('hide.bs.modal', function (e) {
-//   $("#ename").attr("hidden",true);
-//   $("#estate").attr("hidden",true);
-//   $("#epincode").attr("hidden",true);
-//   $("#ephone").attr("hidden",true);
-//   $("#epassword").attr("hidden",true);
-//   $("#eemail").attr("hidden",true);
-//   $("#ecountry").attr("hidden",true);
-//   $("#econpassword").attr("hidden",true);
-//   $("#ecity").attr("hidden",true);
-//   $("#egender").attr("hidden",true);
-//   $("#eaddress").attr("hidden",true);
 
-});
         function update() {
- $("#ename").attr("hidden",true);
-  $("#estate").attr("hidden",true);
-  $("#epincode").attr("hidden",true);
-  $("#ephone").attr("hidden",true);
-  $("#epassword").attr("hidden",true);
-  $("#eemail").attr("hidden",true);
-  $("#ecountry").attr("hidden",true);
-  $("#econpassword").attr("hidden",true);
-  $("#ecity").attr("hidden",true);
-  $("#egender").attr("hidden",true);
-  $("#eaddress").attr("hidden",true);
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
+            $("#ename").attr("hidden", true);
+            $("#estate").attr("hidden", true);
+            $("#epincode").attr("hidden", true);
+            $("#ephone").attr("hidden", true);
+            $("#epassword").attr("hidden", true);
+            $("#eemail").attr("hidden", true);
+            $("#ecountry").attr("hidden", true);
+            $("#econpassword").attr("hidden", true);
+            $("#ecity").attr("hidden", true);
+            $("#egender").attr("hidden", true);
+            $("#eaddress").attr("hidden", true);
 
-                $.ajax({
-                    type: 'post',
-                    url: "/customerupdate",
-                    data: {
-                        id: $('#id').val(),
-                        name: $('#name').val(),
-                        phone: $('#phone').val(),
-                        email: $('#email').val(),
-                        address: $('#address').val(),
-                        gender: $('input[name="gender"]:checked').val(),
-                        city: $('#city').val(),
-                        state: $('#state').val(),
-                        country: $('#country').val(),
-                        pincode: $('#pincode').val(),
-                        password: $('#password').val(),
-                        conformpassword: $('#conpassword').val()
-                    },
-                    success: function (res) {          
-                        window.location.href = res.redirect_url;
-                    },
-                    error: function (e) {
-                        const data=e['responseJSON']['errors'];
-                        console.log(data['name']);
-                        console.log(data);
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
 
-                        if (data['name']) {
-                            $("#ename").text(data['name'][0]).removeAttr("hidden");
-                        }
-                        if (data['gender']) {
-                            $("#egender").text(data['gender'][0]).removeAttr("hidden");
-                        }
-                        if (data['address']) {
-                            $("#eaddress").text(data['address'][0]).removeAttr("hidden");
-                        }
-                        if (data['city']) {
-                            $("#ecity").text(data['city'][0]).removeAttr("hidden");
-                        }
-                        if (data['conformpassword']) {
-                            $("#econpassword").text(data['conformpassword'][0]).removeAttr("hidden");
-                        }
-                        if (data['country']) {
-                            $("#ecountry").text(data['country'][0]).removeAttr("hidden");
-                        }
-                        if (data['email']) {
-                            $("#eemail").text(data['email'][0]).removeAttr("hidden");
-                        }
-                        if (data['password']) {
-                            $("#epassword").text(data['password'][0]).removeAttr("hidden");
-                        }
-                        if (data['phone']) {
-                            $("#ephone").text(data['phone'][0]).removeAttr("hidden");
-                        }
-                        if (data['pincode']) {
-                            $("#epincode").text(data['pincode'][0]).removeAttr("hidden");
-                        }
-                        if (data['state']) {
-                            $("#estate").text(data['state'][0]).removeAttr("hidden");
-                        }  
+            $.ajax({
+                type: 'post',
+                url: "/customerupdate",
+                data: {
+                    id: $('#id').val(),
+                    name: $('#name').val(),
+                    phone: $('#phone').val(),
+                    email: $('#email').val(),
+                    address: $('#address').val(),
+                    gender: $('input[name="gender"]:checked').val(),
+                    city: $('#city').val(),
+                    state: $('#state').val(),
+                    country: $('#country').val(),
+                    pincode: $('#pincode').val(),
+                    password: $('#password').val(),
+                    conformpassword: $('#conpassword').val()
+                },
+                success: function (res) {
+
+                    window.location.href = res.redirect_url;
+                },
+                error: function (e) {
+                    const data = e['responseJSON']['errors'];
+
+                    if (data['name']) {
+                        $("#ename").text(data['name'][0]).removeAttr("hidden");
                     }
-                });
+                    if (data['gender']) {
+                        $("#egender").text(data['gender'][0]).removeAttr("hidden");
+                    }
+                    if (data['address']) {
+                        $("#eaddress").text(data['address'][0]).removeAttr("hidden");
+                    }
+                    if (data['city']) {
+                        $("#ecity").text(data['city'][0]).removeAttr("hidden");
+                    }
+                    if (data['conformpassword']) {
+                        $("#econpassword").text(data['conformpassword'][0]).removeAttr("hidden");
+                    }
+                    if (data['country']) {
+                        $("#ecountry").text(data['country'][0]).removeAttr("hidden");
+                    }
+                    if (data['email']) {
+                        $("#eemail").text(data['email'][0]).removeAttr("hidden");
+                    }
+                    if (data['password']) {
+                        $("#epassword").text(data['password'][0]).removeAttr("hidden");
+                    }
+                    if (data['phone']) {
+                        $("#ephone").text(data['phone'][0]).removeAttr("hidden");
+                    }
+                    if (data['pincode']) {
+                        $("#epincode").text(data['pincode'][0]).removeAttr("hidden");
+                    }
+                    if (data['state']) {
+                        $("#estate").text(data['state'][0]).removeAttr("hidden");
+                    }
+                }
+            });
         }
 
-        function datashow() {
-            $("#name").removeAttr('readonly');
-            $("#phone").removeAttr('readonly');
-            $("#address").removeAttr('readonly');
-            $("#city").removeAttr('readonly');
-            $("#state").removeAttr('readonly');
-            $("#country").removeAttr('readonly');
-            $("#pincode").removeAttr('readonly');
-            $("#email").removeAttr('readonly');
-            $("#password").removeAttr('readonly');
-            $("#conpassword").removeAttr('readonly');
-
-        }
-
+        
         // password 
         function passwordshow() {
             $("#passwordhidden").removeAttr("hidden");
@@ -341,7 +328,7 @@ $('#exampleModal').on('hide.bs.modal', function (e) {
                 type: 'GET',
                 url: "/customeruser",
                 data: { customerid: "{{session('customerid')}}" },
-                success: function (res) {   
+                success: function (res) {
                     document.getElementById('name').value = res[0]['name'];
                     document.getElementById('phone').value = res[0]['phone'];
                     document.getElementById('email').value = res[0]['email'];

@@ -7,6 +7,7 @@ use App\Models\Customer;
 use App\Models\CustomerAndShopkeeper;
 use Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
@@ -15,11 +16,17 @@ class CustomerController extends Controller
 {
     public function dashboard(Request $request)
     {
-        return view("Customer.index");
+        $content = File::get(public_path('countries.json'));
+        $contrylist = json_decode($content, true);
+        // $contrylists = json_encode($contrylist, true);
+        return view("Customer.index",compact("contrylist"));
     }
 
     public function registration(Request $request)
     {
+        
+        $content = File::get(public_path('countries.json'));
+        $contrylist = json_decode($content, true);
 
         if ($request->isMethod("post")) {
 
@@ -41,12 +48,12 @@ class CustomerController extends Controller
                         ->numbers()
                 ],
                 "email" => "required|email|unique:CustomerAndShopkeeper,email",
-                "phone" => "required|max:10",
+                "phone" => "required|numeric|digits:10",
                 "address" => "required",
                 "city" => "required",
                 "state" => "required",
                 "country" => "required",
-                "pincode" => "required|max:6",
+                "pincode" => "required|numeric|digits:6",
                 "gender" => "required",
             ]);
 
@@ -66,7 +73,7 @@ class CustomerController extends Controller
 
             return redirect()->route("customerlogin");
         }
-        return view("registration");
+        return view("registration",compact("contrylist"));
     }
 
     public function login(Request $request)
@@ -124,7 +131,9 @@ class CustomerController extends Controller
     public function updateuser(Request $request)
     {
 
-        $responce=$request->validate([
+        dd($request->all());    
+
+        $responce = $request->validate([
             "name" => "required",
             "conformpassword" => [
                 "required",
@@ -149,9 +158,8 @@ class CustomerController extends Controller
             "gender" => "required",
         ]);
 
-        dd($responce);  
 
-        $customer = new CustomerAndShopkeeper();
+        $customer = CustomerAndShopkeeper::where("email", $request->email)->first();
         $customer->update([
             "name" => $request->name,
             "address" => $request->address,
@@ -165,7 +173,8 @@ class CustomerController extends Controller
             "gender" => $request->gender,
         ]);
 
-        Session::put("customerid", $customer->name);
+
+        Session::put("customerid", $request->name);
 
         return response()->json([
             'status' => 'success',
@@ -179,5 +188,9 @@ class CustomerController extends Controller
         return response()->json($data);
     }
 
-
+    public function getallcustomer(Request $request)
+    {
+        $data = CustomerAndShopkeeper::where("rols", 'Customer')->get();
+        return view("Admin.Table.customertable", ["customer" => $data]);
+    }
 }

@@ -14,9 +14,7 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
-        $customer = CustomerAndShopkeeper::where("rols","Customer")->get();
-        $shopkeeper = CustomerAndShopkeeper::where("rols","Shopkeeper")->get();
-        return view("Admin.index", compact("customer","shopkeeper"));
+        return view("Admin.index");
     }
 
     public function login(Request $request)
@@ -93,5 +91,10 @@ class AdminController extends Controller
         return response()->json($data);
     }
 
+    public function deleterecord(Request $request)
+    {
+        $delete = CustomerAndShopkeeper::where("email", $request->email)->delete();
+        return response()->json(["data"=>"delete"]);
+    }
 
 }

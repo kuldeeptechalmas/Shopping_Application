@@ -101,8 +101,19 @@
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                                 <label class="form-label" for="form3Example1c">Country</label>
-                                                <input type="text" id="form3Example1c" value="{{old('country')}}"
-                                                    name="country" class="form-control" />
+                                                {{-- <input type="text" id="form3Example1c" value="{{old('country')}}"
+                                                    name="country" class="form-control" /> --}}
+                                                    
+                                                     <select class="form-select" aria-label="Default select example"   id="country" value="{{old('country')}}" name="country">
+                                                    <option selected value="">Select</option>
+                                                    @if (isset($contrylist))
+                                                        @foreach ($contrylist as $item)
+                                                        
+                                                        <option value={{$item['name']}} {{old('country')==$item['name'] ? 'selected':''}}>{{$item['name']}}</option>   
+                                                        @endforeach
+                                                    @endif
+                                                    
+                                                </select>
                                                 @error('country')
                                                     <div style="color:red;">{{$message}}</div>
                                                 @enderror

@@ -47,11 +47,7 @@ class ShopkeeperController extends Controller
             "gender" => "required",
         ]);
 
-        $customer = CustomerAndShopkeeper::find($request->id);
-
-        if (!$customer) {
-            return redirect()->back()->withErrors(['error' => 'User not found.']);
-        }
+        $customer = CustomerAndShopkeeper::where("email", $request->email)->first();
 
         $customer->update([
             "name" => $request->name,
@@ -74,4 +70,10 @@ class ShopkeeperController extends Controller
         ]);
     }
 
+    public function getallshopkeeper(Request $request)
+    {
+        
+        $data=CustomerAndShopkeeper::where('rols',"Shopkeeper")->get();
+        return view("Admin.Table.shopkeepertable",["shopkeeper"=> $data]);
+    }
 }

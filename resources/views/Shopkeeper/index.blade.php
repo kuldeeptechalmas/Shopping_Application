@@ -68,9 +68,9 @@
                                 <label class="form-label" for="form3Example1c">Your Name</label>
                                 <input readonly type="text" id="name" value="{{old('name')}}" name='name'
                                     class="form-control" />
-                                @error('name')
-                                    <div style="color:red;">{{$message}}</div>
-                                @enderror
+                                
+                                    <div style="color:red;" id="ename" hidden></div>
+                                
                             </div>
                         </div>
 
@@ -81,21 +81,20 @@
                                 <label class="form-label" for="form3Example1c">Phone No</label>
                                 <input readonly type="text" id="phone" value="{{old('phone')}}" name="phone"
                                     class="form-control" />
-                                @error('phone')
-                                    <div style="color:red;">{{$message}}</div>
-                                @enderror
+                                
+                                    <div style="color:red;" id="ephone" hidden></div>
+                                
                             </div>
                         </div>
 
                         <div class="d-flex flex-row align-items-center mb-4">
                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                 <label class="form-label" for="form3Example1c">Gender</label>
-                                <input type="radio" id="gende1r" value="{{old('gender', 'male')}}" name="gender" />Male
-                                <input type="radio" id="gender2" value="{{old('gender', 'female')}}"
-                                    name="gender" />Female
-                                @error('gender')
-                                    <div style="color:red;">{{$message}}</div>
-                                @enderror
+                                <input type="radio" id="gender1" value="male" name="gender" {{old('gender') == 'male' ? 'checked' : ''}} />Male
+                                <input type="radio" id="gender2" value="female" name="gender" {{old('gender') == 'female' ? 'checked' : ''}} />Female
+                                
+                                    <div style="color:red;" id="egender" hidden></div>
+                                
                             </div>
                         </div>
 
@@ -104,9 +103,7 @@
                                 <label class="form-label" for="form3Example1c">Address</label>
                                 <input readonly type="text" id="address" value="{{old('address')}}" name="address"
                                     class="form-control" />
-                                @error('address')
-                                    <div style="color:red;">{{$message}}</div>
-                                @enderror
+                                <div style="color:red;" id="eaddress" hidden></div>
                             </div>
                         </div>
 
@@ -115,20 +112,16 @@
                                 <label class="form-label" for="form3Example1c">City</label>
                                 <input readonly type="text" id="city" value="{{old('city')}}" name="city"
                                     class="form-control" />
-                                @error('city')
-                                    <div style="color:red;">{{$message}}</div>
-                                @enderror
+                                <div style="color:red;" id="ecity" hidden></div>
                             </div>
                         </div>
-
+                        
                         <div class="d-flex flex-row align-items-center mb-4">
                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                 <label class="form-label" for="form3Example1c">State</label>
                                 <input readonly type="text" id="state" value="{{old('state')}}" name="state"
-                                    class="form-control" />
-                                @error('state')
-                                    <div style="color:red;">{{$message}}</div>
-                                @enderror
+                                class="form-control" />
+                                <div style="color:red;" id="estate" hidden></div>
                             </div>
                         </div>
 
@@ -138,9 +131,7 @@
                                 <label class="form-label" for="form3Example1c">Country</label>
                                 <input readonly type="text" id="country" value="{{old('country')}}" name="country"
                                     class="form-control" />
-                                @error('country')
-                                    <div style="color:red;">{{$message}}</div>
-                                @enderror
+                                <div style="color:red;" id="ecountry" hidden></div>
                             </div>
                         </div>
 
@@ -149,9 +140,7 @@
                                 <label class="form-label" for="form3Example1c">Pincode</label>
                                 <input readonly type="text" id="pincode" value="{{old('pincode')}}" name="pincode"
                                     class="form-control" />
-                                @error('pincode')
-                                    <div style="color:red;">{{$message}}</div>
-                                @enderror
+                               <div style="color:red;" id="epincode" hidden></div>
                             </div>
                         </div>
 
@@ -160,9 +149,7 @@
                                 <label class="form-label" for="form3Example3c">Your Email</label>
                                 <input readonly type="text" id="email" value="{{old('email')}}" name="email"
                                     class="form-control" />
-                                @error('email')
-                                    <div style="color:red;">{{$message}}</div>
-                                @enderror
+                                <div style="color:red;" id="eemail" hidden></div>
                             </div>
                         </div>
 
@@ -177,9 +164,7 @@
                             </div>
                         </div>
                         <input type="text" name="id" id="id" hidden>
-                        @error('password')
-                            <span style="color:red;">{{$message}}</span>
-                        @enderror
+                        <div style="color:red;" id="epassword" hidden></div>
 
                         <div class="d-flex flex-row align-items-center mb-4">
                             <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
@@ -193,9 +178,7 @@
                                     style="position:absolute;top: 62%;right: 5%;" onclick="conformpasswordhidden()"></i>
                             </div>
                         </div>
-                        @error('conformpassword')
-                            <span style="color:red;">{{$message}}</span>
-                        @enderror
+                       <div style="color:red;" id="econpassword" hidden></div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -218,14 +201,26 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
 
+
         function update() {
-            $(document).ready(function () {
-                console.log("asdasdf");
+                $("#ename").attr("hidden",true);
+                $("#estate").attr("hidden",true);
+                $("#epincode").attr("hidden",true);
+                $("#ephone").attr("hidden",true);
+                $("#epassword").attr("hidden",true);
+                $("#eemail").attr("hidden",true);
+                $("#ecountry").attr("hidden",true);
+                $("#econpassword").attr("hidden",true);
+                $("#ecity").attr("hidden",true);
+                $("#egender").attr("hidden",true);
+                $("#eaddress").attr("hidden",true);
+
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
+
                 $.ajax({
                     type: 'post',
                     url: "/shopkeeperupdate",
@@ -235,7 +230,7 @@
                         phone: $('#phone').val(),
                         email: $('#email').val(),
                         address: $('#address').val(),
-                        gender: $('#gender').val(),
+                        gender: $('input[name="gender"]:checked').val(),
                         city: $('#city').val(),
                         state: $('#state').val(),
                         country: $('#country').val(),
@@ -243,14 +238,50 @@
                         password: $('#password').val(),
                         conformpassword: $('#conpassword').val()
                     },
-                    success: function (res) {
-                            window.location.href = res.redirect_url;
+                    success: function (res) {  
+                            
+                        window.location.href = res.redirect_url;
                     },
                     error: function (e) {
-                        console.error("Error:", e);
+                        const data=e['responseJSON']['errors'];
+                        console.log(data['name']);
+                        console.log(data);
+
+                        if (data['name']) {
+                            $("#ename").text(data['name'][0]).removeAttr("hidden");
+                        }
+                        if (data['gender']) {
+                            $("#egender").text(data['gender'][0]).removeAttr("hidden");
+                        }
+                        if (data['address']) {
+                            $("#eaddress").text(data['address'][0]).removeAttr("hidden");
+                        }
+                        if (data['city']) {
+                            $("#ecity").text(data['city'][0]).removeAttr("hidden");
+                        }
+                        if (data['conformpassword']) {
+                            $("#econpassword").text(data['conformpassword'][0]).removeAttr("hidden");
+                        }
+                        if (data['country']) {
+                            $("#ecountry").text(data['country'][0]).removeAttr("hidden");
+                        }
+                        if (data['email']) {
+                            $("#eemail").text(data['email'][0]).removeAttr("hidden");
+                        }
+                        if (data['password']) {
+                            $("#epassword").text(data['password'][0]).removeAttr("hidden");
+                        }
+                        if (data['phone']) {
+                            $("#ephone").text(data['phone'][0]).removeAttr("hidden");
+                        }
+                        if (data['pincode']) {
+                            $("#epincode").text(data['pincode'][0]).removeAttr("hidden");
+                        }
+                        if (data['state']) {
+                            $("#estate").text(data['state'][0]).removeAttr("hidden");
+                        }  
                     }
                 });
-            });
         }
 
         function datashow() {
@@ -273,6 +304,7 @@
             $("#passwordshow").attr("hidden", true);
             document.getElementById('password').type = 'text';
         }
+
         function passwordhidden() {
             $("#passwordshow").removeAttr("hidden");
             $("#passwordhidden").attr('hidden', true);
@@ -298,8 +330,7 @@
                 type: 'GET',
                 url: "/shopkeeperuser",
                 data: { shopkeeperid: "{{session('shopkeeperid')}}" },
-                success: function (res) {
-                    console.log("Response:", res);
+                success: function (res) {   
                     document.getElementById('name').value = res[0]['name'];
                     document.getElementById('phone').value = res[0]['phone'];
                     document.getElementById('email').value = res[0]['email'];
