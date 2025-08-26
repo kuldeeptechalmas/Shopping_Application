@@ -39,7 +39,7 @@
                 </ul>
                 <form class="d-flex">
                     <div>
-                        <h1><i class="fa-solid fa-circle-user" data-bs-toggle="modal"
+                        <h1><i class="fa-solid fa-circle-user" onclick="getuserprofiledata()" data-bs-toggle="modal"
                                 data-bs-target="#exampleModal"></i></h1>{{session('customerid')}}
                     </div>
 
@@ -51,7 +51,7 @@
 
     <h1 style="margin-left: 36%;margin-top: 15%;">Welcome to Customer</h1>
 
-    <!-- Modal -->
+    <!-- Update Profile Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" style="margin-left: 57%;margin-top: 14%;">
@@ -322,37 +322,50 @@
             document.getElementById('conpassword').type = 'password';
         }
 
-        $(document).ready(function () {
+        function getuserprofiledata()
+        {
+
+            $("#ename").attr("hidden", true);
+            $("#estate").attr("hidden", true);
+            $("#epincode").attr("hidden", true);
+            $("#ephone").attr("hidden", true);
+            $("#epassword").attr("hidden", true);
+            $("#eemail").attr("hidden", true);
+            $("#ecountry").attr("hidden", true);
+            $("#econpassword").attr("hidden", true);
+            $("#ecity").attr("hidden", true);
+            $("#egender").attr("hidden", true);
+            $("#eaddress").attr("hidden", true);
 
             $.ajax({
                 type: 'GET',
                 url: "/customeruser",
-                data: { customerid: "{{session('customerid')}}" },
+                data: { customeremail: "{{session('customeremail')}}" },
                 success: function (res) {
-                    document.getElementById('name').value = res[0]['name'];
-                    document.getElementById('phone').value = res[0]['phone'];
-                    document.getElementById('email').value = res[0]['email'];
-                    document.getElementById('pincode').value = res[0]['pincode'];
-                    document.getElementById('country').value = res[0]['country'];
-                    document.getElementById('state').value = res[0]['state'];
-                    document.getElementById('city').value = res[0]['city'];
-                    document.getElementById('address').value = res[0]['address'];
-                    document.getElementById('password').value = res[0]['password'];
-                    document.getElementById('conpassword').value = res[0]['password'];
-                    if (res[0]['gender'] == "male") {
+                    document.getElementById('name').value = res['name'];
+                    document.getElementById('phone').value = res['phone'];
+                    document.getElementById('email').value = res['email'];
+                    document.getElementById('pincode').value = res['pincode'];
+                    document.getElementById('country').value = res['country'];
+                    document.getElementById('state').value = res['state'];
+                    document.getElementById('city').value = res['city'];
+                    document.getElementById('address').value = res['address'];
+                    document.getElementById('password').value = res['password'];
+                    document.getElementById('conpassword').value = res['password'];
+                    if (res['gender'] == "male") {
                         document.getElementById('gender1').checked = true;
                     }
                     else {
                         document.getElementById('gender2').checked = true;
                     }
 
-                    document.getElementById('id').value = res[0]['id'];
+                    document.getElementById('id').value = res['id'];
                 },
                 error: function (e) {
                     console.error("Error:", e);
                 }
             });
-        });
+        }
     </script>
 
 </body>

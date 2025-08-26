@@ -21,13 +21,12 @@ Route::get('/logout', [CustomerController::class, 'logout'])->name('customerlogo
 Route::get('/customerdashboard', [CustomerController::class, "dashboard"])->name("customerdashboard")->middleware("customerCheck");
 Route::post('/customerupdate', [CustomerController::class, "updateuser"]);
 Route::get('/customeruser', [CustomerController::class, "profileuser"]);
-Route::get('/admingetcustome', [CustomerController::class, "getallcustomer"]);
+Route::get('/getstatecity', [CustomerController::class, "getstate_city"]);
 
 // Shopkeeper Route
 Route::get('/shopkeeperdashboard', [ShopkeeperController::class, 'dashboard'])->name('shopkeeperdashboard')->middleware('shopkeeperCheck');
 Route::get('/shopkeeperuser', [ShopkeeperController::class, "profileuser"]);
 Route::post('/shopkeeperupdate', [ShopkeeperController::class, "updateuser"]);
-Route::get('/admingetshopkeeper', [ShopkeeperController::class, "getallshopkeeper"]);
 
 
 // Admin Route
@@ -36,3 +35,9 @@ Route::get('/adminlogout', [AdminController::class, 'logout'])->name('adminlogou
 Route::get('/adminruser', [AdminController::class, "profileuser"]);
 Route::post('/adminupdate', [AdminController::class, "updateuser"]);
 Route::get('/deleterecord', [AdminController::class, "deleterecord"]);
+Route::get('/getuserofall', [AdminController::class, "getuserofall"]);
+
+// Error
+Route::get('/error', function(){
+    return view('error');
+})->name('error');

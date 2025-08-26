@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
         integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css"
+        integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -54,22 +57,43 @@
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                                 <label class="form-label" for="form3Example1c">Gender</label>
-                                                <input type="radio" id="form3Example1c" value="male" {{old('gender') == 'male' ? 'checked' : ''}}
-                                                    name="gender" />Male
-                                                <input type="radio" id="form3Example1c" value="female" {{old('gender') == 'female' ? 'checked' : ''}}
-                                                    name="gender" />Female
+                                                <input type="radio" id="form3Example1c" value="male"
+                                                    {{old('gender')=='male' ? 'checked' : '' }} name="gender" />Male
+                                                <input type="radio" id="form3Example1c" value="female"
+                                                    {{old('gender')=='female' ? 'checked' : '' }} name="gender" />Female
                                                 @error('gender')
-                                                    <div style="color:red;">{{$message}}</div>
+                                                <div style="color:red;">{{$message}}</div>
                                                 @enderror
                                             </div>
                                         </div>
-
+                                        
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                                <label class="form-label" for="form3Example1c">Address</label>
-                                                <input type="text" id="form3Example1c" value="{{old('address')}}"
-                                                    name="address" class="form-control" />
-                                                @error('address')
+                                                <label class="form-label" for="form3Example1c">Country</label>
+                                                
+                                                <select  onchange="findstate()" placeholder="Select" id="country" value="{{old('country')}}" name="country">
+                                                    
+                                                    @if (isset($contrylist))
+                                                    @foreach ($contrylist as $item)
+<option></option>
+                                                    <option value={{$item['id']}} {{old('country')==$item['id']
+                                                        ? 'selected' :''}}>{{$item['name']}}</option>
+                                                    
+                                                    @endforeach
+                                                    @endif
+                                                </select>
+                                                @error('country')
+                                                <div style="color:red;">{{$message}}</div>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="d-flex flex-row align-items-center mb-4">
+                                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                                                <label class="form-label" for="form3Example1c">State</label>
+                                                <input type="text" id="form3Example1c" value="{{old('state')}}"
+                                                    name="state" class="form-control" />
+                                                @error('state')
                                                     <div style="color:red;">{{$message}}</div>
                                                 @enderror
                                             </div>
@@ -88,38 +112,15 @@
 
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                                <label class="form-label" for="form3Example1c">State</label>
-                                                <input type="text" id="form3Example1c" value="{{old('state')}}"
-                                                    name="state" class="form-control" />
-                                                @error('state')
-                                                    <div style="color:red;">{{$message}}</div>
+                                                <label class="form-label" for="form3Example1c">Address</label>
+                                                <input type="text" id="form3Example1c" value="{{old('address')}}"
+                                                    name="address" class="form-control" />
+                                                @error('address')
+                                                <div style="color:red;">{{$message}}</div>
                                                 @enderror
                                             </div>
                                         </div>
-
-
-                                        <div class="d-flex flex-row align-items-center mb-4">
-                                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                                <label class="form-label" for="form3Example1c">Country</label>
-                                                {{-- <input type="text" id="form3Example1c" value="{{old('country')}}"
-                                                    name="country" class="form-control" /> --}}
-                                                    
-                                                     <select class="form-select" aria-label="Default select example"   id="country" value="{{old('country')}}" name="country">
-                                                    <option selected value="">Select</option>
-                                                    @if (isset($contrylist))
-                                                        @foreach ($contrylist as $item)
-                                                        
-                                                        <option value={{$item['name']}} {{old('country')==$item['name'] ? 'selected':''}}>{{$item['name']}}</option>   
-                                                        @endforeach
-                                                    @endif
-                                                    
-                                                </select>
-                                                @error('country')
-                                                    <div style="color:red;">{{$message}}</div>
-                                                @enderror
-                                            </div>
-                                        </div>
-
+                                        
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                                 <label class="form-label" for="form3Example1c">Pincode</label>
@@ -211,11 +212,40 @@
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"
+        integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
     <script>
         document.getElementById("roles").value = sessionStorage.getItem("role");
         document.getElementById("rolesname").textContent = document.getElementById("rolesname").textContent + sessionStorage.getItem("role");
-        
+        $(document).ready(function () {
+            $('select').selectize({
+                sortField: 'text'
+            });
+        });
+
+        function findstate()
+        {
+            
+            $.ajax({
+                type:"get",
+                url:"/getstatecity",
+                data:{
+                    data:$('#country').val(),
+                },
+                success:function(res)
+                {
+                    console.log(res);
+                    
+                },
+                error:function(e)
+                {
+                    console.log(e);
+
+                },
+            })
+        }
+
         // password 
         function passwordshow() {
             $("#passwordhidden").removeAttr("hidden");

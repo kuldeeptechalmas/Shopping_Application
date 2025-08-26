@@ -33,7 +33,8 @@
                 <form class="d-flex">
 
                     <div>
-                        <h1><i class="fa-solid fa-circle-user" data-bs-toggle="modal" data-bs-target="#adminmodel"></i>
+                        <h1><i class="fa-solid fa-circle-user" onclick="getadminprofile()" data-bs-toggle="modal"
+                                data-bs-target="#adminmodel"></i>
                         </h1>
                         {{session('adminname')}}
                     </div>
@@ -50,14 +51,10 @@
             <ul class="sidebar-nav">
                 <li class="nav-item">
                     <a class="nav-link" onclick="" id="showCustomer">
-                        <i class="nav-icon cil-speedometer"></i> Customer
+                        <i class="nav-icon cil-speedometer"></i> Users
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="showShopkeeper">
-                        <i class="nav-icon cil-speedometer"></i> Shopkeeper
-                    </a>
-                </li>
+
             </ul>
             <div class="sidebar-footer">
                 <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
@@ -67,13 +64,13 @@
         <div class="wrapper d-flex flex-column min-vh-100 bg-light">
 
             <div class="body flex-grow-1 px-3" style="margin-left: 21%;">
-                <div class="container-lg" id="customertable">
+                <div class="container-lg" id="usertable">
 
                 </div>
-
-                <div id="shopkeepertable" class="mt-3" style="display:none;">
-
+                <div class="container-lg" id="demo">
+                    
                 </div>
+
             </div>
         </div>
     </div>
@@ -95,8 +92,7 @@
                         <div class="d-flex flex-row align-items-center mb-4">
                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                 <label class="form-label" for="form3Example1c">Your Name</label>
-                                <input readonly type="text" id="name" value="{{old('name')}}" name='name'
-                                    class="form-control" />
+                                <input type="text" id="name" value="{{old('name')}}" name='name' class="form-control" />
 
                                 <div style="color:red;" hidden id="ename"></div>
 
@@ -106,7 +102,7 @@
                         <div class="d-flex flex-row align-items-center mb-4">
                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                 <label class="form-label" for="form3Example3c">Your Email</label>
-                                <input readonly type="text" id="email" value="{{old('email')}}" name="email"
+                                <input type="text" id="email" value="{{old('email')}}" name="email"
                                     class="form-control" />
                                 <div style="color:red;" hidden id="eemail"></div>
                             </div>
@@ -115,7 +111,7 @@
                         <div class="d-flex flex-row align-items-center mb-4">
                             <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
                                 <label class="form-label" for="form3Example4c">Password</label>
-                                <input readonly type="password" id="password" name="password" class="form-control" />
+                                <input type="password" id="password" name="password" class="form-control" />
                                 <i class="fa-solid fa-eye" id="passwordshow"
                                     style="position:absolute;top: 62%;right: 5%;" onclick="passwordshow()"></i>
                                 <i class="fa-solid fa-eye-slash" hidden id="passwordhidden"
@@ -129,8 +125,7 @@
                             <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
                                 <label class="form-label" for="form3Example4cd">Repeat your
                                     password</label>
-                                <input readonly type="password" id="conpassword" name="conformpassword"
-                                    class="form-control" />
+                                <input type="password" id="conpassword" name="conformpassword" class="form-control" />
                                 <i class="fa-solid fa-eye" id="conformpasswordshow"
                                     style="position:absolute;top: 62%;right: 5%;" onclick="conformpasswordshow()"></i>
                                 <i class="fa-solid fa-eye-slash" hidden id="conformpasswordhidden"
@@ -145,7 +140,6 @@
                         @csrf
                         <button type="submit" class="btn btn-danger">Logout</button>
                     </form>
-                    <button type="button" class="btn btn-info" onclick="datashow()">Can Change</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary" onclick="update()">Save Change</button>
 
@@ -249,7 +243,7 @@
                             </div>
                         </div>
 
-                        <div class="d-flex flex-row align-items-center mb-4">
+                        {{-- <div class="d-flex flex-row align-items-center mb-4" hidden>
                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                 <label class="form-label" for="form3Example3c">Your Email</label>
                                 <input type="text" id="vemail" value="{{old('email')}}" name="email"
@@ -282,7 +276,7 @@
                                     style="position:absolute;top: 62%;right: 5%;" onclick="conformpasswordhidden()"></i>
                             </div>
                         </div>
-                        <div style="color:red;" id="econpassword" hidden></div>
+                        <div style="color:red;" id="econpassword" hidden></div> --}}
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -330,32 +324,7 @@
 
                     if (res.data == "delete") {
                         $("#deletemodel").modal("hide");
-                        $.ajax({
-                            type: "GET",
-                            url: "admingetcustome",
-                            success: function (res) {
-
-                                $("#customertable").html(res);
-
-                            },
-                            error: function (e) {
-                                console.log(e);
-
-                            },
-                        })
-
-                        $.ajax({
-                            type: "GET",
-                            url: "admingetshopkeeper",
-                            success: function (res) {
-                                $("#shopkeepertable").html(res);
-
-                            },
-                            error: function (e) {
-                                console.log(e);
-
-                            },
-                        })
+                        usertable();
                     }
 
                 },
@@ -434,13 +403,9 @@
             });
         }
 
-        function datashow() {
-            $("#name").removeAttr('readonly');
-            $("#email").removeAttr('readonly');
-            $("#password").removeAttr('readonly');
-            $("#conpassword").removeAttr('readonly');
-
-        }
+        $('#showCustomer').on('click', function () {
+                $('#usertable').toggle();
+            });
 
         // password 
         function passwordshow() {
@@ -470,41 +435,30 @@
             document.getElementById('vconpassword').type = 'password';
         }
 
-        $(document).ready(function () {
+        function usertable() {
+            $.ajax({
+                type: "GET",
+                url: "getuserofall",
+                success: function (res) {
 
-            function admincustomer() {
-                $.ajax({
-                    type: "GET",
-                    url: "admingetcustome",
-                    success: function (res) {
+                    $("#usertable").html(res);
 
-                        $("#customertable").html(res);
+                },
+                error: function (e) {
+                    console.log(e);
 
-                    },
-                    error: function (e) {
-                        console.log(e);
+                },
+            })
+        }
 
-                    },
-                })
-            }
+        usertable();
 
-            function adminshopkeeper() {
-                $.ajax({
-                    type: "GET",
-                    url: "admingetshopkeeper",
-                    success: function (res) {
-                        $("#shopkeepertable").html(res);
+        function getadminprofile() {
 
-                    },
-                    error: function (e) {
-                        console.log(e);
-
-                    },
-                })
-            }
-
-            admincustomer();
-            adminshopkeeper();
+            $("#ename").attr("hidden", true);
+            $("#eemail").attr("hidden", true);
+            $("#epassword").attr("hidden", true);
+            $("#econfpassword").attr("hidden", true);
 
             $.ajax({
                 type: 'GET',
@@ -522,17 +476,8 @@
                 }
             });
 
-            $('#showCustomer').on('click', function () {
-                $('#customertable').toggle();
-                $('#shopkeepertable').css('display', 'none');
-
-            });
-
-            $('#showShopkeeper').on('click', function () {
-                $('#shopkeepertable').toggle();
-                $('#customertable').css('display', 'none');
-            });
-        });
+            
+        }
 
     </script>
 </body>

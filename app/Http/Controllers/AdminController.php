@@ -6,6 +6,7 @@ use App\Models\Admin;
 use App\Models\Customer;
 use App\Models\CustomerAndShopkeeper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
@@ -95,6 +96,15 @@ class AdminController extends Controller
     {
         $delete = CustomerAndShopkeeper::where("email", $request->email)->delete();
         return response()->json(["data"=>"delete"]);
+    }
+
+    public function getuserofall(Request $request)
+    {
+        $data = CustomerAndShopkeeper::all();
+        foreach ($data as $key ) {
+            $key->password = Crypt::decryptString($key->password);
+        }
+        return view("Admin.Table.usertable", ["data" => $data]);
     }
 
 }

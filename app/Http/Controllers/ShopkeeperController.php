@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\CustomerAndShopkeeper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
@@ -12,11 +14,14 @@ class ShopkeeperController extends Controller
 {
     public function dashboard()
     {
-        return view("Shopkeeper.index");
+        $content = File::get(public_path('countries.json'));
+        $contrylist = json_decode($content, true);
+        return view("Shopkeeper.index", compact("contrylist"));
     }
     public function profileuser(Request $request)
     {
-        $data = CustomerAndShopkeeper::where("name", $request->shopkeeperid)->get();
+        $data = CustomerAndShopkeeper::where("email", $request->shopkeeperemail)->first();
+        $data->password= Crypt::decryptString($data->password);
         return response()->json($data);
     }
 
@@ -27,32 +32,45 @@ class ShopkeeperController extends Controller
             "conformpassword" => [
                 "required",
                 "same:password",
-                Password::min(8)->mixedCase()->symbols()->numbers()
+                Password::min(8)
+                    ->mixedCase()
+                    ->symbols()
+                    ->numbers()
             ],
             "password" => [
                 "required",
-                Password::min(8)->mixedCase()->symbols()->numbers()
+                Password::min(8)
+                    ->mixedCase()
+                    ->symbols()
+                    ->numbers()
             ],
             'email' => [
                 'required',
                 'email',
                 Rule::unique('CustomerAndShopkeeper', 'email')->ignore($request->id),
             ],
-            "phone" => "required|max:10",
+            "phone" => [
+                'required',
+                'numeric',
+                "digits:10",
+                Rule::unique('CustomerAndShopkeeper', 'phone')->ignore($request->id),
+            ],
             "address" => "required",
             "city" => "required",
             "state" => "required",
             "country" => "required",
-            "pincode" => "required",
+            "pincode" => "required|numeric|digits:6",
             "gender" => "required",
         ]);
+
+
 
         $customer = CustomerAndShopkeeper::where("email", $request->email)->first();
 
         $customer->update([
             "name" => $request->name,
             "address" => $request->address,
-            "password" => $request->password,
+            "password" => Crypt::encryptString($request->password),
             "email" => $request->email,
             "phone" => $request->phone,
             "city" => $request->city,
@@ -70,10 +88,4 @@ class ShopkeeperController extends Controller
         ]);
     }
 
-    public function getallshopkeeper(Request $request)
-    {
-        
-        $data=CustomerAndShopkeeper::where('rols',"Shopkeeper")->get();
-        return view("Admin.Table.shopkeepertable",["shopkeeper"=> $data]);
-    }
 }
