@@ -68,7 +68,7 @@
 
                 </div>
                 <div class="container-lg" id="demo">
-                    
+
                 </div>
 
             </div>
@@ -242,41 +242,6 @@
                                 <div style="color:red;" id="epincode" hidden></div>
                             </div>
                         </div>
-
-                        {{-- <div class="d-flex flex-row align-items-center mb-4" hidden>
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                <label class="form-label" for="form3Example3c">Your Email</label>
-                                <input type="text" id="vemail" value="{{old('email')}}" name="email"
-                                    class="form-control" />
-                                <div style="color:red;" id="eemail" hidden></div>
-                            </div>
-                        </div>
-
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
-                                <label class="form-label" for="form3Example4c">Password</label>
-                                <input type="password" id="vpassword" name="password" class="form-control" />
-                                <i class="fa-solid fa-eye" id="passwordshow"
-                                    style="position:absolute;top: 62%;right: 5%;" onclick="passwordshow()"></i>
-                                <i class="fa-solid fa-eye-slash" hidden id="passwordhidden"
-                                    style="position:absolute;top: 62%;right: 5%;" onclick="passwordhidden()"></i>
-                            </div>
-                        </div>
-                        <input type="text" name="id" id="id" hidden>
-                        <div style="color:red;" id="epassword" hidden></div>
-
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
-                                <label class="form-label" for="form3Example4cd">Repeat your
-                                    password</label>
-                                <input type="password" id="vconpassword" name="conformpassword" class="form-control" />
-                                <i class="fa-solid fa-eye" id="conformpasswordshow"
-                                    style="position:absolute;top: 62%;right: 5%;" onclick="conformpasswordshow()"></i>
-                                <i class="fa-solid fa-eye-slash" hidden id="conformpasswordhidden"
-                                    style="position:absolute;top: 62%;right: 5%;" onclick="conformpasswordhidden()"></i>
-                            </div>
-                        </div>
-                        <div style="color:red;" id="econpassword" hidden></div> --}}
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -404,8 +369,8 @@
         }
 
         $('#showCustomer').on('click', function () {
-                $('#usertable').toggle();
-            });
+            $('#usertable').toggle();
+        });
 
         // password 
         function passwordshow() {
@@ -476,7 +441,7 @@
                 }
             });
 
-            
+
         }
 
     </script>

@@ -21,7 +21,8 @@ Route::get('/logout', [CustomerController::class, 'logout'])->name('customerlogo
 Route::get('/customerdashboard', [CustomerController::class, "dashboard"])->name("customerdashboard")->middleware("customerCheck");
 Route::post('/customerupdate', [CustomerController::class, "updateuser"]);
 Route::get('/customeruser', [CustomerController::class, "profileuser"]);
-Route::get('/getstatecity', [CustomerController::class, "getstate_city"]);
+Route::get('/getstate', [CustomerController::class, "getstate"]);
+Route::get('/getcity', [CustomerController::class, "getcity"]);
 
 // Shopkeeper Route
 Route::get('/shopkeeperdashboard', [ShopkeeperController::class, 'dashboard'])->name('shopkeeperdashboard')->middleware('shopkeeperCheck');

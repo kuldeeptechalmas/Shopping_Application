@@ -20,29 +20,33 @@ class CustomerController extends Controller
         $contentcountry = File::get(public_path('countries.json'));
         $contrylist = json_decode($contentcountry, true);
 
-        // $contentstate = File::get(public_path('state.json'));
-        // $statelist = json_decode($contentstate, true);
-        
-        // $contentcity = File::get(public_path('city.json'));
-        // $citylist = json_decode($contentcity, true);
-
-        // dd($statelist);
-        // dd($citylist[0]);
-
-        return view("Customer.index", ["contrylist"=>$contrylist]);
-        // "statelist"=>$statelist,"citylist"=>$citylist]);
+        return view("Customer.index", ["contrylist" => $contrylist]);
     }
 
-    public function getstate_city(Request $request)
+    public function getstate(Request $request)
     {
         $contentstate = File::get(public_path('state.json'));
         $statelist = json_decode($contentstate, true);
-        dd($request->all());
-        // $statelistofarray =array();
-        // for ($i = 0; $i < count($statelist); $i++) {
-        //         if($statelist[$i][""])
-        //     dd($statelist[$i]);
-        // }
+        $countryId = $request->data;
+
+        $filterstate = array_filter($statelist, function ($item) use ($countryId) {
+            return $item["countryId"] === $countryId;
+        });
+        return response()->json(["statelist" => $filterstate]);
+    }
+
+     public function getcity(Request $request)
+    {
+        $contentcity = File::get(public_path('city.json'));
+        $citylist = json_decode($contentcity, true);
+        $stateId = $request->data;
+
+        // dd($citylist);
+
+        $filterstate = array_filter($citylist, function ($item) use ($stateId) {
+            return $item["stateId"] === $stateId;
+        });
+        return response()->json(["citylist" => $filterstate]);
     }
 
     public function registration(Request $request)
@@ -50,6 +54,7 @@ class CustomerController extends Controller
 
         $content = File::get(public_path('countries.json'));
         $contrylist = json_decode($content, true);
+
 
         if ($request->isMethod("post")) {
 
@@ -96,12 +101,13 @@ class CustomerController extends Controller
 
             return redirect()->route("customerlogin");
         }
-        return view("registration", compact("contrylist"));
+        return view("registration", ["contrylist" => $contrylist]);
+        // "statelist"=>$statelist,"citylist"=>$citylist]);
     }
 
     public function login(Request $request)
     {
-    
+
         if ($request->isMethod("post")) {
 
             $validator = $request->validate([
@@ -109,11 +115,11 @@ class CustomerController extends Controller
                 "password" => "required",
             ]);
 
-            
+
 
             $customer = CustomerAndShopkeeper::where("email", $request->email)->first();
             $admin = Admin::where("email", $request->email)->first();
-            
+
             if ($admin) {
                 if ($request->password == $admin->password) {
                     Session::put("adminname", $admin->name);
@@ -125,17 +131,17 @@ class CustomerController extends Controller
             if (empty($customer)) {
                 return redirect()->route("error");
             }
-            
+
             if (!empty($customer->rols)) {
                 if (empty($customer)) {
                     return redirect()->back()->with("notfound", $customer->rols . " not found")->withInput();
                 }
             }
-            
+
             if ($request->password != Crypt::decryptString($customer->password)) {
                 return redirect()->back()->with("passworderror", "The password is Invalid password")->withInput();
             }
-            
+
             if ($customer->rols == "Customer") {
                 Session::put("customerid", $customer->name);
                 Session::put("customeremail", $customer->email);
@@ -198,9 +204,9 @@ class CustomerController extends Controller
             "gender" => "required",
         ]);
 
-        
+
         $customer = CustomerAndShopkeeper::where("email", $request->email)->first();
-        
+
         $customer->update([
             "name" => $request->name,
             "address" => $request->address,
@@ -224,10 +230,9 @@ class CustomerController extends Controller
     }
     public function profileuser(Request $request)
     {
-        
+
         $data = CustomerAndShopkeeper::where("email", $request->customeremail)->first();
-        $data->password= Crypt::decryptString($data->password);
+        $data->password = Crypt::decryptString($data->password);
         return response()->json($data);
     }
-
 }

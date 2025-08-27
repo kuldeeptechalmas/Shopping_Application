@@ -100,7 +100,7 @@ class AdminController extends Controller
 
     public function getuserofall(Request $request)
     {
-        $data = CustomerAndShopkeeper::all();
+        $data = CustomerAndShopkeeper::paginate(10);
         foreach ($data as $key ) {
             $key->password = Crypt::decryptString($key->password);
         }

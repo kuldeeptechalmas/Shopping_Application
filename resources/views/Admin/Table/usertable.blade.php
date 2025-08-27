@@ -39,3 +39,6 @@
             @endif
         </tbody>
     </table>
+    <div class="paginationDiv" style="margin-right: 73%;">
+            {{ $data->links('pagination::bootstrap-5') }}
+        </div>
