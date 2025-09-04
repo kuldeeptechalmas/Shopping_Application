@@ -7,6 +7,7 @@ use App\Models\Customer;
 use App\Models\CustomerAndShopkeeper;
 use Hash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
@@ -17,6 +18,7 @@ class CustomerController extends Controller
 {
     public function dashboard(Request $request)
     {
+        // dd(Auth::check());
         $contentcountry = File::get(public_path('countries.json'));
         $contrylist = json_decode($contentcountry, true);
 
@@ -35,6 +37,14 @@ class CustomerController extends Controller
         return response()->json(["statelist" => $filterstate]);
     }
 
+    public function getcountry(Request $request)
+    {
+        $contentcountry = File::get(public_path('countries.json'));
+        $countrylist = json_decode($contentcountry, true);
+         
+        return response()->json(["countrylist" => $countrylist]); 
+    }
+
      public function getcity(Request $request)
     {
         $contentcity = File::get(public_path('city.json'));
@@ -46,6 +56,7 @@ class CustomerController extends Controller
         $filterstate = array_filter($citylist, function ($item) use ($stateId) {
             return $item["stateId"] === $stateId;
         });
+
         return response()->json(["citylist" => $filterstate]);
     }
 
@@ -145,6 +156,7 @@ class CustomerController extends Controller
             if ($customer->rols == "Customer") {
                 Session::put("customerid", $customer->name);
                 Session::put("customeremail", $customer->email);
+                Auth::login($customer->email);
                 return redirect()->route("customerdashboard");
             } else {
                 Session::put("shopkeeperid", $customer->name);

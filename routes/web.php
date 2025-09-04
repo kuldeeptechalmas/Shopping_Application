@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\Product_Controller;
 use App\Http\Controllers\ShopkeeperController;
 use App\Http\Middleware\AdminCheck;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,7 @@ Route::post('/customerupdate', [CustomerController::class, "updateuser"]);
 Route::get('/customeruser', [CustomerController::class, "profileuser"]);
 Route::get('/getstate', [CustomerController::class, "getstate"]);
 Route::get('/getcity', [CustomerController::class, "getcity"]);
+Route::get('/getcountry', [CustomerController::class, "getcountry"]);
 
 // Shopkeeper Route
 Route::get('/shopkeeperdashboard', [ShopkeeperController::class, 'dashboard'])->name('shopkeeperdashboard')->middleware('shopkeeperCheck');
@@ -37,8 +39,19 @@ Route::get('/adminruser', [AdminController::class, "profileuser"]);
 Route::post('/adminupdate', [AdminController::class, "updateuser"]);
 Route::get('/deleterecord', [AdminController::class, "deleterecord"]);
 Route::get('/getuserofall', [AdminController::class, "getuserofall"]);
+Route::post('/adminviewupdate', [AdminController::class, "viewupdateuser"]);
 
 // Error
 Route::get('/error', function(){
     return view('error');
 })->name('error');
+
+
+// Product
+Route::post('/productadd', [Product_Controller::class,'product_add']);
+Route::get('/getproductall', [Product_Controller::class,'product_get_all']);
+Route::post('/editproduct', [Product_Controller::class,'product_edit']);
+Route::delete('/deleteproduct', [Product_Controller::class,'product_remove']);
+Route::get('/searchproduct', [Product_Controller::class,'product_search']);
+Route::get('/getproductshopkeeper', [Product_Controller::class,'product_list_get_shopkeeper']);
+Route::get('/productaddshop/{category_name}', [Product_Controller::class,'product_add_show']);

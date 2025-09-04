@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CategoryProduct;
 use App\Models\CustomerAndShopkeeper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -14,9 +15,11 @@ class ShopkeeperController extends Controller
 {
     public function dashboard()
     {
+        $catagory = CategoryProduct::all();
+        // return view("Admin.index",["catagory"=> $catagory]);
         $content = File::get(public_path('countries.json'));
         $contrylist = json_decode($content, true);
-        return view("Shopkeeper.index", compact("contrylist"));
+        return view("Shopkeeper.index", compact("contrylist"),["catagory"=> $catagory]);
     }
     public function profileuser(Request $request)
     {
@@ -24,7 +27,6 @@ class ShopkeeperController extends Controller
         $data->password= Crypt::decryptString($data->password);
         return response()->json($data);
     }
-
     public function updateuser(Request $request)
     {
         $request->validate([

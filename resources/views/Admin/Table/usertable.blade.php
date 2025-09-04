@@ -1,6 +1,6 @@
 <div id="dataOutput" class="mt-3" style="">
-    <h1>Show Users</h1>
-    <table class="table table-striped" style="margin-top: 5%;">
+    <h1 style="margin-top: -27px;">Show Users</h1>
+    <table class="table table-striped" >
         <thead>
             <tr>
                 <th scope="col">Name</th>
@@ -23,7 +23,7 @@
                         <th scope="col">{{$item->email}}</th>
                         <th scope="col">{{$item->rols}}</th>
                         <th scope="col">
-                            <button type="button" class="btn btn-primary" onclick="viewdataname('{{$item->name}}',
+                            <button type="button" class="btn btn-primary" onclick="viewdataname('{{$item->id}}','{{$item->name}}',
                                             '{{$item->phone}}','{{$item->gender}}','{{$item->address}}','{{$item->city}}',
                                             '{{$item->state}}','{{$item->country}}','{{$item->pincode}}','{{$item->email}}'
                                             ,'{{$item->password}}')" data-bs-toggle="modal" data-bs-target="#viewmodel">
@@ -39,6 +39,6 @@
             @endif
         </tbody>
     </table>
-    <div class="paginationDiv" style="margin-right: 73%;">
+    <div class="paginationDiv" style="margin-right: 73%;" id="usertableid">
             {{ $data->links('pagination::bootstrap-5') }}
         </div>

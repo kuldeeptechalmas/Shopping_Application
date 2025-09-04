@@ -10,11 +10,7 @@
     <!-- Select2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-    <!-- jQuery (Select2 requires jQuery) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-    <!-- Select2 JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -76,9 +72,9 @@
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                                 <label class="form-label" for="form3Example1c">Country</label>
-                                                <select onchange="findstate()" class="form-select" id="country"
+                                                <select class="form-select" id="country"
                                                     value="{{old('country')}}" name="country">
-                                                    <option></option>
+                                                    <option value="">Select</option>
                                                     @if (isset($contrylist))
                                                         @foreach ($contrylist as $item)
                                                             <option value={{$item['id']}} {{old('country') == $item['id'] ? 'selected' : ''}}>{{$item['name']}}</option>
@@ -216,17 +212,115 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
+
+    <!-- jQuery (Select2 requires jQuery) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Select2 JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         document.getElementById("roles").value = sessionStorage.getItem("role");
         document.getElementById("rolesname").textContent = document.getElementById("rolesname").textContent + sessionStorage.getItem("role");
 
         $(document).ready(function () {
+
+            var oldcountry = "{{old('country')}}";
+
+            if (oldcountry) {
+                var oldstate = "{{old('state')}}";
+                const selectElement = $('#state');
+                selectElement.empty();
+                $.ajax({
+                    type: "get",
+                    url: "/getstate",
+                    data: {
+                        data: $('#country').val(),
+                    },
+                    success: function (res) {
+                        $("#state").append(`<option value="">Select</option>`);
+                        $.each(res["statelist"], function (indexInArray, valueOfElement) {
+                            var selectstate = (oldstate == valueOfElement["id"]) ? "selected" : "";
+                            $("#state").append(`<option value="${valueOfElement["id"]}" ${selectstate} >${valueOfElement["name"]}</option>`);
+                        });
+                    },
+                    error: function (e) {
+                        console.log(e);
+
+                    },
+                })
+                if (oldstate) {
+                    var oldcity = "{{old('city')}}";
+                    const selectElement = $('#city');
+                    selectElement.empty();
+                    $.ajax({
+                        type: "get",
+                        url: "/getcity",
+                        data: {
+                            data: oldstate,
+                        },
+                        success: function (res) {
+                            $("#city").append(`<option value="">Select</option>`);
+                            $.each(res["citylist"], function (indexInArray, valueOfElement) {
+                                var selectcity = (oldcity == valueOfElement["id"]) ? "selected" : "";
+                                $("#city").append(`<option value="${valueOfElement["id"]}" ${selectcity}>${valueOfElement["name"]}</option>`);
+
+                            });
+
+                        },
+                        error: function (e) {
+                            console.log(e);
+
+                        },
+                    })
+                }
+            }
+            // var selectstate=(oldstate)
+            // $("#state").append(`<option value="${valueOfElement["id"]}">   ${valueOfElement["name"]}</option>`);
+
+
             $('#country').select2();
             $('#state').select2();
             $('#city').select2();
         });
 
+        $("#country").on("change", function () {
+            const selectElement = $('#state');
+            selectElement.empty();
+            $.ajax({
+                type: "get",
+                url: "/getstate",
+                data: {
+                    data: $('#country').val(),
+                },
+                success: function (res) {
+                    var oldstate = "{{old('state')}}";
+                    console.log(oldstate);
+                    $("#state").append(`<option value="">Select</option>`);
+                    $.each(res["statelist"], function (indexInArray, valueOfElement) {
+                        var selectstate = (oldstate == valueOfElement["id"]) ? "selected" : "";
+                        console.log(selectstate);
+
+                        $("#state").append(`<option value="${valueOfElement["id"]}" ${selectstate} >${valueOfElement["name"]}</option>`);
+                    });
+                },
+                error: function (e) {
+                    console.log(e);
+
+                },
+            })
+        });
+
+        function findstate() {
+
+        }
+
         function findcity() {
+
+        }
+        $("#state").on("change", function () {
             const selectElement = $('#city');
             selectElement.empty();
             $.ajax({
@@ -237,9 +331,8 @@
                 },
                 success: function (res) {
                     console.log(res);
-                    $("#city").append(`<option value=""></option>`);
+                    $("#city").append(`<option value="">Select</option>`);
                     $.each(res["citylist"], function (indexInArray, valueOfElement) {
-                        console.log(`<option value="${valueOfElement["id"]}">${valueOfElement["name"]}</option>`);
                         $("#city").append(`<option value="${valueOfElement["id"]}">${valueOfElement["name"]}</option>`);
 
                     });
@@ -250,31 +343,8 @@
 
                 },
             })
-        }
+        });
 
-        function findstate() {
-            const selectElement = $('#state');
-            selectElement.empty();
-            $.ajax({
-                type: "get",
-                url: "/getstate",
-                data: {
-                    data: $('#country').val(),
-                },
-                success: function (res) {
-
-                    $("#state").append(`<option value=""></option>`);
-                    $.each(res["statelist"], function (indexInArray, valueOfElement) {
-                        console.log(`<option value="${valueOfElement["id"]}">${valueOfElement["name"]}</option>`);
-                        $("#state").append(`<option value="${valueOfElement["id"]}">   ${valueOfElement["name"]}</option>`);
-                    });
-                },
-                error: function (e) {
-                    console.log(e);
-
-                },
-            })
-        }
 
         // password 
         function passwordshow() {

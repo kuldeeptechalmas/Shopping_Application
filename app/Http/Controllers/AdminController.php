@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\welcomeEmail;
 use App\Models\Admin;
+use App\Models\CategoryProduct;
 use App\Models\Customer;
 use App\Models\CustomerAndShopkeeper;
+use FFI\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
@@ -15,24 +19,25 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
-        return view("Admin.index");
+        $catagory = CategoryProduct::all();
+        return view("Admin.index",["catagory"=> $catagory]);
     }
 
     public function login(Request $request)
     {
-        if($request->isMethod("post")){
+        if ($request->isMethod("post")) {
             $validator = $request->validate([
                 "email" => "required",
                 "password" => "required",
             ]);
 
-            $admin = Admin ::where("email", $request->email)->first();
+            $admin = Admin::where("email", $request->email)->first();
 
-            if(empty($admin)) {
-                return redirect()->back()->with("error","Admin not found");
+            if (empty($admin)) {
+                return redirect()->back()->with("error", "Admin not found");
             }
 
-            
+
             return redirect()->route("admindashboard");
         }
         return view('Admin.login');
@@ -44,9 +49,9 @@ class AdminController extends Controller
         return redirect()->route('customerlogin');
     }
 
-     public function updateuser(Request $request)
+    public function updateuser(Request $request)
     {
-        
+
         $request->validate([
             "name" => "required",
             "conformpassword" => [
@@ -66,7 +71,7 @@ class AdminController extends Controller
         ]);
 
         $Admin = Admin::find($request->id);
-        
+
         if (!$Admin) {
             return redirect()->back()->withErrors(['error' => 'User not found.']);
         }
@@ -77,9 +82,9 @@ class AdminController extends Controller
             "email" => $request->email,
         ]);
 
-        
+
         Session::put("adminname", $Admin->name);
-        
+
         return response()->json([
             'status' => 'success',
             'redirect_url' => route('admindashboard')
@@ -95,16 +100,61 @@ class AdminController extends Controller
     public function deleterecord(Request $request)
     {
         $delete = CustomerAndShopkeeper::where("email", $request->email)->delete();
-        return response()->json(["data"=>"delete"]);
+        return response()->json(["data" => "delete"]);
     }
 
     public function getuserofall(Request $request)
     {
         $data = CustomerAndShopkeeper::paginate(10);
-        foreach ($data as $key ) {
+        foreach ($data as $key) {
             $key->password = Crypt::decryptString($key->password);
+        }
+        if ($request->ajax()) {
+            return view("Admin.Table.usertable", ["data" => $data]);
         }
         return view("Admin.Table.usertable", ["data" => $data]);
     }
 
+    public function viewupdateuser(Request $request)
+    {
+        $validator = $request->validate([
+            "name" => "required",
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('CustomerAndShopkeeper', 'email')->ignore($request->id),
+            ],
+            "phone" => [
+                'required',
+                'numeric',
+                "digits:10",
+                Rule::unique('CustomerAndShopkeeper', 'phone')->ignore($request->id),
+            ],
+            "address" => "required",
+            "city" => "required",
+            "state" => "required",
+            "country" => "required",
+            "pincode" => "required|numeric|digits:6",
+            "gender" => "required",
+        ]);
+
+        $customer = CustomerAndShopkeeper::where("email", $request->email)->first();
+
+        $customer->update([
+            "name" => $request->name,
+            "address" => $request->address,
+            "password" => Crypt::encryptString($request->password),
+            "email" => $request->email,
+            "phone" => $request->phone,
+            "city" => $request->city,
+            "state" => $request->state,
+            "country" => $request->country,
+            "pincode" => $request->pincode,
+            "gender" => $request->gender,
+        ]);
+
+        return response()->json([
+            'status' => 'success'
+        ]);
+    }
 }
