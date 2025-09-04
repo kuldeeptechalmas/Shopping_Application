@@ -15,15 +15,31 @@ class Product_Controller extends Controller
 {
     public function product_add(Request $request)
     {
-        $request->validate([
-            "name" => "required",
-            "description" => "required",
-            "price" => "required|numeric|gt:0",
-            "stock" => "required|numeric|gt:-1",
-            "status" => "required",
-            "image" => "required",
-            "catagory" => "required",
-        ]);
+        $validator = $request->validate(
+            [
+                "name" => "required",
+                "description" => "required",
+                "price" => "required|numeric|gt:0",
+                "stock" => "required|numeric|gt:-1",
+                "status" => "required",
+                "image" => "required",
+                "catagory" => "required",
+            ],
+            [
+                "name.required" => "Enter Name Are Required.",
+                "description.required" => "Enter Description Are Required.",
+                "price.required" => "Enter Price Are Required.",
+                "price.numeric" => "Enter Price Is Numeric Required.",
+                "price.gt" => "Enter Price Is Greater Then 0 Required.",
+                "stock.required" => "Enter Stock Are Required.",
+                "stock.numeric" => "Enter Stock Is Numeric Required.",
+                "stock.gt" => "Enter Stock Is Greater Then -1 Required.",
+                "status.required" => "Enter Status Are Required.",
+                "image.required" => "Enter Image Are Required.",
+                "catagory.required" => "Enter Catagory Are Required.",
+            ]
+        );
+
 
         $user = CustomerAndShopkeeper::where("email", Session::get("shopkeeperemail"))->first();
         $path = $request->file("image")->storeAs("public/UploadeFile", $request->image->getClientOriginalName());
@@ -98,10 +114,8 @@ class Product_Controller extends Controller
         $user = CustomerAndShopkeeper::where("email", Session::get("shopkeeperemail"))->first();
 
         if (isset($request->catagoryid)) {
-            
-            $data1 = Product::where("user_id", $user->id)->
-            where("category_id",$request->catagoryid)->
-            where("name", "like", "%" . $request->searchText . "%")->paginate(10);
+
+            $data1 = Product::where("user_id", $user->id)->where("category_id", $request->catagoryid)->where("name", "like", "%" . $request->searchText . "%")->paginate(10);
             return view("Shopkeeper.Product.productshow", ["data" => $data1]);
         }
         $data = Product::where("name", "like", "%" . $request->searchText . "%")->paginate(10);
@@ -113,11 +127,10 @@ class Product_Controller extends Controller
         $user = CustomerAndShopkeeper::where("email", Session::get("shopkeeperemail"))->first();
         if (isset($request->catagoryid)) {
 
-            $data1 = Product::where("user_id", $user->id)->
-            where("category_id",$request->catagoryid)->paginate(10);
+            $data1 = Product::where("user_id", $user->id)->where("category_id", $request->catagoryid)->paginate(10);
             return view("Shopkeeper.Product.productshow", ["data" => $data1]);
         }
-        
+
         $data = Product::where("user_id", $user->id)->paginate(10);
         if ($request->ajax()) {
             return view("Shopkeeper.Product.productshow", ["data" => $data]);

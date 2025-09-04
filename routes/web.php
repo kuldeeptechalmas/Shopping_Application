@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CatagoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\Product_Controller;
 use App\Http\Controllers\ShopkeeperController;
+use App\Http\Controllers\SubCatagoryController;
 use App\Http\Middleware\AdminCheck;
 use Illuminate\Support\Facades\Route;
 
@@ -55,3 +57,13 @@ Route::delete('/deleteproduct', [Product_Controller::class,'product_remove']);
 Route::get('/searchproduct', [Product_Controller::class,'product_search']);
 Route::get('/getproductshopkeeper', [Product_Controller::class,'product_list_get_shopkeeper']);
 Route::get('/productaddshop/{category_name}', [Product_Controller::class,'product_add_show']);
+
+
+// Catagory
+Route::get('/catagorypage', [CatagoryController::class,'index']);
+Route::get('/catagoryget', [CatagoryController::class,'catagory_show']);
+Route::post('/catagoryadd', [CatagoryController::class,'catagory_add']);
+
+// Sub-Catagory
+Route::post('/subcatagoryadd', [SubCatagoryController::class,'sub_catagory_add']);
+

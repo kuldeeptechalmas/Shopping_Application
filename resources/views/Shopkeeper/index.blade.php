@@ -125,7 +125,11 @@
                         @endif
                     </div>
                 </li>
-
+                <li class="nav-item">
+                    <a class="nav-link" href="/catagorypage">
+                        <i class="nav-icon cil-speedometer"></i> Catagory Add
+                    </a>
+                </li>
             </ul>
             <div class="sidebar-footer">
                 <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
@@ -151,6 +155,8 @@
                         <div id="producttable">
 
                         </div>
+                    @elseif (isset($cetagoryexist))
+                        @yield('content_catagory')
                     @else
                         <h1 style="margin-left: 23%;margin-top: 15%;">welcome to shopkeeper</h1>
                     @endif
@@ -527,8 +533,7 @@
                     catagoryid: "{{isset($catagoryid) ? $catagoryid : ''}}"
                 },
                 success: function (res) {
-                        $("#producttable").html(res);
-                   
+                    $("#producttable").html(res);
                 },
                 error: function (e) {
                     console.log(e);
@@ -829,7 +834,7 @@
 
         $('#addproductmodel').on('hidden.bs.modal', function (e) {
 
-                document.getElementById('pname').value = "",
+            document.getElementById('pname').value = "",
                 document.getElementById('pdescription').value = "",
                 document.getElementById('pprice').value = "",
                 document.getElementById('pstock').value = "",
