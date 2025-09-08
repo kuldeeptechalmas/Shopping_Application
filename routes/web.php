@@ -57,13 +57,17 @@ Route::delete('/deleteproduct', [Product_Controller::class,'product_remove']);
 Route::get('/searchproduct', [Product_Controller::class,'product_search']);
 Route::get('/getproductshopkeeper', [Product_Controller::class,'product_list_get_shopkeeper']);
 Route::get('/productaddshop/{category_name}', [Product_Controller::class,'product_add_show']);
+Route::get('/productdetails/{productid}', [Product_Controller::class,'product_details']);
 
 
 // Catagory
 Route::get('/catagorypage', [CatagoryController::class,'index']);
 Route::get('/catagoryget', [CatagoryController::class,'catagory_show']);
 Route::post('/catagoryadd', [CatagoryController::class,'catagory_add']);
+Route::get('/catagoryupdate', [CatagoryController::class,'catagory_update']);
+Route::delete('/catagorydelete', [CatagoryController::class,'catagory_delete']);
 
 // Sub-Catagory
 Route::post('/subcatagoryadd', [SubCatagoryController::class,'sub_catagory_add']);
+Route::delete('/subcatagorydelete', [SubCatagoryController::class,'sub_catagory_delete']);
 

@@ -34,7 +34,7 @@
                         <button type="button" class="btn btn-primary" onclick="viewproductdata('{{$item->id}}','{{$item->name}}','{{$item->description}}','{{$item->price}}',
                                     '{{$item->stock}}','{{$item->status}}','{{$item->image}}','{{$item->category_id }}')" data-bs-toggle="modal"
                             data-bs-target="#viewproductmodel">
-                            View
+                            Edit
                         </button>
                         <button type="button" class="btn btn-danger"
                             onclick="deleteproductdata('{{$item->id}}','{{$item->name}}')" data-bs-toggle="modal"

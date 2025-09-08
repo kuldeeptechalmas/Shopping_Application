@@ -20,11 +20,17 @@ class Product extends Model
         "image",
         "status",
         "price",
-        "sub_category_id"
+        "sub_category_id",
+        "admin_id",
     ];
 
     public function category()
     {
         return $this->belongsTo(CategoryProduct::class);
+    }
+
+    public function images()
+    {
+        return $this->hasMany(Images::class);
     }
 }

@@ -27,7 +27,7 @@
                                             '{{$item->phone}}','{{$item->gender}}','{{$item->address}}','{{$item->city}}',
                                             '{{$item->state}}','{{$item->country}}','{{$item->pincode}}','{{$item->email}}'
                                             ,'{{$item->password}}')" data-bs-toggle="modal" data-bs-target="#viewmodel">
-                                View
+                                Edit
                             </button>
                             <button type="button" class="btn btn-danger" data-bs-toggle="modal" onclick="deletedataname('{{$item->email}}')" data-bs-target="#deletemodel">
                                 Delete

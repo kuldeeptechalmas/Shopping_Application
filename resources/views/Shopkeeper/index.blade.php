@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
         integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
 </head>
 <style>
     .modal-backdrop.show {
@@ -69,6 +70,17 @@
                 }
             }
         }
+    }
+
+    .preview {
+        display: inline-block;
+        margin: 10px;
+    }
+
+    .preview img {
+        width: 100px;
+        height: 100px;
+        margin-right: 10px;
     }
 </style>
 
@@ -157,6 +169,8 @@
                         </div>
                     @elseif (isset($cetagoryexist))
                         @yield('content_catagory')
+                    @elseif (isset($productdatails))
+                        @yield('productdatail')
                     @else
                         <h1 style="margin-left: 23%;margin-top: 15%;">welcome to shopkeeper</h1>
                     @endif
@@ -376,7 +390,7 @@
 
                         <div class="mb-3">
                             <label for="exampleInputPassword1" class="form-label">Image</label>
-                            <input type="file" class="form-control" id="pimage" name="image">
+                            <input type="file" class="form-control" multiple id="pimage" name="image[]">
                         </div>
                         <div style="color:red;" id="epimage" hidden></div>
 
@@ -422,7 +436,8 @@
 
                         <div class="mb-3">
                             <label for="exampleInputPassword1" class="form-label">Description</label>
-                            <input type="text" class="form-control" id="vpdescription" name="description">
+                            <textarea type="text" style="resize: none;" rows="5" class="form-control" id="vpdescription"
+                                name="description"></textarea>
                         </div>
                         <div style="color:red;" id="vepdescription" hidden></div>
 
@@ -457,12 +472,15 @@
                         <div class="mb-3">
                             <label for="exampleInputPassword1" class="form-label">Image</label>
                             <div class="form-group">
-                                <input type="file" name="file" id="file" class="input-file">
+                                {{-- <input type="file" id="file-input" multiple> --}}
+                                <input type="file" name="file[]" multiple id="file" class="input-file">
+                                <div id="preview-container"></div>
                                 <label for="file" class="btn btn-tertiary js-labelFile" style="width:100%">
                                     <i class="icon fa fa-check"></i>
-                                    <span class="js-fileName" id="vpimagename">Choose a file</span>
+                                    <span class="js-fileName" id="vpimagename">Choose a file : </span>
                                 </label>
                             </div>
+                            <div id="showimage" style="margin-top: 21px;"></div>
                         </div>
                         <div style="color:red;" id="vepimage" hidden></div>
 
@@ -508,11 +526,15 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+        integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script>
 
         // pagination to prodcut
@@ -604,17 +626,36 @@
             });
         }
 
+
         // view product 
-        function viewproductdata(id, name, description, price, stock, status, image, subcatagory) {
+        function viewproductdata(id, name, description, price, stock, status, image, subcatagory, adminid) {
+
             document.getElementById("vpname").value = name;
             document.getElementById("vpdescription").value = description;
             document.getElementById("vpprice").value = price;
             document.getElementById("vpstock").value = stock;
             document.getElementById("vpstatus").value = status;
-            document.getElementById('vpimagename').textContent = image;
+
+            console.log(image.length);
+            if (image.length == 2) {
+                $("#vpimagename").html("Choce file ");
+            }
+            else {
+                $("#vpimagename").html("");
+                $.each(JSON.parse(image), function (index, item) {
+                    $("#vpimagename").append(item.image_name + ",");
+                    // $("#showimage").append(`<img style="height: 100px"
+                    // src="{{ asset('storage/UploadeFile/' . '${item.image_name}') }}" alt="Image">`);
+                });
+            }
+
+
             document.getElementById("vpid").value = id;
             document.getElementById("vpcatagory").value = subcatagory;
-            console.log(subcatagory);
+
+            if (adminid != 0) {
+                toastr.warning('Admin can change Product Detail');
+            }
 
         }
 
@@ -655,6 +696,8 @@
                 error: function (e) {
 
                     const data = e['responseJSON']["errors"];
+                    console.log(data);
+
                     if (data['name']) {
                         $("#vepname").text(data['name'][0]).removeAttr("hidden");
                     }
@@ -681,6 +724,26 @@
         });
 
         // upload function
+
+        $(document).ready(function () {
+            $("#file-input").on("change", function () {
+                var files = $(this)[0].files;
+                $("#preview-container").empty();
+                if (files.length > 0) {
+                    for (var i = 0; i < files.length; i++) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            $("<div class='preview'><img src='" + e.target.result + "'><button class='delete'>Delete</button></div>").appendTo("#preview-container");
+                        };
+                        reader.readAsDataURL(files[i]);
+                    }
+                }
+            });
+            $("#preview-container").on("click", ".delete", function () {
+                $(this).parent(".preview").remove();
+                $("#file-input").val(""); // Clear input value if needed
+            });
+        });
         (function () {
 
             'use strict';
@@ -693,7 +756,22 @@
                 $input.on('change', function (element) {
                     var fileName = '';
                     if (element.target.value) fileName = element.target.value.split('\\').pop();
+                    console.log(element.target.value);
+
+                    var value = $('#file').val();
+                    console.log(value);
+
+                    var images = value.$('img');
+                    var srcList = [];
+                    console.log(images);
+
+                    for (var i = 0; i < images.length; i++) {
+                        srcList.push(images[i].src);
+                    }
+
                     fileName ? $label.addClass('has-file').find('.js-fileName').html(fileName) : $label.removeClass('has-file').html(labelVal);
+                    fileName ? $label.addClass('has-file').find('.js-fileName').html(fileName) : $label.removeClass('has-file').html(labelVal);
+
                 });
             });
 
@@ -804,14 +882,24 @@
                 document.getElementById('pstatus').value = "out of stock";
             }
             else {
-                document.getElementById('pstatus').value = "in stock";
+                if (document.getElementById('pstock').value > 0) {
+                    document.getElementById('pstatus').value = "in stock";
+                }
+                else {
+                    document.getElementById('pstatus').value = "";
+                }
             }
 
             if (document.getElementById('vpstock').value == "0") {
                 document.getElementById('vpstatus').value = "out of stock";
             }
             else {
-                document.getElementById('vpstatus').value = "in stock";
+                if (document.getElementById('vpstock').value > 0) {
+                    document.getElementById('vpstatus').value = "in stock";
+                }
+                else {
+                    document.getElementById('vpstatus').value = "";
+                }
             }
         }
 
@@ -878,6 +966,8 @@
                 contentType: false,
                 data: formData,
                 success: function (response) {
+                    console.log(response);
+
                     $('#addproductmodel').modal("hide");
                     showproduct();
                 },

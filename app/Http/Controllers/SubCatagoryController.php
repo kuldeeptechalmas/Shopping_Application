@@ -26,4 +26,12 @@ class SubCatagoryController extends Controller
 
         return response()->json(["responce"=> "save"]);
     }
+
+    public function sub_catagory_delete(Request $request)
+    {
+        $data= SubCatagory::find($request->deleteid);
+        $data->delete();
+
+        return response()->json(["responce"=> "delete"]);
+    }
 }

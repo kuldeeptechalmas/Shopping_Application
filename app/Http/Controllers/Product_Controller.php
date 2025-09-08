@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Models\CategoryProduct;
 use App\Models\CustomerAndShopkeeper;
+use App\Models\Images;
 use App\Models\Product;
 use App\Models\SubCatagory;
 use Illuminate\Http\Request;
@@ -15,6 +17,7 @@ class Product_Controller extends Controller
 {
     public function product_add(Request $request)
     {
+
         $validator = $request->validate(
             [
                 "name" => "required",
@@ -22,7 +25,7 @@ class Product_Controller extends Controller
                 "price" => "required|numeric|gt:0",
                 "stock" => "required|numeric|gt:-1",
                 "status" => "required",
-                "image" => "required",
+                "image.*" => "required|image|mimes:png,jpg|max:2048",
                 "catagory" => "required",
             ],
             [
@@ -36,13 +39,14 @@ class Product_Controller extends Controller
                 "stock.gt" => "Enter Stock Is Greater Then -1 Required.",
                 "status.required" => "Enter Status Are Required.",
                 "image.required" => "Enter Image Are Required.",
+                "image.image" => "Enter Only Image Are Required.",
+                "image.mimes" => "Enter PNG Or JPG Image Are Required.",
+                "image.max" => "Enter Less then 2 Mb Image Are Required.",
                 "catagory.required" => "Enter Catagory Are Required.",
             ]
         );
 
-
         $user = CustomerAndShopkeeper::where("email", Session::get("shopkeeperemail"))->first();
-        $path = $request->file("image")->storeAs("public/UploadeFile", $request->image->getClientOriginalName());
 
         $product = new Product();
         $product->category_id = $request->catagoryid;
@@ -53,8 +57,19 @@ class Product_Controller extends Controller
         $product->price = $request->price;
         $product->stock = $request->stock;
         $product->status = $request->status;
-        $product->image = $request->image->getClientOriginalName();
+        $product->admin_id = 0;
+        $product->image = $request->file("image")[0]->getClientOriginalName();
         $product->save();
+
+        if ($files = $request->file("image")) {
+            foreach ($files as $file) {
+                $file->storeAs("public/UploadeFile", $file->getClientOriginalName());
+                $image = new Images();
+                $image->image_name = $file->getClientOriginalName();
+                $image->product_id = $product->id;
+                $image->save();
+            }
+        }
 
         return response()->json(["success" => "save"]);
     }
@@ -79,17 +94,20 @@ class Product_Controller extends Controller
             "stock" => "required|numeric",
             "status" => "required",
             "catagory" => "required",
+            "file.*" => "required|image|mimes:png,jpg|max:2048",
         ]);
 
 
         $product = Product::find($request->id);
 
-        if (isset($request->file)) {
-            $product->update([
-                "image" => $request->file->getClientOriginalName(),
-            ]);
-            $request->file("file")->storeAs("public/UploadeFile", $request->file->getClientOriginalName());
-        }
+        // if (isset($request->file)) {
+        //     $product->update([
+        //         "image" => $request->file->getClientOriginalName(),
+        //     ]);
+        //     $request->file("file")->storeAs("public/UploadeFile", $request->file->getClientOriginalName());
+        // }
+
+        $admin = Admin::where("name", $request->adminid)->first();
 
         $product->update([
             "name" => $request->name,
@@ -99,6 +117,19 @@ class Product_Controller extends Controller
             "status" => $request->status,
             "sub_category_id" => $request->catagory,
         ]);
+        if ($admin) {
+            $product->admin_id = $admin->id;
+            $product->save();
+        }
+        if ($files = $request->file("file")) {
+            foreach ($files as $file) {
+                $file->storeAs("public/UploadeFile", $file->getClientOriginalName());
+                $image = new Images();
+                $image->image_name = $file->getClientOriginalName();
+                $image->product_id = $product->id;
+                $image->save();
+            }
+        }
 
         return response()->json(["success" => "save"]);
     }
@@ -151,5 +182,12 @@ class Product_Controller extends Controller
                 "catagoryid" => $data->id
             ]
         );
+    }
+
+    public function product_details($productid)
+    {
+        $catagorydata = CategoryProduct::all();
+        $data = Product::where("id", $productid)->first();
+        return view("Shopkeeper.productdetail", ["productdatails" => $data, "catagory" => $catagorydata,]);
     }
 }

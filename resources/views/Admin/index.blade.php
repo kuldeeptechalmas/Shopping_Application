@@ -377,9 +377,9 @@
                                 <select class="form-select" id="pcatagory" name="catagory">
                                     <option value="">Select</option>
                                     @if (isset($catagory))
-                                    @foreach ($catagory as $item)
-                                    <option value="{{$item->id}}">{{$item->category_name}}</option>
-                                    @endforeach
+                                        @foreach ($catagory as $item)
+                                            <option value="{{$item->id}}">{{$item->category_name}}</option>
+                                        @endforeach
                                     @endif
                                 </select>
                                 <div style="color:red;" hidden id="epcatagory"></div>
@@ -457,14 +457,16 @@
                                 <select class="form-select" id="vpcatagory" name="catagory">
                                     <option value="">Select</option>
                                     @if (isset($catagory))
-                                    @foreach ($catagory as $item)
-                                    <option value="{{$item->id}}">{{$item->category_name}}</option>
-                                    @endforeach
+                                        @foreach ($catagory as $item)
+                                            <option value="{{$item->id}}">{{$item->category_name}}</option>
+                                        @endforeach
                                     @endif
                                 </select>
                                 <div style="color:red;" hidden id="vepcountry"></div>
                             </div>
                         </div>
+
+                        <input type="text" name="adminid" hidden value="{{session('adminname')}}" id="vpadminid">
 
                         <div class="mb-3">
                             <label for="exampleInputPassword1" class="form-label">Price</label>
@@ -607,7 +609,7 @@
             });
         }
         // view product
-        function viewproductdata(id, name, description, price, stock, status, image,catagory) {
+        function viewproductdata(id, name, description, price, stock, status, image, catagory) {
             document.getElementById("vpname").value = name;
             document.getElementById("vpdescription").value = description;
             document.getElementById("vpprice").value = price;
@@ -615,7 +617,6 @@
             document.getElementById("vpstatus").value = status;
             document.getElementById('vpimagename').textContent = image;
             document.getElementById("vpid").value = id;
-            console.log(catagory);
             document.getElementById("vpcatagory").value = catagory;
         }
 
@@ -654,8 +655,8 @@
                     producttable();
                 },
                 error: function (e) {
-                  
-                    const data = e['responseJSON']["errors"];
+
+                    const data = e["responseJSON"]["errors"];
                     if (data['name']) {
                         $("#vepname").text(data['name'][0]).removeAttr("hidden");
                     }
@@ -686,8 +687,14 @@
                 document.getElementById('vpstatus').value = "out of stock";
             }
             else {
-                document.getElementById('vpstatus').value = "in stock";
+                if (document.getElementById('vpstock').value > 0) {
+                    document.getElementById('vpstatus').value = "in stock";
+                }
+                else {
+                    document.getElementById('vpstatus').value = "";
+                }
             }
+
         }
         // add product
         $('#addproductmodel').on('hidden.bs.modal', function (e) {
@@ -715,11 +722,17 @@
         })
 
         function statuscheck_addproduct() {
+
             if (document.getElementById('pstock').value == "0") {
                 document.getElementById('pstatus').value = "out of stock";
             }
             else {
-                document.getElementById('pstatus').value = "in stock";
+                if (document.getElementById('pstock').value > 0) {
+                    document.getElementById('pstatus').value = "in stock";
+                }
+                else {
+                    document.getElementById('pstatus').value = "";
+                }
             }
         }
 

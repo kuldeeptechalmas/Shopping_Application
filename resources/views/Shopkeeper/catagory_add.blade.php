@@ -1,25 +1,16 @@
 @extends('Shopkeeper.index')
 
 @section('content_catagory')
-
-    <link href="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.4.1/dist/css/coreui.min.css" rel="stylesheet">
-    <script defer src="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.4.1/dist/js/coreui.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
         integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
-        integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-
     <div>
         Add : <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addcatagory"
             aria-current="page">Catagory</button>
     </div>
     <br>
     <div>
-        Add : <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addsubcatagory"
+        Add : <button type="button" class="btn btn-success" onclick="cleansubcatagory()" data-bs-toggle="modal" data-bs-target="#addsubcatagory"
             aria-current="page">Sub Catagory</button>
     </div>
 
@@ -28,7 +19,7 @@
     </div>
 
     <!--Add Catagory Modal -->
-    <div class="modal fade" id="addcatagory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addcatagory" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -36,7 +27,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" style="margin-right: 10%;margin-left: 9%;">
-                    <form id="catagory-from" enctype="multipart/form-data">
+                    <form enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
                             <label for="exampleInputEmail1" class="form-label">Name </label>
@@ -48,7 +39,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="addcatagory()">save</button>
+                    <button type="button" class="btn btn-primary closemodel" onclick="addcatagory()">save</button>
                 </div>
             </div>
         </div>
@@ -63,7 +54,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" style="margin-right: 10%;margin-left: 9%;">
-                    <form id="catagory-from" enctype="multipart/form-data">
+                    <form enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
                             <label for="exampleInputEmail1" class="form-label">Name </label>
@@ -89,7 +80,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="addsubcatagory()">save</button>
+                    <button type="button" class="btn btn-primary closemodel" onclick="addsubcatagory()">save</button>
                 </div>
             </div>
         </div>
@@ -104,28 +95,64 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" style="margin-right: 10%;margin-left: 9%;">
-                    <form id="catagory-from" enctype="multipart/form-data">
+                    <form enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
                             <label for="exampleInputEmail1" class="form-label">Name </label>
-                            <input type="text" class="form-control" id="vname" name="name" aria-describedby="emailHelp">
+                            <input type="text" class="form-control" id="vcname" name="name" aria-describedby="emailHelp">
+                            <input type="text" class="form-control" hidden id="vcid">
                         </div>
                         <div style="color:red;" id="evcname" hidden></div>
 
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                <label class="form-label" for="form3Example1c">Sub Catagory</label><br>
-                                <span type="text" name="scatagory" id="scatagory" hidden></span>
-                                <div id="subcatagoryidto">
-                                    
-                                </div>
-                            </div>
-                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="addsubcatagory()">save</button>
+                    <button type="button" class="btn btn-primary closemodel" onclick="viewcatagorydata()">save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Sub Catagory Delete Modal -->
+    <div class="modal fade" id="deletesubcatagory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Sub Catagory Delete Modal</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are You Sore This Record Delete
+                    <label id="deletenamesubcatagory" style="font-weight: bold"></label>
+                    <label id="deletesubcatagoryid" hidden></label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger closemodel"
+                        onclick="deleteReacordSubCatagory()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Catagory Delete Modal -->
+    <div class="modal fade" id="deletecatagory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Catagory Delete Modal</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are You Sore This Record Delete
+                    <label id="deletenamecatagory" style="font-weight: bold"></label>
+                    <label id="deletecatagoryid" hidden></label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger closemodel"
+                        onclick="deleteReacordCatagory()">Delete</button>
                 </div>
             </div>
         </div>
@@ -137,27 +164,91 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
 
+        function deletecatagory(id,name) {
+            console.log(name);
+            
+            document.getElementById("deletecatagoryid").textContent = id;
+            document.getElementById("deletenamecatagory").textContent = name;
+        }
+
+        function deleteReacordCatagory()
+        {
+            $.ajax({
+                type: "delete",
+                url: "/catagorydelete",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    deleteid: document.getElementById("deletecatagoryid").textContent
+                },
+                success: function (res) {
+                    console.log(res);
+                    $(".closemodel").prev().trigger('click');
+                    show_catagory();
+                },
+            });
+        }
+
+        // delete sub catagory
+        function removesubcatagory(removeid, name) {
+            document.getElementById("deletesubcatagoryid").textContent = removeid;
+            document.getElementById("deletenamesubcatagory").textContent = name;
+        }
+
+        function deleteReacordSubCatagory() {
+            $.ajax({
+                type: "delete",
+                url: "/subcatagorydelete",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    deleteid: document.getElementById("deletesubcatagoryid").textContent
+                },
+                success: function (res) {
+                    console.log(res);
+                    $(".closemodel").prev().trigger('click');
+                    show_catagory();
+                },
+            });
+
+        }
+
+        // view catagory
         function viewcatagory(name, id) {
-            document.getElementById("vname").value = name;
+            document.getElementById("vcname").value = name;
+            document.getElementById("vcid").value = id;
 
-            var cid = id;
-            console.log(cid);
+        }
 
-           
-            $("#subcatagoryidto").html(`@if (isset($subcata))
-                 @foreach ($subcata as $item)
-                    @if ($item->catagroy_id == `+'cid'+`)
-                        {{$item->name}}
-                     @endif
-                @endforeach
-                <input type="text" value="${id}">
-            @endif`);
-            
-            
-            console.log(html);
-            
+        function viewcatagorydata() {
+            $.ajax({
+                type: "get",
+                url: "/catagoryupdate",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    id: document.getElementById("vcid").value,
+                    name: document.getElementById("vcname").value,
+                },
+                success: function (res) {
+                    console.log(res);
+                    $(".closemodel").prev().trigger('click');
+                    show_catagory();
+                },
+                error: function (e) {
+                    const data = e["responseJSON"]["errors"];
+                    console.log(e);
 
-            }
+                    if (data["category_name"]) {
+                        $("#evcname").text(data["category_name"]["0"]).removeAttr("hidden");
+                    }
+
+                }
+            });
+        }
 
         // add sub catagory
         function addsubcatagory() {
@@ -173,8 +264,7 @@
                 },
                 success: function (res) {
                     console.log(res);
-
-                    $("#addsubcatagory").modal("hide");
+                    $(".closemodel").prev().trigger('click');
                     show_catagory();
                 },
                 error: function (e) {
@@ -191,11 +281,15 @@
             })
         }
 
-        $("#addsubcatagory").on("click", function () {
-            // document.getElementById("scname").value = "";
+        function cleansubcatagory() {
+            console.log("show all");
+            
+            show_catagory();
+            document.getElementById("scname").value = "";
+            document.getElementById("sccatagory").value = "";
             $("#escname").attr("hidden", true);
             $("#esccatagory").attr("hidden", true);
-        })
+        }
 
         // add catagory
         function addcatagory() {
@@ -210,7 +304,7 @@
                     name: document.getElementById("cname").value
                 },
                 success: function (res) {
-                    $("#addcatagory").modal("hide");
+                    $(".closemodel").prev().trigger('click');
                     show_catagory();
                 },
                 error: function (e) {

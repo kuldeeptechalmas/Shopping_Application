@@ -126,8 +126,6 @@ class CustomerController extends Controller
                 "password" => "required",
             ]);
 
-
-
             $customer = CustomerAndShopkeeper::where("email", $request->email)->first();
             $admin = Admin::where("email", $request->email)->first();
 
@@ -148,7 +146,7 @@ class CustomerController extends Controller
                     return redirect()->back()->with("notfound", $customer->rols . " not found")->withInput();
                 }
             }
-
+// dd(Crypt::decryptString($customer->password));
             if ($request->password != Crypt::decryptString($customer->password)) {
                 return redirect()->back()->with("passworderror", "The password is Invalid password")->withInput();
             }
@@ -216,7 +214,6 @@ class CustomerController extends Controller
             "gender" => "required",
         ]);
 
-
         $customer = CustomerAndShopkeeper::where("email", $request->email)->first();
 
         $customer->update([
@@ -231,7 +228,6 @@ class CustomerController extends Controller
             "pincode" => $request->pincode,
             "gender" => $request->gender,
         ]);
-
 
         Session::put("customerid", $request->name);
 
