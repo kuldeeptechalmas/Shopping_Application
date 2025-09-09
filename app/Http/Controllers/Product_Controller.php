@@ -160,6 +160,7 @@ class Product_Controller extends Controller
 
     public function product_search(Request $request)
     {
+        
         $user = CustomerAndShopkeeper::where("email", Session::get("shopkeeperemail"))->first();
 
         if (isset($request->catagoryid)) {

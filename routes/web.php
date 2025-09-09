@@ -33,6 +33,7 @@ Route::get('/shopkeeperdashboard', [ShopkeeperController::class, 'dashboard'])->
 Route::get('/shopkeeperuser', [ShopkeeperController::class, "profileuser"]);
 Route::post('/shopkeeperupdate', [ShopkeeperController::class, "updateuser"]);
 Route::get('/shopkeeperprofile/{shopkeeperid}', [ShopkeeperController::class, "shopkeeper_profile"]);
+Route::match(["post","get"],'/shopkeeperchangepassword/{shopkeeperid}', [ShopkeeperController::class, "shopkeeper_change_password"]);
 
 
 // Admin Route

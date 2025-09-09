@@ -17,9 +17,7 @@ class ShopkeeperController extends Controller
     {
         $catagory = CategoryProduct::all();
         // return view("Admin.index",["catagory"=> $catagory]);
-        $content = File::get(public_path('countries.json'));
-        $contrylist = json_decode($content, true);
-        return view("Shopkeeper.index", compact("contrylist"),["catagory"=> $catagory]);
+        return view("Shopkeeper.index",["catagory"=> $catagory,"showallrecord"=>"yes"]);
     }
     public function profileuser(Request $request)
     {
@@ -92,8 +90,55 @@ class ShopkeeperController extends Controller
 
     public function shopkeeper_profile($shopkeeper_email)
     {
+        // contry data
+        $content = File::get(public_path('countries.json'));
+        $contrylist = json_decode($content, true);
+        
+        // profile user
         $shopkeeper_profile=CustomerAndShopkeeper::where("email",$shopkeeper_email)->first();
-        return view("Shopkeeper.Profile.shopkeeperprofile",["shopkeeper_profile"=>$shopkeeper_profile]);
+        $shopkeeper_profile->password= Crypt::decryptString($shopkeeper_profile->password);
+
+        // all catagory
+        $catagory = CategoryProduct::all();
+
+        return view("Shopkeeper.Profile.shopkeeperprofile",["catagory"=> $catagory,"contrylist"=>$contrylist,"shopkeeper_profile"=>$shopkeeper_profile]);
     }
 
+    public function shopkeeper_change_password($shopkeeper_email,Request $request)
+    {
+        // all catagory
+        $catagory = CategoryProduct::all();
+
+        // profile user
+        $shopkeeper_profile=CustomerAndShopkeeper::where("email",$shopkeeper_email)->first();
+        $shopkeeper_profile->password= Crypt::decryptString($shopkeeper_profile->password);
+
+        if($request->isMethod("post"))
+        {
+            $request->validate([
+                "oldpassword"=>"required",
+                "newpassword"=>"required",
+                "confpassword"=>"required|same:newpassword",
+            ],[
+                "oldpassword.required"=>"Enter Old Password are Required",
+                "newpassword.required"=>"Enter New Password are Required",
+                "confpassword.required"=>"Enter Conform Password are Required",
+                "confpassword.same"=>"Enter Password are Not Match to New Password",
+            ]);
+
+            $shopkeeperdata= CustomerAndShopkeeper::where("email",$shopkeeper_email)->first();
+            // $data_password=
+            // dd($request->oldpassword);
+            if(Crypt::decryptString($shopkeeperdata->password)==$request->oldpassword)
+            {
+                $shopkeeperdata->password=Crypt::encryptString($request->confpassword);
+                $shopkeeperdata->save();
+            }
+
+            return view("Shopkeeper.Profile.changepassword",["successupdate"=>"yes","catagory"=> $catagory,"shopkeeper_data"=>$shopkeeper_profile]);
+        }
+        
+
+        return view("Shopkeeper.Profile.changepassword",["catagory"=> $catagory,"shopkeeper_data"=>$shopkeeper_profile]);
+    }
 }

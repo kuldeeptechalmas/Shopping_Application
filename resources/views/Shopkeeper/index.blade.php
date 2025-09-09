@@ -111,10 +111,10 @@
         border-color: var(--cui-btn-active-border-color); */
     }
 
-    .btn:first-child:active{
+    .btn:first-child:active {
         color: var(--cui-btn-active-color);
-    background-color: var(--cui-btn-active-bg);
-    border-color: var(--cui-btn-active-border-color);
+        background-color: var(--cui-btn-active-bg);
+        border-color: var(--cui-btn-active-border-color);
     }
 </style>
 
@@ -145,12 +145,17 @@
                             style="right: 0px; width: 170px; background: white;border-radius: 15px;">
 
                             <div style="padding: 10px; border-bottom: 1px solid #555;">
-                                <a style="text-decoration: none;  color: #000;" href="/shopkeeperprofile/{{session('shopkeeperemail')}}">
+                                <a style="text-decoration: none;  color: #000;"
+                                    href="/shopkeeperprofile/{{session('shopkeeperemail')}}">
                                     Profile
                                 </a>
                             </div>
-
-                            <div style="padding: 10px; border-bottom: 1px solid #555;">Change Password</div>
+                            <div style="padding: 10px; border-bottom: 1px solid #555;">
+                                <a style="text-decoration: none;  color: #000;"
+                                    href="/shopkeeperchangepassword/{{session('shopkeeperemail')}}">
+                                    Change Password
+                                </a>
+                            </div>
 
                             <a style="text-decoration: none;  color: #000;" href="/logout">
                                 <div style="padding: 10px;color:red;">
@@ -168,8 +173,10 @@
         <div class="sidebar sidebar-white sidebar-fixed" id="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-brand">
+                    <a href="/shopkeeperdashboard">
                     <img style="width: 100%; height: 100%; object-fit: cover;"
                         src="{{ asset('storage/UploadeFile/logo.png') }}" alt="Image">
+                        </a>
                 </div>
             </div>
             <ul class="sidebar-nav">
@@ -212,16 +219,18 @@
                 <div class="container-lg" id="producttablediv" style="margin-top: 30px;">
 
                     @yield('content')
-                    <div id="producttable">
+                    @if (isset($showallrecord))
+                        <div id="producttable">
 
-                    </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Update User Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    {{-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" style="margin-left: 57%;margin-top: 14%;">
                 <div class="modal-header">
@@ -229,134 +238,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="mx-1 mx-md-4" method="post" action="/registration">
-                        @csrf
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                <label class="form-label" for="form3Example1c">Your Name</label>
-                                <input type="text" id="name" value="{{old('name')}}" name='name' class="form-control" />
 
-                                <div style="color:red;" id="ename" hidden></div>
-
-                            </div>
-                        </div>
-
-                        <input type="text" name="rols" id="roles" hidden>
-
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                <label class="form-label" for="form3Example1c">Phone No</label>
-                                <input type="text" id="phone" value="{{old('phone')}}" name="phone"
-                                    class="form-control" />
-
-                                <div style="color:red;" id="ephone" hidden></div>
-
-                            </div>
-                        </div>
-
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                <label class="form-label" for="form3Example1c">Gender</label>
-                                <input type="radio" id="gender1" value="male" name="gender" {{old('gender') == 'male' ? 'checked' : '' }} />Male
-                                <input type="radio" id="gender2" value="female" name="gender" {{old('gender') == 'female' ? 'checked' : '' }} />Female<div style="color:red;" id="egender" hidden></div>
-
-                            </div>
-                        </div>
-
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                <label class="form-label" for="form3Example1c">Address</label>
-                                <input type="text" id="address" value="{{old('address')}}" name="address"
-                                    class="form-control" />
-                                <div style="color:red;" id="eaddress" hidden></div>
-                            </div>
-                        </div>
-
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                <label class="form-label" for="form3Example1c">Country</label>
-                                <select class="form-select" id="country" value="{{old('country')}}" name="country">
-                                    <option>Select</option>
-                                    @if (isset($contrylist))
-                                        @foreach ($contrylist as $item)
-                                            <option value={{$item['id']}} {{old('country') == $item['id'] ? 'selected' : ''}}>
-                                                {{$item['name']}}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                                @error('country')
-                                    <div style="color:red;">{{$message}}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                <label class="form-label" for="state">State</label>
-                                <select class="form-select" id="state" value="{{old('state')}}" name="state">
-                                </select>
-                                @error('state')
-                                    <div style="color:red;">{{$message}}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                <label class="form-label" for="form3Example1c">City</label>
-                                <select placeholder="Select" class="form-select" id="city" value="{{old('city')}}"
-                                    name="city">
-                                </select>
-                                @error('city')
-                                    <div style="color:red;">{{$message}}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                <label class="form-label" for="form3Example1c">Pincode</label>
-                                <input type="text" id="pincode" value="{{old('pincode')}}" name="pincode"
-                                    class="form-control" />
-                                <div style="color:red;" id="epincode" hidden></div>
-                            </div>
-                        </div>
-
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                <label class="form-label" for="form3Example3c">Your Email</label>
-                                <input type="text" id="email" value="{{old('email')}}" name="email"
-                                    class="form-control" />
-                                <div style="color:red;" id="eemail" hidden></div>
-                            </div>
-                        </div>
-
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
-                                <label class="form-label" for="form3Example4c">Password</label>
-                                <input type="password" id="password" name="password" class="form-control" />
-                                <i class="fa-solid fa-eye" id="passwordshow"
-                                    style="position:absolute;top: 62%;right: 5%;" onclick="passwordshow()"></i>
-                                <i class="fa-solid fa-eye-slash" hidden id="passwordhidden"
-                                    style="position:absolute;top: 62%;right: 5%;" onclick="passwordhidden()"></i>
-                            </div>
-                        </div>
-                        <input type="text" name="id" id="id" hidden>
-                        <div style="color:red;" id="epassword" hidden></div>
-
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
-                                <label class="form-label" for="form3Example4cd">Repeat your
-                                    password</label>
-                                <input type="password" id="conpassword" name="conformpassword" class="form-control" />
-                                <i class="fa-solid fa-eye" id="conformpasswordshow"
-                                    style="position:absolute;top: 62%;right: 5%;" onclick="conformpasswordshow()"></i>
-                                <i class="fa-solid fa-eye-slash" hidden id="conformpasswordhidden"
-                                    style="position:absolute;top: 62%;right: 5%;" onclick="conformpasswordhidden()"></i>
-                            </div>
-                        </div>
-                        <div style="color:red;" id="econpassword" hidden></div>
-                    </form>
                 </div>
                 <div class="modal-footer">
                     <form action="/logout" method="get">
@@ -370,7 +252,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!--Add Product Modal -->
     <div class="modal fade" id="addproductmodel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -463,7 +345,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" style="margin-right: 10%;margin-left: 9%;" id="viewmodelform">
-
+                    {{-- body other page "viewproduct.blade.php" --}}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -524,6 +406,8 @@
                     catagoryid: "{{isset($catagoryid) ? $catagoryid : ''}}"
                 },
                 success: function (res) {
+                    
+                    
                     $("#producttable").html(res);
                 },
                 error: function (e) {
@@ -547,6 +431,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function (res) {
+                    console.log(res.length);
                     $("#producttable").html(res);
                 },
                 error: function (e) {
@@ -723,101 +608,6 @@
         $(document).ready(function () {
             showproduct();
         });
-
-        // user get profile
-        // function getuserdataprofile() {
-
-        //     $("#ename").attr("hidden", true);
-        //     $("#estate").attr("hidden", true);
-        //     $("#epincode").attr("hidden", true);
-        //     $("#ephone").attr("hidden", true);
-        //     $("#epassword").attr("hidden", true);
-        //     $("#eemail").attr("hidden", true);
-        //     $("#ecountry").attr("hidden", true);
-        //     $("#econpassword").attr("hidden", true);
-        //     $("#ecity").attr("hidden", true);
-        //     $("#egender").attr("hidden", true);
-        //     $("#eaddress").attr("hidden", true);
-
-        //     $.ajax({
-        //         type: 'GET',
-        //         url: "/shopkeeperuser",
-        //         data: { shopkeeperemail: "{{session('shopkeeperemail')}}" },
-        //         success: function (res) {
-
-        //             if (res['gender'] == "male") {
-        //                 document.getElementById('gender1').checked = true;
-        //             }
-        //             else {
-        //                 document.getElementById('gender2').checked = true;
-        //             }
-        //             document.getElementById('name').value = res['name'];
-        //             document.getElementById('phone').value = res['phone'];
-        //             document.getElementById('email').value = res['email'];
-        //             document.getElementById('pincode').value = res['pincode'];
-        //             document.getElementById('address').value = res['address'];
-        //             document.getElementById('password').value = res['password'];
-        //             document.getElementById('conpassword').value = res['password'];
-        //             document.getElementById('country').value = res['country'];
-        //             document.getElementById('id').value = res['id'];
-
-        //             var oldcountry = res['country'];
-
-        //             if (oldcountry) {
-        //                 var oldstate = res['state'];
-        //                 const selectElement = $('#state');
-        //                 selectElement.empty();
-        //                 $.ajax({
-        //                     type: "get",
-        //                     url: "/getstate",
-        //                     data: {
-        //                         data: $('#country').val(),
-        //                     },
-        //                     success: function (res) {
-        //                         $("#state").append(`<option value="">Select</option>`);
-        //                         $.each(res["statelist"], function (indexInArray, valueOfElement) {
-        //                             var selectstate = (oldstate == valueOfElement["id"]) ? "selected" : "";
-        //                             $("#state").append(`<option value="${valueOfElement["id"]}" ${selectstate} >${valueOfElement["name"]}</option>`);
-        //                         });
-        //                     },
-        //                     error: function (e) {
-        //                         console.log(e);
-
-        //                     },
-        //                 })
-        //                 if (oldstate) {
-        //                     var oldcity = res['city'];
-        //                     const selectElement = $('#city');
-        //                     selectElement.empty();
-        //                     $.ajax({
-        //                         type: "get",
-        //                         url: "/getcity",
-        //                         data: {
-        //                             data: oldstate,
-        //                         },
-        //                         success: function (res) {
-        //                             $("#city").append(`<option value="">Select</option>`);
-        //                             $.each(res["citylist"], function (indexInArray, valueOfElement) {
-        //                                 var selectcity = (oldcity == valueOfElement["id"]) ? "selected" : "";
-        //                                 $("#city").append(`<option value="${valueOfElement["id"]}" ${selectcity}>${valueOfElement["name"]}</option>`);
-
-        //                             });
-
-        //                         },
-        //                         error: function (e) {
-        //                             console.log(e);
-
-        //                         },
-        //                     })
-        //                 }
-        //             }
-
-        //         },
-        //         error: function (e) {
-        //             console.error("Error:", e);
-        //         }
-        //     });
-        // }
 
         function statuscheck_viewproduct() {
             if (document.getElementById('pstock').value == "0") {
