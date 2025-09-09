@@ -32,6 +32,7 @@ Route::get('/getcountry', [CustomerController::class, "getcountry"]);
 Route::get('/shopkeeperdashboard', [ShopkeeperController::class, 'dashboard'])->name('shopkeeperdashboard')->middleware('shopkeeperCheck');
 Route::get('/shopkeeperuser', [ShopkeeperController::class, "profileuser"]);
 Route::post('/shopkeeperupdate', [ShopkeeperController::class, "updateuser"]);
+Route::get('/shopkeeperprofile/{shopkeeperid}', [ShopkeeperController::class, "shopkeeper_profile"]);
 
 
 // Admin Route
@@ -58,6 +59,7 @@ Route::get('/searchproduct', [Product_Controller::class,'product_search']);
 Route::get('/getproductshopkeeper', [Product_Controller::class,'product_list_get_shopkeeper']);
 Route::get('/productaddshop/{category_name}', [Product_Controller::class,'product_add_show']);
 Route::get('/productdetails/{productid}', [Product_Controller::class,'product_details']);
+Route::get('/productview/{productid}', [Product_Controller::class,'product_view']);
 
 
 // Catagory

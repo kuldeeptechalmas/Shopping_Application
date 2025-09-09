@@ -1,6 +1,6 @@
 @extends('Shopkeeper.index')
 
-@section('productdatail')
+@section('content')
     <style>
         .carousel-control-prev-icon,
         .carousel-control-next-icon{

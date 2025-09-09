@@ -90,4 +90,10 @@ class ShopkeeperController extends Controller
         ]);
     }
 
+    public function shopkeeper_profile($shopkeeper_email)
+    {
+        $shopkeeper_profile=CustomerAndShopkeeper::where("email",$shopkeeper_email)->first();
+        return view("Shopkeeper.Profile.shopkeeperprofile",["shopkeeper_profile"=>$shopkeeper_profile]);
+    }
+
 }

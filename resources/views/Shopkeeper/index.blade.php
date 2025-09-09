@@ -82,10 +82,44 @@
         height: 100px;
         margin-right: 10px;
     }
+
+    /* profile */
+    .hover-trigger {
+        position: relative;
+    }
+
+    .show-on-hover {
+        display: none;
+        position: absolute;
+        top: 100%;
+    }
+
+    .hover-trigger:hover .show-on-hover {
+        display: block;
+        z-index: 9;
+    }
+
+    .btn:focus,
+    .btn:active:focus,
+    .btn.active:focus {
+        box-shadow: none !important;
+        /* color: var(--bs-btn-color);
+        background-color: var(--bs-btn-bg);
+        border-color: var(--bs-btn-bg);
+        color: var(--cui-btn-active-color);
+        background-color: var(--cui-btn-active-bg);
+        border-color: var(--cui-btn-active-border-color); */
+    }
+
+    .btn:first-child:active{
+        color: var(--cui-btn-active-color);
+    background-color: var(--cui-btn-active-bg);
+    border-color: var(--cui-btn-active-border-color);
+    }
 </style>
 
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg navbar-white bg-white">
         <div class="container-fluid">
             <a class="navbar-brand" href="">Navbar</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -95,33 +129,53 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-
-                    </li>
-                    <li class="nav-item">
-
-                    </li>
                 </ul>
+                <div style="margin-right: 60px;">
+                    <form class="d-flex">
+                        <input class="form-control me-2" oninput="searchproduct()" id="searchproductid" type="search"
+                            placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" onclick="searchproduct()" type="button">Search</button>
+                    </form>
+                </div>
                 <form class="d-flex">
+                    <div class="hover-trigger position-relative">
+                        <h3><i class="fa-solid fa-circle-user" style="margin-left: 21%;"></i></h3>
+                        {{session('shopkeeperid')}}
+                        <div class="show-on-hover position-absolute"
+                            style="right: 0px; width: 170px; background: white;border-radius: 15px;">
 
-                    <div>
-                        <h1><i class="fa-solid fa-circle-user" onclick="getuserdataprofile()" data-bs-toggle="modal"
-                                data-bs-target="#exampleModal"></i></h1>{{session('shopkeeperid')}}
+                            <div style="padding: 10px; border-bottom: 1px solid #555;">
+                                <a style="text-decoration: none;  color: #000;" href="/shopkeeperprofile/{{session('shopkeeperemail')}}">
+                                    Profile
+                                </a>
+                            </div>
+
+                            <div style="padding: 10px; border-bottom: 1px solid #555;">Change Password</div>
+
+                            <a style="text-decoration: none;  color: #000;" href="/logout">
+                                <div style="padding: 10px;color:red;">
+                                    Logout
+                                </div>
+                            </a>
+                        </div>
                     </div>
-
                 </form>
             </div>
         </div>
     </nav>
 
     <div class="c-app">
-        <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
+        <div class="sidebar sidebar-white sidebar-fixed" id="sidebar">
             <div class="sidebar-header">
-                <div class="sidebar-brand">Shopping_Application</div>
+                <div class="sidebar-brand">
+                    <img style="width: 100%; height: 100%; object-fit: cover;"
+                        src="{{ asset('storage/UploadeFile/logo.png') }}" alt="Image">
+                </div>
             </div>
             <ul class="sidebar-nav">
                 <li class="nav-item">
-                    <a class="nav-link">
+
+                    <a class="nav-link" id="showProductdiv">
                         <i class="nav-icon cil-speedometer"></i> Products
                         <i class="fa-solid fa-chevron-down" id="showProduct" style="margin-left: 41%;"></i>
                         <i class="fa-solid fa-chevron-up" id="hideProduct" style="margin-left: 41%;" hidden></i>
@@ -155,28 +209,13 @@
                 <div class="container-lg" id="usertable">
 
                 </div>
-                <div class="container-lg" id="producttablediv">
+                <div class="container-lg" id="producttablediv" style="margin-top: 30px;">
 
                     @yield('content')
-                    @if (isset($subcatagory))
-                        <form class="d-flex" style="margin-bottom: 23px;width: 52%;">
-                            <input class="form-control me-2" oninput="searchproduct()" id="searchproductid" type="search"
-                                placeholder="Search" aria-label="Search">
-                            <button class="btn btn-outline-success" onclick="searchproduct()" type="button">Search</button>
-                        </form>
-                        <div id="producttable">
+                    <div id="producttable">
 
-                        </div>
-                    @elseif (isset($cetagoryexist))
-                        @yield('content_catagory')
-                    @elseif (isset($productdatails))
-                        @yield('productdatail')
-                    @else
-                        <h1 style="margin-left: 23%;margin-top: 15%;">welcome to shopkeeper</h1>
-                    @endif
-
+                    </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -423,78 +462,8 @@
                     <h1 class="modal-title fs-5" id="exampleModalLabel">View Product</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" style="margin-right: 10%;margin-left: 9%;">
-                    <form id="view-product-from" enctype="multipart/form-data">
-                        @csrf
-                        <input type="text" name="id" id="vpid" hidden>
-                        <div class="mb-3">
-                            <label for="exampleInputEmail1" class="form-label">Name </label>
-                            <input type="text" class="form-control" id="vpname" name="name"
-                                aria-describedby="emailHelp">
-                        </div>
-                        <div style="color:red;" id="vepname" hidden></div>
+                <div class="modal-body" style="margin-right: 10%;margin-left: 9%;" id="viewmodelform">
 
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Description</label>
-                            <textarea type="text" style="resize: none;" rows="5" class="form-control" id="vpdescription"
-                                name="description"></textarea>
-                        </div>
-                        <div style="color:red;" id="vepdescription" hidden></div>
-
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                <label class="form-label" for="form3Example1c">Sub-Catagory</label>
-                                <select class="form-select" id="vpcatagory" name="catagory">
-                                    <option value="">Select</option>
-                                    @if (isset($subcatagory))
-                                        @foreach ($subcatagory as $item)
-                                            <option value="{{$item->id}}">{{$item->name}}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                                <div style="color:red;" hidden id="vepcatagory"></div>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Price</label>
-                            <input type="text" class="form-control" id="vpprice" name="price">
-                        </div>
-                        <div style="color:red;" id="vepprice" hidden></div>
-
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Stock</label>
-                            <input type="text" class="form-control" id="vpstock" oninput="statuscheck_viewproduct()"
-                                name="stock">
-                        </div>
-                        <div style="color:red;" id="vepstock" hidden></div>
-
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Image</label>
-                            <div class="form-group">
-                                {{-- <input type="file" id="file-input" multiple> --}}
-                                <input type="file" name="file[]" multiple id="file" class="input-file">
-                                <div id="preview-container"></div>
-                                <label for="file" class="btn btn-tertiary js-labelFile" style="width:100%">
-                                    <i class="icon fa fa-check"></i>
-                                    <span class="js-fileName" id="vpimagename">Choose a file : </span>
-                                </label>
-                            </div>
-                            <div id="showimage" style="margin-top: 21px;"></div>
-                        </div>
-                        <div style="color:red;" id="vepimage" hidden></div>
-
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Status</label>
-                            <select class="form-select" id="vpstatus" name="status">
-                                <option value="">Select</option>
-                                <option value="in stock">in stock</option>
-                                <option value="out of stock">out of stock</option>
-                            </select>
-                        </div>
-                        <div style="color:red;" id="vepstatus" hidden></div>
-
-                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -586,14 +555,16 @@
             });
         }
 
-        $("#showProduct").on("click", function () {
+        $("#showProductdiv").on("click", function () {
             $("#product1").removeAttr("hidden");
             $("#hideProduct").removeAttr("hidden");
             $("#showProduct").attr("hidden", true);
 
         })
         $("#hideProduct").on("click", function () {
-            $("#product1").attr("hidden", true);
+            console.log("hide");
+
+            // $("#product1").attr("hidden", true);
             $("#showProduct").removeAttr("hidden");
             $("#hideProduct").attr("hidden", true);
         })
@@ -628,34 +599,18 @@
 
 
         // view product 
-        function viewproductdata(id, name, description, price, stock, status, image, subcatagory, adminid) {
-
-            document.getElementById("vpname").value = name;
-            document.getElementById("vpdescription").value = description;
-            document.getElementById("vpprice").value = price;
-            document.getElementById("vpstock").value = stock;
-            document.getElementById("vpstatus").value = status;
-
-            console.log(image.length);
-            if (image.length == 2) {
-                $("#vpimagename").html("Choce file ");
-            }
-            else {
-                $("#vpimagename").html("");
-                $.each(JSON.parse(image), function (index, item) {
-                    $("#vpimagename").append(item.image_name + ",");
-                    // $("#showimage").append(`<img style="height: 100px"
-                    // src="{{ asset('storage/UploadeFile/' . '${item.image_name}') }}" alt="Image">`);
-                });
-            }
-
-
-            document.getElementById("vpid").value = id;
-            document.getElementById("vpcatagory").value = subcatagory;
-
-            if (adminid != 0) {
-                toastr.warning('Admin can change Product Detail');
-            }
+        // done
+        function viewproduct_productshow(productid) {
+            $.ajax({
+                type: "get",
+                url: "/productview/" + productid,
+                success: function (res) {
+                    $("#viewmodelform").html(res);
+                },
+                error: function (e) {
+                    console.log(e);
+                }
+            })
 
         }
 
@@ -741,9 +696,10 @@
             });
             $("#preview-container").on("click", ".delete", function () {
                 $(this).parent(".preview").remove();
-                $("#file-input").val(""); // Clear input value if needed
+                $("#file-input").val("");
             });
         });
+
         (function () {
 
             'use strict';
@@ -756,126 +712,112 @@
                 $input.on('change', function (element) {
                     var fileName = '';
                     if (element.target.value) fileName = element.target.value.split('\\').pop();
-                    console.log(element.target.value);
+                    console.log(fileName);
 
-                    var value = $('#file').val();
-                    console.log(value);
-
-                    var images = value.$('img');
-                    var srcList = [];
-                    console.log(images);
-
-                    for (var i = 0; i < images.length; i++) {
-                        srcList.push(images[i].src);
-                    }
-
-                    fileName ? $label.addClass('has-file').find('.js-fileName').html(fileName) : $label.removeClass('has-file').html(labelVal);
-                    fileName ? $label.addClass('has-file').find('.js-fileName').html(fileName) : $label.removeClass('has-file').html(labelVal);
-
+                    fileName ? $label.addClass('has-file').find('.js-fileName').html(fileName) : $label.removeClass('has-file').html("labelVal");
                 });
             });
 
         })();
 
         $(document).ready(function () {
-            getuserdataprofile();
             showproduct();
         });
 
         // user get profile
-        function getuserdataprofile() {
+        // function getuserdataprofile() {
 
-            $("#ename").attr("hidden", true);
-            $("#estate").attr("hidden", true);
-            $("#epincode").attr("hidden", true);
-            $("#ephone").attr("hidden", true);
-            $("#epassword").attr("hidden", true);
-            $("#eemail").attr("hidden", true);
-            $("#ecountry").attr("hidden", true);
-            $("#econpassword").attr("hidden", true);
-            $("#ecity").attr("hidden", true);
-            $("#egender").attr("hidden", true);
-            $("#eaddress").attr("hidden", true);
+        //     $("#ename").attr("hidden", true);
+        //     $("#estate").attr("hidden", true);
+        //     $("#epincode").attr("hidden", true);
+        //     $("#ephone").attr("hidden", true);
+        //     $("#epassword").attr("hidden", true);
+        //     $("#eemail").attr("hidden", true);
+        //     $("#ecountry").attr("hidden", true);
+        //     $("#econpassword").attr("hidden", true);
+        //     $("#ecity").attr("hidden", true);
+        //     $("#egender").attr("hidden", true);
+        //     $("#eaddress").attr("hidden", true);
 
-            $.ajax({
-                type: 'GET',
-                url: "/shopkeeperuser",
-                data: { shopkeeperemail: "{{session('shopkeeperemail')}}" },
-                success: function (res) {
+        //     $.ajax({
+        //         type: 'GET',
+        //         url: "/shopkeeperuser",
+        //         data: { shopkeeperemail: "{{session('shopkeeperemail')}}" },
+        //         success: function (res) {
 
-                    if (res['gender'] == "male") {
-                        document.getElementById('gender1').checked = true;
-                    }
-                    else {
-                        document.getElementById('gender2').checked = true;
-                    }
-                    document.getElementById('name').value = res['name'];
-                    document.getElementById('phone').value = res['phone'];
-                    document.getElementById('email').value = res['email'];
-                    document.getElementById('pincode').value = res['pincode'];
-                    document.getElementById('address').value = res['address'];
-                    document.getElementById('password').value = res['password'];
-                    document.getElementById('conpassword').value = res['password'];
-                    document.getElementById('country').value = res['country'];
-                    document.getElementById('id').value = res['id'];
+        //             if (res['gender'] == "male") {
+        //                 document.getElementById('gender1').checked = true;
+        //             }
+        //             else {
+        //                 document.getElementById('gender2').checked = true;
+        //             }
+        //             document.getElementById('name').value = res['name'];
+        //             document.getElementById('phone').value = res['phone'];
+        //             document.getElementById('email').value = res['email'];
+        //             document.getElementById('pincode').value = res['pincode'];
+        //             document.getElementById('address').value = res['address'];
+        //             document.getElementById('password').value = res['password'];
+        //             document.getElementById('conpassword').value = res['password'];
+        //             document.getElementById('country').value = res['country'];
+        //             document.getElementById('id').value = res['id'];
 
-                    var oldcountry = res['country'];
+        //             var oldcountry = res['country'];
 
-                    if (oldcountry) {
-                        var oldstate = res['state'];
-                        const selectElement = $('#state');
-                        selectElement.empty();
-                        $.ajax({
-                            type: "get",
-                            url: "/getstate",
-                            data: {
-                                data: $('#country').val(),
-                            },
-                            success: function (res) {
-                                $("#state").append(`<option value="">Select</option>`);
-                                $.each(res["statelist"], function (indexInArray, valueOfElement) {
-                                    var selectstate = (oldstate == valueOfElement["id"]) ? "selected" : "";
-                                    $("#state").append(`<option value="${valueOfElement["id"]}" ${selectstate} >${valueOfElement["name"]}</option>`);
-                                });
-                            },
-                            error: function (e) {
-                                console.log(e);
+        //             if (oldcountry) {
+        //                 var oldstate = res['state'];
+        //                 const selectElement = $('#state');
+        //                 selectElement.empty();
+        //                 $.ajax({
+        //                     type: "get",
+        //                     url: "/getstate",
+        //                     data: {
+        //                         data: $('#country').val(),
+        //                     },
+        //                     success: function (res) {
+        //                         $("#state").append(`<option value="">Select</option>`);
+        //                         $.each(res["statelist"], function (indexInArray, valueOfElement) {
+        //                             var selectstate = (oldstate == valueOfElement["id"]) ? "selected" : "";
+        //                             $("#state").append(`<option value="${valueOfElement["id"]}" ${selectstate} >${valueOfElement["name"]}</option>`);
+        //                         });
+        //                     },
+        //                     error: function (e) {
+        //                         console.log(e);
 
-                            },
-                        })
-                        if (oldstate) {
-                            var oldcity = res['city'];
-                            const selectElement = $('#city');
-                            selectElement.empty();
-                            $.ajax({
-                                type: "get",
-                                url: "/getcity",
-                                data: {
-                                    data: oldstate,
-                                },
-                                success: function (res) {
-                                    $("#city").append(`<option value="">Select</option>`);
-                                    $.each(res["citylist"], function (indexInArray, valueOfElement) {
-                                        var selectcity = (oldcity == valueOfElement["id"]) ? "selected" : "";
-                                        $("#city").append(`<option value="${valueOfElement["id"]}" ${selectcity}>${valueOfElement["name"]}</option>`);
+        //                     },
+        //                 })
+        //                 if (oldstate) {
+        //                     var oldcity = res['city'];
+        //                     const selectElement = $('#city');
+        //                     selectElement.empty();
+        //                     $.ajax({
+        //                         type: "get",
+        //                         url: "/getcity",
+        //                         data: {
+        //                             data: oldstate,
+        //                         },
+        //                         success: function (res) {
+        //                             $("#city").append(`<option value="">Select</option>`);
+        //                             $.each(res["citylist"], function (indexInArray, valueOfElement) {
+        //                                 var selectcity = (oldcity == valueOfElement["id"]) ? "selected" : "";
+        //                                 $("#city").append(`<option value="${valueOfElement["id"]}" ${selectcity}>${valueOfElement["name"]}</option>`);
 
-                                    });
+        //                             });
 
-                                },
-                                error: function (e) {
-                                    console.log(e);
+        //                         },
+        //                         error: function (e) {
+        //                             console.log(e);
 
-                                },
-                            })
-                        }
-                    }
+        //                         },
+        //                     })
+        //                 }
+        //             }
 
-                },
-                error: function (e) {
-                    console.error("Error:", e);
-                }
-            });
-        }
+        //         },
+        //         error: function (e) {
+        //             console.error("Error:", e);
+        //         }
+        //     });
+        // }
 
         function statuscheck_viewproduct() {
             if (document.getElementById('pstock').value == "0") {

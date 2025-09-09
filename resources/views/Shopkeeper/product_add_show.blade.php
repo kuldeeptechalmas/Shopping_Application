@@ -19,6 +19,7 @@
 @endsection
 
 @section('content')
+
     <h1>product</h1>
     <a type="button" class="btn btn-primary" style="margin-left: 86%;" data-bs-toggle="modal"
         data-bs-target="#addproductmodel" aria-current="page">Add Product</a>

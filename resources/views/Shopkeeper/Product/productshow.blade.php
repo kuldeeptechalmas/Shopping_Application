@@ -68,10 +68,7 @@
                 </div>
 
                 <div class="d-flex justify-content-between ps-3 pe-3" style="margin-bottom: 15px;">
-                    <button type="button" class="btn btn-primary" style=""
-                        onclick="viewproductdata('{{$item->id}}','{{$item->name}}','{{$item->description}}','{{$item->price}}',
-                                                                    '{{$item->stock}}','{{$item->status}}','{{$item->images}}','{{$item->sub_category_id }}','{{$item->admin_id}}')"
-                        data-bs-toggle="modal" data-bs-target="#viewproductmodel">
+                    <button type="button" onclick="viewproduct_productshow('{{$item->id}}')" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewproductmodel">
                         Edit
                     </button>
                     <button type="button" class="btn btn-danger text-white" style=""
@@ -83,7 +80,9 @@
             </div>
         @endforeach
     </div>
+    <div class="paginationDiv" style="margin-right: 73%;">
+        {{ $data->links('pagination::bootstrap-5') }}
+    </div>
+@else
+    <div>Not Found Product Data</div>
 @endif
-<div class="paginationDiv" style="margin-right: 73%;">
-    {{ $data->links('pagination::bootstrap-5') }}
-</div>

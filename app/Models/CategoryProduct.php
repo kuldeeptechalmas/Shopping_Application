@@ -15,6 +15,7 @@ class CategoryProduct extends Model
         "category_name",
     ];
 
+    
 
 
 }
