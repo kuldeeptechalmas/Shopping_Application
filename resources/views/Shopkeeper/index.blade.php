@@ -431,7 +431,8 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function (res) {
-                    console.log(res.length);
+                    console.log(res);
+                    
                     $("#producttable").html(res);
                 },
                 error: function (e) {

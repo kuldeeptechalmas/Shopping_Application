@@ -160,15 +160,21 @@ class Product_Controller extends Controller
 
     public function product_search(Request $request)
     {
-        
+
         $user = CustomerAndShopkeeper::where("email", Session::get("shopkeeperemail"))->first();
 
         if (isset($request->catagoryid)) {
 
             $data1 = Product::where("user_id", $user->id)->where("category_id", $request->catagoryid)->where("name", "like", "%" . $request->searchText . "%")->paginate(10);
+            if ( $data1->count() == 0) {
+            return view("Shopkeeper.Product.notfoundproduct");
+        }
             return view("Shopkeeper.Product.productshow", ["data" => $data1]);
         }
         $data = Product::where("name", "like", "%" . $request->searchText . "%")->paginate(10);
+        if ( $data->count() == 0) {
+            return view("Shopkeeper.Product.notfoundproduct");
+        }
         return view("Shopkeeper.Product.productshow", ["data" => $data]);
     }
 

@@ -51,7 +51,7 @@
 </table> --}}
 
 @if (isset($data))
-    <div class="row">
+    {{-- <div class="row">
         @foreach ($data as $item)
             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 card" style="width: 18rem; margin: 10px;">
                 <a href="/productdetails/{{$item->id}}">
@@ -79,9 +79,18 @@
                 </div>
             </div>
         @endforeach
-    </div>
+    </div> --}}
+    <style>
+        .w-5.h-5{
+            width: 20px;
+        }
+
+        .flex.justify-between.flex-1{
+            display: none;
+        }
+    </style>
     <div class="paginationDiv" style="margin-right: 73%;">
-        {{ $data->links('pagination::bootstrap-5') }}
+        {{ $data->links()}}
     </div>
 @else
     <div>Not Found Product Data</div>
