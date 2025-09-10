@@ -1,32 +1,12 @@
-@extends('Shopkeeper.index')
+@extends('ForgetPassword.emailvarify')
 
 @section('content')
-    @if (isset($successupdate))
-        <div class="alert alert-success" role="alert">
-            Password Successfully Change
-        </div>
-    @endif
-    <form method="post" style="margin-right: 40%;margin-left: 4%;">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <form method="post" action="/forgetpasswords">
         @csrf
-        <h3 style="margin-bottom: 15px;">Change Password</h3>
-        <div class="d-flex flex-row align-items-center mb-4">
-            <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
-                <label class="form-label" for="form3Example4c">Old Password </label>
-                <input type="password" id="password" name="oldpassword" class="form-control"
-                    value="{{old('oldpassword')}}" />
-                <i class="fa-solid fa-eye" id="passwordshow" style="position:absolute;top: 62%;right: 5%;"
-                    onclick="passwordshow()"></i>
-                <i class="fa-solid fa-eye-slash" hidden id="passwordhidden" style="position:absolute;top: 62%;right: 5%;"
-                    onclick="passwordhidden()"></i>
-            </div>
-        </div>
-        @if (session("passworderror"))
-            <div class="text-danger">{{session("passworderror")}}</div><br>
-        @endif
-        @error('oldpassword')
-            <div class="text-danger">{{$message}}</div><br>
-        @enderror
-
+        <h1>Forgot Password</h1>
         <div class="d-flex flex-row align-items-center mb-4">
             <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
                 <label class="form-label" for="form3Example4c">New Password </label>
@@ -57,10 +37,13 @@
             <div class="text-danger">{{$message}}</div><br>
         @enderror
 
-        <input type="submit" class="btn btn-primary" value="Change Password">
+        <div data-mdb-input-init class="form-outline mb-4" style="text-align: center;">
+            <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">
+                Forgot Password
+            </button>
+        </div>
     </form>
-
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
 
         // new password 

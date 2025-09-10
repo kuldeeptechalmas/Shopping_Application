@@ -34,6 +34,11 @@ Route::get('/shopkeeperuser', [ShopkeeperController::class, "profileuser"]);
 Route::post('/shopkeeperupdate', [ShopkeeperController::class, "updateuser"]);
 Route::get('/shopkeeperprofile/{shopkeeperid}', [ShopkeeperController::class, "shopkeeper_profile"]);
 Route::match(["post","get"],'/shopkeeperchangepassword/{shopkeeperid}', [ShopkeeperController::class, "shopkeeper_change_password"]);
+Route::match(["get","post"],'/forgetpasswords', [ShopkeeperController::class, "shopkeeper_forget_password"])->name("forgetpassword");
+Route::get('/viewprofile/{email}', [ShopkeeperController::class, "view_profile"]);
+
+// forgetpassword user
+Route::match(["post","get"],'/forgetpassword', [ShopkeeperController::class, "forget_password"]);
 
 
 // Admin Route

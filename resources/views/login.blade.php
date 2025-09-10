@@ -26,7 +26,7 @@
                     <form method="POST">
                         @csrf
                         <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
-                            <h2 id="rolesname">Sign in </h2> 
+                            <h2 id="rolesname">Sign in </h2>
                         </div>
 
                         <div class="divider d-flex align-items-center my-4">
@@ -73,15 +73,23 @@
                                     @endif
                                 </label>
                             </div>
-                            
+
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <!-- Checkbox -->
+                            <div class="form-check mb-0">
+                                
+                            </div>
+                            <a href="/forgetpassword" class="text-body">Forgot password?</a>
                         </div>
 
                         <div class="text-center text-lg-start mt-4 pt-2">
                             <button type="submit" data-mdb-button-init data-mdb-ripple-init
                                 class="btn btn-primary btn-lg"
                                 style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button>
-                            <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a
-                                    href="/welcome" class="link-danger">Register</a></p>
+                            <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="/welcome"
+                                    class="link-danger">Register</a></p>
                         </div>
 
                     </form>
@@ -99,7 +107,7 @@
 
 
     <script>
-       
+
         // password 
         function passwordshow() {
             $("#passwordhidden").removeAttr("hidden");

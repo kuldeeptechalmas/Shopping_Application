@@ -116,7 +116,7 @@
         background-color: var(--cui-btn-active-bg);
         border-color: var(--cui-btn-active-border-color);
     }
-</style>
+</style>    
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-white bg-white">
@@ -142,26 +142,29 @@
                         <h3><i class="fa-solid fa-circle-user" style="margin-left: 21%;"></i></h3>
                         {{session('shopkeeperid')}}
                         <div class="show-on-hover position-absolute"
-                            style="right: 0px; width: 170px; background: white;border-radius: 15px;">
+                            style="right: 0px; width: 222px; background: white;border-radius: 15px;">
+                            <div class="shadow p-3 bg-body rounded">
 
-                            <div style="padding: 10px; border-bottom: 1px solid #555;">
-                                <a style="text-decoration: none;  color: #000;"
-                                    href="/shopkeeperprofile/{{session('shopkeeperemail')}}">
-                                    Profile
-                                </a>
-                            </div>
-                            <div style="padding: 10px; border-bottom: 1px solid #555;">
-                                <a style="text-decoration: none;  color: #000;"
-                                    href="/shopkeeperchangepassword/{{session('shopkeeperemail')}}">
-                                    Change Password
-                                </a>
-                            </div>
 
-                            <a style="text-decoration: none;  color: #000;" href="/logout">
-                                <div style="padding: 10px;color:red;">
-                                    Logout
+                                <div style="padding: 10px; border-bottom: 1px solid #555;">
+                                    <a style="text-decoration: none;  color: #000;"
+                                        href="/shopkeeperprofile/{{session('shopkeeperemail')}}">
+                                        Profile
+                                    </a>
                                 </div>
-                            </a>
+                                <div style="padding: 10px; border-bottom: 1px solid #555;">
+                                    <a style="text-decoration: none;  color: #000;"
+                                        href="/shopkeeperchangepassword/{{session('shopkeeperemail')}}">
+                                        Change Password
+                                    </a>
+                                </div>
+
+                                <a style="text-decoration: none;  color: #000;" href="/logout">
+                                    <div style="padding: 10px;color:red;">
+                                        Logout
+                                    </div>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -174,9 +177,9 @@
             <div class="sidebar-header">
                 <div class="sidebar-brand">
                     <a href="/shopkeeperdashboard">
-                    <img style="width: 100%; height: 100%; object-fit: cover;"
-                        src="{{ asset('storage/UploadeFile/logo.png') }}" alt="Image">
-                        </a>
+                        <img style="width: 100%; height: 100%; object-fit: cover;"
+                            src="{{ asset('storage/UploadeFile/logo.png') }}" alt="Image">
+                    </a>
                 </div>
             </div>
             <ul class="sidebar-nav">
@@ -406,8 +409,7 @@
                     catagoryid: "{{isset($catagoryid) ? $catagoryid : ''}}"
                 },
                 success: function (res) {
-                    
-                    
+                    console.log(res);
                     $("#producttable").html(res);
                 },
                 error: function (e) {
@@ -432,7 +434,7 @@
                 },
                 success: function (res) {
                     console.log(res);
-                    
+
                     $("#producttable").html(res);
                 },
                 error: function (e) {

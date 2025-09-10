@@ -76,13 +76,14 @@ class Product_Controller extends Controller
 
     public function product_get_all(Request $request)
     {
-        $data = Product::paginate(10);
+        // $data = Product::paginate(10);
 
-        if ($request->ajax()) {
-            return view("Admin.Table.producttable", ["data" => $data, "table" => "product"]);
-        }
+        // if ($request->ajax()) {
+        //     return view("Admin.Table.producttable", ["data" => $data, "table" => "product"]);
+        // }
 
-        return view("Admin.Table.producttable", ["data" => $data]);
+        // return view("Admin.Table.producttable", ["data" => $data]);
+        return view("Admin.Table.productshow");
     }
 
     public function product_edit(Request $request)

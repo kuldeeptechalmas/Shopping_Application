@@ -67,7 +67,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg navbar-white bg-white">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">Navbar</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -93,16 +93,21 @@
     </nav>
 
     <div class="c-app">
-        <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
+        <div class="sidebar sidebar-white sidebar-fixed" id="sidebar">
             <div class="sidebar-header">
-                <div class="sidebar-brand">Shopping_Application</div>
+                <div class="sidebar-brand">
+                    <a href="/admindashboard">
+                        <img style="width: 100%; height: 100%; object-fit: cover;"
+                            src="{{ asset('storage/UploadeFile/logo.png') }}" alt="Image">
+                    </a>
+                </div>
             </div>
             <ul class="sidebar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" onclick="" id="showCustomer">
+                    <a class="nav-link" onclick="showuserdataget()">
                         <i class="nav-icon cil-speedometer"></i> Users
                     </a>
-                    <a class="nav-link" onclick="" id="showProduct">
+                    <a href="/getproductall" class="nav-link">
                         <i class="nav-icon cil-speedometer"></i> Products
                     </a>
                 </li>
@@ -117,10 +122,12 @@
 
             <div class="body flex-grow-1 px-3" style="margin-left: 21%;">
 
-                <div class="container-lg" id="usertable">
+@yield('content')
+                {{-- <div class="container-lg" id="outputoftable">
 
-                </div>
-                <div class="container-lg" id="producttablediv" hidden>
+                </div> --}}
+                {{--
+                <div class="container-lg" id="producttablediv">
                     <h1>Show Product</h1>
                     <button type="button" class="btn btn-primary" style="margin-left: 87%;margin-top: -5%;"
                         data-bs-toggle="modal" data-bs-target="#addproductmodel" aria-current="page">
@@ -134,7 +141,7 @@
                     <div class="container-lg" id="producttable">
 
                     </div>
-                </div>
+                </div> --}}
 
             </div>
         </div>
@@ -558,6 +565,37 @@
             });
 
         })();
+
+        // User data are get all
+        function showuserdataget() {
+            $.ajax({
+                type: "GET",
+                url: "getuserofall",
+                success: function (res) {
+                    $("#outputoftable").html(res);
+                },
+                error: function (e) {
+                    console.log(e);
+                },
+            })
+        }
+        // showuserdataget();
+
+        // Product data are get all
+        function showproductdataget() {
+            $.ajax({
+                type: "GET",
+                url: "getproductall",
+                success: function (res) {
+                    // $("#outputoftable").html(res);
+                    console.log(res);
+                    
+                },
+                error: function (e) {
+                    console.log(e);
+                },
+            })
+        }
 
         // searching product data
         function searchproduct() {
@@ -1117,18 +1155,18 @@
             });
         }
 
-        $('#showCustomer').on('click', function () {
-            console.log("customer");
-            $("#usertable").removeAttr("hidden");
-            $("#producttablediv").attr("hidden", true);
-        });
+        // $('#showCustomer').on('click', function () {
+        //     console.log("customer");
+        //     $("#usertable").removeAttr("hidden");
+        //     $("#producttablediv").attr("hidden", true);
+        // });
 
-        $('#showProduct').on('click', function () {
-            console.log("product");
-            $("#producttablediv").removeAttr("hidden");
-            $("#usertable").attr("hidden", true);
+        // $('#showProduct').on('click', function () {
+        //     console.log("product");
+        //     $("#producttablediv").removeAttr("hidden");
+        //     $("#usertable").attr("hidden", true);
 
-        });
+        // });
 
         // password 
         function passwordshow() {
@@ -1158,35 +1196,6 @@
             document.getElementById('vconpassword').type = 'password';
         }
 
-        //product table data
-        function producttable() {
-            $.ajax({
-                type: "GET",
-                url: "getproductall",
-                success: function (res) {
-                    $("#producttable").html(res);
-                },
-                error: function (e) {
-                    console.log(e);
-                },
-            })
-        }
-        producttable();
-
-        //user table data
-        function usertable() {
-            $.ajax({
-                type: "GET",
-                url: "getuserofall",
-                success: function (res) {
-                    $("#usertable").html(res);
-                },
-                error: function (e) {
-                    console.log(e);
-                },
-            })
-        }
-        usertable();
         getadminprofile();
 
         // admin profile

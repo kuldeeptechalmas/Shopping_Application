@@ -1,5 +1,5 @@
 <div id="dataOutput" class="mt-3" style="">
-    <h1 style="margin-top: -27px;">Show Users</h1>
+    <h1>Show Users</h1>
     <table class="table table-striped" >
         <thead>
             <tr>
