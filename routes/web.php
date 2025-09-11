@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddToCartController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CatagoryController;
 use App\Http\Controllers\CustomerController;
@@ -48,7 +49,9 @@ Route::get('/adminruser', [AdminController::class, "profileuser"]);
 Route::post('/adminupdate', [AdminController::class, "updateuser"]);
 Route::get('/deleterecord', [AdminController::class, "deleterecord"]);
 Route::get('/getuserofall', [AdminController::class, "getuserofall"]);
+Route::get('/admingetuserofall', [AdminController::class, "admin_getuserofall"]);
 Route::post('/adminviewupdate', [AdminController::class, "viewupdateuser"]);
+Route::get('/productdetailsadmin/{productid}', [AdminController::class,'product_details']);
 
 // Error
 Route::get('/error', function(){
@@ -59,6 +62,7 @@ Route::get('/error', function(){
 // Product
 Route::post('/productadd', [Product_Controller::class,'product_add']);
 Route::get('/getproductall', [Product_Controller::class,'product_get_all']);
+Route::get('/admingetproductall', [Product_Controller::class,'Admin_product_get_all']);
 Route::post('/editproduct', [Product_Controller::class,'product_edit']);
 Route::delete('/deleteproduct', [Product_Controller::class,'product_remove']);
 Route::get('/searchproduct', [Product_Controller::class,'product_search']);
@@ -79,3 +83,6 @@ Route::delete('/catagorydelete', [CatagoryController::class,'catagory_delete']);
 Route::post('/subcatagoryadd', [SubCatagoryController::class,'sub_catagory_add']);
 Route::delete('/subcatagorydelete', [SubCatagoryController::class,'sub_catagory_delete']);
 
+// Add To Cart Functionality
+Route::get('/addtocart_desbord/{product_id}', [AddToCartController::class,'index']);
+Route::get('/addtocartget', [AddToCartController::class,'addtocart_get_all']);

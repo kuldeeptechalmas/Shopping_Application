@@ -3,19 +3,16 @@
 @section('content')
 
 <div id="datatable">
-
+hello user
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
-    // $(document).ready(function(){
-    //     showproductdataget();
-    // });
     
     // Product data are get all
-        function showproductdataget() {
+        function showuserdataget() {
             $.ajax({
                 type: "GET",
-                url: "/getproductall",
+                url: "/getuserofall",
                 success: function (res) {
                     
                     $("#datatable").html(res);
@@ -26,8 +23,6 @@
                 },
             })
         }
-        showproductdataget();
-
-        
+        showuserdataget();
 </script>
 @endsection

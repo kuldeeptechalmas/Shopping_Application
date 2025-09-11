@@ -39,7 +39,7 @@
 
         <div data-mdb-input-init class="form-outline mb-4" style="text-align: center;">
             <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">
-                Forgot Password
+                Change Password
             </button>
         </div>
     </form>

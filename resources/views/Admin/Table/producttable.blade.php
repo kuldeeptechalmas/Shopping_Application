@@ -58,11 +58,6 @@
         data-bs-target="#addproductmodel" aria-current="page">
         Add Product
     </button>
-    <form class="d-flex" style="margin-bottom: 23px;width: 52%;">
-        <input class="form-control me-2" oninput="searchproduct()" id="searchproductid" type="search" placeholder="Search"
-            aria-label="Search">
-        <button class="btn btn-outline-success" onclick="searchproduct()" type="button">Search</button>
-    </form>
     <div class="row">
         @foreach ($data as $item)
             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 card" style="width: 18rem; margin: 10px;">

@@ -1,6 +1,6 @@
 <form id="view-product-from" enctype="multipart/form-data">
     @csrf
-    <input type="text" name="id" id="vpid" hidden>
+    <input type="text" name="id" value="{{$product_data->id}}" id="vpid" hidden>
     <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Name </label>
         <input type="text" class="form-control" value="{{$product_data->name}}" id="vpname" name="name" aria-describedby="emailHelp">

@@ -7,6 +7,7 @@ use App\Models\Admin;
 use App\Models\CategoryProduct;
 use App\Models\Customer;
 use App\Models\CustomerAndShopkeeper;
+use App\Models\Product;
 use FFI\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -23,25 +24,28 @@ class AdminController extends Controller
         return view("Admin.index",["catagory"=> $catagory]);
     }
 
-    public function login(Request $request)
-    {
-        if ($request->isMethod("post")) {
-            $validator = $request->validate([
-                "email" => "required",
-                "password" => "required",
-            ]);
+    // public function login(Request $request)
+    // {
+    //     if ($request->isMethod("post")) {
+    //         $validator = $request->validate([
+    //             "email" => "required",
+    //             "password" => "required",
+    //         ],[
+    //             "email.required" => "Enter Email is Required.",
+    //             "password.required" => "Enter Password is Required.",
+    //         ]);
 
-            $admin = Admin::where("email", $request->email)->first();
+    //         $admin = Admin::where("email", $request->email)->first();
 
-            if (empty($admin)) {
-                return redirect()->back()->with("error", "Admin not found");
-            }
+    //         if (empty($admin)) {
+    //             return redirect()->back()->with("error", "Admin not found");
+    //         }
 
 
-            return redirect()->route("admindashboard");
-        }
-        return view('Admin.login');
-    }
+    //         return redirect()->route("admindashboard");
+    //     }
+    //     return view('Admin.login');
+    // }
 
     public function logout(Request $request)
     {
@@ -103,6 +107,10 @@ class AdminController extends Controller
         return response()->json(["data" => "delete"]);
     }
 
+    public function admin_getuserofall(Request $request)
+    {
+        return view("Admin.Table.usershow");
+    }
     public function getuserofall(Request $request)
     {
         $data = CustomerAndShopkeeper::paginate(10);
@@ -136,6 +144,21 @@ class AdminController extends Controller
             "country" => "required",
             "pincode" => "required|numeric|digits:6",
             "gender" => "required",
+        ],[
+            "name.required" => "Enter Name is Required.",
+            'email.required' => "Enter Email is Required.",
+            'email.email' => "Enter Only Email is Required.",
+            "phone.required" => "Enter Phone No. is Required.",
+            "phone.numeric" => "Enter Only Numeric is Required.",
+            "phone.digits" => "Enter 10 Digits is Required.",
+            "address.required" => "Enter Address is Required.",
+            "city.required" => "Enter City is Required.",
+            "state.required" => "Enter State is Required.",
+            "country.required" => "Enter Country is Required.",
+            "pincode.required" => "Enter Pincode is Required.",
+            "pincode.numeric" => "Enter Only Numeric is Required.",
+            "pincode.digits" => "Enter 6 Digits is Required.",
+            "gender.required" => "Enter Name is Required.",
         ]);
 
         $customer = CustomerAndShopkeeper::where("email", $request->email)->first();
@@ -156,5 +179,12 @@ class AdminController extends Controller
         return response()->json([
             'status' => 'success'
         ]);
+    }
+
+    public function product_details($productid)
+    {
+        $catagorydata = CategoryProduct::all();
+        $data = Product::where("id", $productid)->first();
+        return view("Admin.productdetail", ["productdatails" => $data, "catagory" => $catagorydata,]);
     }
 }

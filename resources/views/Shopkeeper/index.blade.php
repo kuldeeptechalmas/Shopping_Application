@@ -116,10 +116,10 @@
         background-color: var(--cui-btn-active-bg);
         border-color: var(--cui-btn-active-border-color);
     }
-</style>    
+</style>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-white bg-white">
+    <nav class="navbar navbar-expand-lg navbar-white bg-white fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="">Navbar</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -130,12 +130,22 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 </ul>
-                <div style="margin-right: 60px;">
-                    <form class="d-flex">
-                        <input class="form-control me-2" oninput="searchproduct()" id="searchproductid" type="search"
-                            placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" onclick="searchproduct()" type="button">Search</button>
-                    </form>
+                <div class="d-flex justify-content-end">
+                    <div class="pe-5">
+                        <form class="d-flex">
+                            <input class="form-control me-2" oninput="searchproduct()" id="searchproductid"
+                                type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-success" onclick="searchproduct()"
+                                type="button">Search</button>
+                        </form>
+                    </div>
+                    <div class="d-flex align-items-center pe-3">
+                        <a href="/addtocartget" style="text-decoration: none ;color: #000;">
+                            <img style="height: 30px; width: 30px; object-fit: contain;"
+                            src="{{ asset('storage/UploadeFile/pic36.png') }}" alt="Image">
+                            <span class="ms-2">Cart</span>
+                        </a>
+                    </div>
                 </div>
                 <form class="d-flex">
                     <div class="hover-trigger position-relative">
@@ -219,7 +229,7 @@
                 <div class="container-lg" id="usertable">
 
                 </div>
-                <div class="container-lg" id="producttablediv" style="margin-top: 30px;">
+                <div class="container-lg" id="producttablediv" style="margin-top: 136px;">
 
                     @yield('content')
                     @if (isset($showallrecord))
@@ -525,7 +535,7 @@
 
             $.ajax({
                 type: "post",
-                url: '/editproduct',
+                url: '/productadd',
                 processData: false,
                 contentType: false,
                 data: formData,

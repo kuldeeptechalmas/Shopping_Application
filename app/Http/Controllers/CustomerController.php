@@ -146,7 +146,6 @@ class CustomerController extends Controller
                     return redirect()->back()->with("notfound", $customer->rols . " not found")->withInput();
                 }
             }
-// dd(Crypt::decryptString($customer->password));
             if ($request->password != Crypt::decryptString($customer->password)) {
                 return redirect()->back()->with("passworderror", "The password is Invalid password")->withInput();
             }
@@ -154,7 +153,6 @@ class CustomerController extends Controller
             if ($customer->rols == "Customer") {
                 Session::put("customerid", $customer->name);
                 Session::put("customeremail", $customer->email);
-                Auth::login($customer->email);
                 return redirect()->route("customerdashboard");
             } else {
                 Session::put("shopkeeperid", $customer->name);

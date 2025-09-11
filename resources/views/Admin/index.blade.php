@@ -77,8 +77,15 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
+                    li
                 </ul>
+                <div style="margin-right: 62px;">
+                    <form class="d-flex">
+                        <input class="form-control me-2" oninput="searchproduct()" id="searchproductid" type="search"
+                            placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" onclick="searchproduct()" type="button">Search</button>
+                    </form>
+                </div>
                 <form class="d-flex">
 
                     <div>
@@ -104,10 +111,10 @@
             </div>
             <ul class="sidebar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" onclick="showuserdataget()">
+                    <a href="/admingetuserofall" id="usersnavbarid" class="nav-link">
                         <i class="nav-icon cil-speedometer"></i> Users
                     </a>
-                    <a href="/getproductall" class="nav-link">
+                    <a href="/admingetproductall" class="nav-link">
                         <i class="nav-icon cil-speedometer"></i> Products
                     </a>
                 </li>
@@ -122,7 +129,7 @@
 
             <div class="body flex-grow-1 px-3" style="margin-left: 21%;">
 
-@yield('content')
+                @yield('content')
                 {{-- <div class="container-lg" id="outputoftable">
 
                 </div> --}}
@@ -441,76 +448,8 @@
                     <h1 class="modal-title fs-5" id="exampleModalLabel">View Product</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" style="margin-right: 10%;margin-left: 9%;">
-                    <form id="view-product-from" enctype="multipart/form-data">
-                        @csrf
-                        <input type="text" name="id" id="vpid" hidden>
-                        <div class="mb-3">
-                            <label for="exampleInputEmail1" class="form-label">Name </label>
-                            <input type="text" class="form-control" id="vpname" name="name"
-                                aria-describedby="emailHelp">
-                        </div>
-                        <div style="color:red;" id="vepname" hidden></div>
-
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Description</label>
-                            <input type="text" class="form-control" id="vpdescription" name="description">
-                        </div>
-                        <div style="color:red;" id="vepdescription" hidden></div>
-
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                <label class="form-label" for="form3Example1c">Catagory</label>
-                                <select class="form-select" id="vpcatagory" name="catagory">
-                                    <option value="">Select</option>
-                                    @if (isset($catagory))
-                                        @foreach ($catagory as $item)
-                                            <option value="{{$item->id}}">{{$item->category_name}}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                                <div style="color:red;" hidden id="vepcountry"></div>
-                            </div>
-                        </div>
-
-                        <input type="text" name="adminid" hidden value="{{session('adminname')}}" id="vpadminid">
-
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Price</label>
-                            <input type="text" class="form-control" id="vpprice" name="price">
-                        </div>
-                        <div style="color:red;" id="vepprice" hidden></div>
-
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Stock</label>
-                            <input type="text" class="form-control" id="vpstock" oninput="statuscheck_viewproduct()"
-                                name="stock">
-                        </div>
-                        <div style="color:red;" id="vepstock" hidden></div>
-
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Image</label>
-                            <div class="form-group">
-                                <input type="file" name="file" id="file" class="input-file">
-                                <label for="file" class="btn btn-tertiary js-labelFile" style="width:100%">
-                                    <i class="icon fa fa-check"></i>
-                                    <span class="js-fileName" id="vpimagename">Choose a file</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div style="color:red;" id="vepimage" hidden></div>
-
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Status</label>
-                            <select class="form-select" id="vpstatus" name="status">
-                                <option value="">Select</option>
-                                <option value="in stock">in stock</option>
-                                <option value="out of stock">out of stock</option>
-                            </select>
-                        </div>
-                        <div style="color:red;" id="vepstatus" hidden></div>
-
-                    </form>
+                <div class="modal-body" style="margin-right: 10%;margin-left: 9%;" id="viewmodelform">
+                    {{-- body other page "viewproduct.blade.php" --}}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -566,36 +505,11 @@
 
         })();
 
-        // User data are get all
-        function showuserdataget() {
-            $.ajax({
-                type: "GET",
-                url: "getuserofall",
-                success: function (res) {
-                    $("#outputoftable").html(res);
-                },
-                error: function (e) {
-                    console.log(e);
-                },
-            })
-        }
-        // showuserdataget();
+        $(document).ready(function () {
+            $('#usersnavbarid').trigger('click');
+            // console.log($("#usersnavbarid").find("a").trigger("click"));
 
-        // Product data are get all
-        function showproductdataget() {
-            $.ajax({
-                type: "GET",
-                url: "getproductall",
-                success: function (res) {
-                    // $("#outputoftable").html(res);
-                    console.log(res);
-                    
-                },
-                error: function (e) {
-                    console.log(e);
-                },
-            })
-        }
+        })
 
         // searching product data
         function searchproduct() {
@@ -610,7 +524,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function (res) {
-                    $("#producttable").html(res);
+                    $("#datatable").html(res);
                 },
                 error: function (e) {
 
@@ -647,17 +561,21 @@
             });
         }
         // view product
-        function viewproductdata(id, name, description, price, stock, status, image, catagory) {
-            document.getElementById("vpname").value = name;
-            document.getElementById("vpdescription").value = description;
-            document.getElementById("vpprice").value = price;
-            document.getElementById("vpstock").value = stock;
-            document.getElementById("vpstatus").value = status;
-            document.getElementById('vpimagename').textContent = image;
-            document.getElementById("vpid").value = id;
-            document.getElementById("vpcatagory").value = catagory;
-        }
+        // done
+        function viewproduct_productshow(productid) {
+            $.ajax({
+                type: "get",
+                url: "/productview/" + productid,
+                success: function (res) {
+                    $("#viewmodelform").html(res);
+                },
+                error: function (e) {
+                    console.log(e);
+                }
+            })
 
+        }
+        
         $('#viewproductmodel').on('hidden.bs.modal', function (e) {
             $("#vepname").attr("hidden", true);
             $("#vepdescription").attr("hidden", true);
@@ -681,7 +599,7 @@
 
             $.ajax({
                 type: "post",
-                url: '/editproduct',
+                url: '/productadd',
                 processData: false,
                 contentType: false,
                 data: formData,
@@ -825,6 +743,7 @@
             });
         }
 
+        // pagination mate
         $(document).on('click', '.pagination a', function (e) {
             e.preventDefault();
             var page = $(this).attr('href');
@@ -842,15 +761,15 @@
                 },
                 success: function (res) {
                     if (tablename == "getproductall") {
-                        $("#producttable").html(res);
+                        $("#datatable").html(res);
                     }
 
                     if (tablename == "getuserofall") {
-                        $("#usertable").html(res);
+                        $("#datatable").html(res);
                     }
 
                     if (tablename == "searchproduct") {
-                        $("#producttable").html(res);
+                        $("#datatable").html(res);
                     }
                 },
                 error: function (e) {
