@@ -4,6 +4,7 @@ use App\Http\Controllers\AddToCartController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CatagoryController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\MainController;
 use App\Http\Controllers\Product_Controller;
 use App\Http\Controllers\ShopkeeperController;
 use App\Http\Controllers\SubCatagoryController;
@@ -11,11 +12,13 @@ use App\Http\Middleware\AdminCheck;
 use Illuminate\Support\Facades\Route;
 
 
-// Route::get('/UserRegistration', );
+// Main page Route
+Route::redirect("/","/MyShop");
+Route::get("/MyShop",[MainController::class,"index"]);
+Route::get("/mainproductget",[MainController::class,"main_product_get_all"]);
+Route::get('/productdetailsunkown/{productid}', [MainController::class,'product_details']);
 
 // Customer Route
-
-Route::redirect("/","/login")->name('welcome');
 Route::get("/welcome",function(){
     return view("welcome");
 });
@@ -86,3 +89,4 @@ Route::delete('/subcatagorydelete', [SubCatagoryController::class,'sub_catagory_
 // Add To Cart Functionality
 Route::get('/addtocart_desbord/{product_id}', [AddToCartController::class,'index']);
 Route::get('/addtocartget', [AddToCartController::class,'addtocart_get_all']);
+Route::get('//deletetocart/{cartid}', [AddToCartController::class,'delete_cart']);

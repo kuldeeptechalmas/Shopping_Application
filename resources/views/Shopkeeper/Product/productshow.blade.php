@@ -83,6 +83,4 @@
     <div class="paginationDiv" style="margin-right: 73%;">
         {{ $data->links('pagination::bootstrap-5') }}
     </div>
-@else
-    <div>Not Found Product Data</div>
 @endif

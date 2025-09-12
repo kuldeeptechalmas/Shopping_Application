@@ -18,6 +18,7 @@ return new class extends Migration
             $table->bigInteger("product_id");
             $table->foreign("product_id")->references("id")->on("products");
             $table->integer("quantity");
+            $table->softDeletes();
             $table->timestamps();
         });
     }
