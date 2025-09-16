@@ -17,8 +17,10 @@
         <div class="container-fluid">
             <a class="navbar-brand" href="">
                 <div style="width: 100px; height: auto; margin-left:131px">
+                    <a href="/MyShop">
                     <img style="width: 100%; height: 100%; object-fit: cover;"
                         src="{{ asset('storage/UploadeFile/logo.png') }}" alt="Image">
+                        </a>
                 </div>
             </a>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">

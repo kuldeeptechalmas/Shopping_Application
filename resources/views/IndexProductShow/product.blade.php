@@ -16,18 +16,6 @@
                             {{$item->description}}
                         </p>
                     </div>
-
-                    <div class="d-flex justify-content-between ps-3 pe-3" style="margin-bottom: 15px;">
-                        <button type="button" onclick="viewproduct_productshow('{{$item->id}}')" class="btn btn-primary"
-                            data-bs-toggle="modal" data-bs-target="#viewproductmodel">
-                            Edit
-                        </button>
-                        <button type="button" class="btn btn-danger text-white" style=""
-                            onclick="deleteproductdata('{{$item->id}}','{{$item->name}}')" data-bs-toggle="modal"
-                            data-bs-target="#productdeletemodel">
-                            Delete
-                        </button>
-                    </div>
                 </div>
             @endforeach
             <br>

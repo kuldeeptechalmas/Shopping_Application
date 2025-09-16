@@ -17,6 +17,7 @@ Route::redirect("/","/MyShop");
 Route::get("/MyShop",[MainController::class,"index"]);
 Route::get("/mainproductget",[MainController::class,"main_product_get_all"]);
 Route::get('/productdetailsunkown/{productid}', [MainController::class,'product_details']);
+Route::get('/checkout', [MainController::class,'checkout_page']);
 
 // Customer Route
 Route::get("/welcome",function(){
@@ -88,5 +89,6 @@ Route::delete('/subcatagorydelete', [SubCatagoryController::class,'sub_catagory_
 
 // Add To Cart Functionality
 Route::get('/addtocart_desbord/{product_id}', [AddToCartController::class,'index']);
-Route::get('/addtocartget', [AddToCartController::class,'addtocart_get_all']);
-Route::get('//deletetocart/{cartid}', [AddToCartController::class,'delete_cart']);
+Route::get('/addtocartget', [AddToCartController::class,'addtocart_get_all'])->name("addtocart_get_all");
+Route::get('/deletetocart/{cartid}', [AddToCartController::class,'delete_cart']);
+Route::get('/addtocartqueantitychange', [AddToCartController::class,'update_queantity']);

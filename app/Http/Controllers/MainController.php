@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CategoryProduct;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class MainController extends Controller
 {
@@ -23,5 +24,24 @@ class MainController extends Controller
        
         $data = Product::where("id", $productid)->first();
         return view("IndexProductShow.productdetail", ["productdatails" => $data]);
+    }
+
+    public function checkout_page()
+    {
+        $cart=Session::get("cart");
+        // dd($cart);
+        if(Session::get("shopkeeperid"))
+        {
+            return redirect()->route("");
+        }
+        elseif(Session::get("customerid"))
+        {
+            return redirect()->route("");
+        }
+        else
+        {
+            return redirect()->route("customerlogin");
+        }
+        // return view("IndexProductShow.CheckOut.checkoutpage");
     }
 }

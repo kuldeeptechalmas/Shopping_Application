@@ -41,6 +41,7 @@
                     <span class="visually-hidden">Next</span>
                 </button>
             </div>
+            @if ($productdatails->status == "in stock")
             <div class="row" style="margin-top: 21px;">
                 <a href="/addtocart_desbord/{{$productdatails->id}}" class="col" style="border-radius: 8px;text-align: center;background: #ae708c;margin-right: 11px;text-decoration: none;  color:white;">
                     <p class="m-3">
@@ -53,6 +54,20 @@
                     </p>
                 </a>
             </div>
+            @else
+            <div class="row" style="margin-top: 21px;" disabled>
+                <a class="col" style="cursor: not-allowed;border-radius: 8px;text-align: center;background: #ae708c;margin-right: 11px;text-decoration: none;  color:white;">
+                    <p class="m-3">
+                        ADD TO CART
+                    </p>
+                </a>
+                <a class="col" style="cursor: not-allowed;border-radius: 8px;text-align: center;background: #ae708c;text-decoration: none;  color:white;">
+                    <p class="m-3">
+                        BUY NOW
+                    </p>
+                </a>
+            </div>
+            @endif
         </div>
         <div class="col">
             <p>
