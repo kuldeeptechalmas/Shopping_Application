@@ -1,7 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('index')
 
-<head>
+@section('content')
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
@@ -10,49 +9,11 @@
     <!-- Select2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Welcome</title>
-</head>
-<style>
-    .modal-backdrop.show {
-        opacity: 0.1 !important;
-    }
-</style>
-
-<body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="">Navbar</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
-                </ul>
-                <form class="d-flex">
-                    <div>
-                        <h1><i class="fa-solid fa-circle-user" onclick="getuserprofiledata()" data-bs-toggle="modal"
-                                data-bs-target="#exampleModal"></i></h1>{{session('customerid')}}
-                    </div>
-
-                </form>
-            </div>
-        </div>
-    </nav>
-
-
-    <h1 style="margin-left: 36%;margin-top: 15%;">Welcome to Customer</h1>
+    <style>
+        .modal-backdrop.show {
+            opacity: 0.1 !important;
+        }
+    </style>
 
     <!-- Update Profile Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -80,8 +41,7 @@
                         <div class="d-flex flex-row align-items-center mb-4">
                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                 <label class="form-label" for="form3Example1c">Phone No</label>
-                                <input type="text" id="phone" value="{{old('phone')}}" name="phone"
-                                    class="form-control" />
+                                <input type="text" id="phone" value="{{old('phone')}}" name="phone" class="form-control" />
 
                                 <div style="color:red;" id="ephone" hidden></div>
 
@@ -92,9 +52,9 @@
                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                 <label class="form-label" for="form3Example1c">Gender</label>
                                 <input type="radio" id="gender1" value="male" name="gender" {{old('gender') == 'male'
-    ? 'checked' : '' }} />Male
+        ? 'checked' : '' }} />Male
                                 <input type="radio" id="gender2" value="female" name="gender" {{old('gender') == 'female'
-    ? 'checked' : '' }} />Female
+        ? 'checked' : '' }} />Female
 
                                 <div style="color:red;" id="egender" hidden></div>
 
@@ -163,8 +123,7 @@
                         <div class="d-flex flex-row align-items-center mb-4">
                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                 <label class="form-label" for="form3Example3c">Your Email</label>
-                                <input type="text" id="email" value="{{old('email')}}" name="email"
-                                    class="form-control" />
+                                <input type="text" id="email" value="{{old('email')}}" name="email" class="form-control" />
                                 <div style="color:red;" id="eemail" hidden></div>
                             </div>
                         </div>
@@ -173,8 +132,8 @@
                             <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
                                 <label class="form-label" for="form3Example4c">Password</label>
                                 <input type="password" id="password" name="password" class="form-control" />
-                                <i class="fa-solid fa-eye" id="passwordshow"
-                                    style="position:absolute;top: 62%;right: 5%;" onclick="passwordshow()"></i>
+                                <i class="fa-solid fa-eye" id="passwordshow" style="position:absolute;top: 62%;right: 5%;"
+                                    onclick="passwordshow()"></i>
                                 <i class="fa-solid fa-eye-slash" hidden id="passwordhidden"
                                     style="position:absolute;top: 62%;right: 5%;" onclick="passwordhidden()"></i>
                             </div>
@@ -482,7 +441,4 @@
             });
         }
     </script>
-
-</body>
-
-</html>
+@endsection

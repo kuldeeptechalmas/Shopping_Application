@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AddToCart;
 use App\Models\Admin;
+use App\Models\CategoryProduct;
 use App\Models\Customer;
 use App\Models\CustomerAndShopkeeper;
 use Hash;
@@ -41,11 +43,11 @@ class CustomerController extends Controller
     {
         $contentcountry = File::get(public_path('countries.json'));
         $countrylist = json_decode($contentcountry, true);
-         
-        return response()->json(["countrylist" => $countrylist]); 
+
+        return response()->json(["countrylist" => $countrylist]);
     }
 
-     public function getcity(Request $request)
+    public function getcity(Request $request)
     {
         $contentcity = File::get(public_path('city.json'));
         $citylist = json_decode($contentcity, true);
@@ -153,7 +155,18 @@ class CustomerController extends Controller
             if ($customer->rols == "Customer") {
                 Session::put("customerid", $customer->name);
                 Session::put("customeremail", $customer->email);
-                return redirect()->route("customerdashboard");
+                // dd(Session::get("cart"));
+                $cart = Session::get("cart");
+
+                foreach ($cart as $key => $value) {
+                    $cart = new AddToCart();
+                    $cart->user_id = $customer->id;
+                    $cart->product_id = $key;
+                    $cart->quantity = 1;
+                    $cart->save();
+                }
+                Session::forget("cart");
+                return redirect()->route("MainIndex");
             } else {
                 Session::put("shopkeeperid", $customer->name);
                 Session::put("shopkeeperemail", $customer->email);
@@ -167,11 +180,13 @@ class CustomerController extends Controller
     {
         if (Session::get("customerid")) {
             Session::forget("customerid");
+            Session::forget("customeremail");
         }
         if (Session::get("shopkeeperid")) {
             Session::forget("shopkeeperid");
+            Session::forget("shopkeeperemail");
         }
-        return redirect()->route("customerlogin");
+        return redirect()->route("MainIndex");
     }
 
     public function updateuser(Request $request)
@@ -240,5 +255,49 @@ class CustomerController extends Controller
         $data = CustomerAndShopkeeper::where("email", $request->customeremail)->first();
         $data->password = Crypt::decryptString($data->password);
         return response()->json($data);
+    }
+
+    public function customer_profile($customer_email)
+    {
+        // contry data
+        $content = File::get(public_path('countries.json'));
+        $contrylist = json_decode($content, true);
+
+        // profile user
+        $customer_profile = CustomerAndShopkeeper::where("email", $customer_email)->first();
+        $customer_profile->password = Crypt::decryptString($customer_profile->password);
+
+        return view("Customer.customerprofile", ["contrylist" => $contrylist, "customer_profile" => $customer_profile]);
+    }
+
+    public function customer_change_password($customer_email, Request $request)
+    {
+
+        // profile user
+        $customer_profile = CustomerAndShopkeeper::where("email", $customer_email)->first();
+        $customer_profile->password = Crypt::decryptString($customer_profile->password);
+
+        if ($request->isMethod("post")) {
+            $request->validate([
+                "oldpassword" => "required",
+                "newpassword" => "required",
+                "confpassword" => "required|same:newpassword",
+            ], [
+                "oldpassword.required" => "Enter Old Password are Required",
+                "newpassword.required" => "Enter New Password are Required",
+                "confpassword.required" => "Enter Conform Password are Required",
+                "confpassword.same" => "Enter Password are Not Match to New Password",
+            ]);
+
+            $customerdata = CustomerAndShopkeeper::where("email", $customer_email)->first();
+            if (Crypt::decryptString($customerdata->password) == $request->oldpassword) {
+                $customerdata->password = Crypt::encryptString($request->confpassword);
+                $customerdata->save();
+            } else {
+                return back()->withInput()->with(["passworderror" => "Enter Currect Old Password"]);
+            }
+            return view("Customer.changepassword", ["successupdate" => "yes", "shopkeeper_data" => $customer_profile]);
+        }
+        return view("Customer.changepassword", ["shopkeeper_data" => $customer_profile]);
     }
 }

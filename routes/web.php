@@ -14,10 +14,18 @@ use Illuminate\Support\Facades\Route;
 
 // Main page Route
 Route::redirect("/","/MyShop");
-Route::get("/MyShop",[MainController::class,"index"]);
+Route::get("/MyShop",[MainController::class,"index"])->name("MainIndex");
 Route::get("/mainproductget",[MainController::class,"main_product_get_all"]);
 Route::get('/productdetailsunkown/{productid}', [MainController::class,'product_details']);
 Route::get('/checkout', [MainController::class,'checkout_page']);
+
+// Checkout Functionality
+Route::get('/checkout', [MainController::class,'checkout_product'])->name("checkout_product");
+Route::get('/summryproductdetail', [MainController::class,'summry_product_detail'])->name("summryproductdetail");
+Route::get('/deletecartsummry/{cartid}', [MainController::class,'delete_cart_summry']);
+
+// Order Functionality
+Route::get('/order', [MainController::class,'order_product']);
 
 // Customer Route
 Route::get("/welcome",function(){
@@ -32,6 +40,8 @@ Route::get('/customeruser', [CustomerController::class, "profileuser"]);
 Route::get('/getstate', [CustomerController::class, "getstate"]);
 Route::get('/getcity', [CustomerController::class, "getcity"]);
 Route::get('/getcountry', [CustomerController::class, "getcountry"]);
+Route::get('/customerprofile/{customeremail}', [CustomerController::class, "customer_profile"]);
+Route::match(["post","get"],'/customerchangepassword/{customeremail}', [CustomerController::class, "customer_change_password"]);
 
 // Shopkeeper Route
 Route::get('/shopkeeperdashboard', [ShopkeeperController::class, 'dashboard'])->name('shopkeeperdashboard')->middleware('shopkeeperCheck');
@@ -92,3 +102,4 @@ Route::get('/addtocart_desbord/{product_id}', [AddToCartController::class,'index
 Route::get('/addtocartget', [AddToCartController::class,'addtocart_get_all'])->name("addtocart_get_all");
 Route::get('/deletetocart/{cartid}', [AddToCartController::class,'delete_cart']);
 Route::get('/addtocartqueantitychange', [AddToCartController::class,'update_queantity']);
+

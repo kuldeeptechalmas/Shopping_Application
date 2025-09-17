@@ -37,6 +37,17 @@ class AddToCartController extends Controller
 
             $addtocart1 = AddToCart::where("user_id", $data->id)->get();
             return view("Shopkeeper.AddToCart.addtocartmain", ["datacart" => $addtocart1, "catagory" => $this->catagorydata]);
+
+        } elseif (Session::get("customeremail")) {
+            $data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))
+                ->first();
+            $cart = new AddToCart();
+            $cart->user_id = $data->id;
+            $cart->product_id = $product_id;
+            $cart->quantity = 1;
+            $cart->save();
+
+            return redirect()->route("addtocart_get_all");
         } else {
 
             $cart = session()->get('cart', []);
@@ -61,6 +72,13 @@ class AddToCartController extends Controller
         if (isset($data)) {
             $addtocart1 = AddToCart::where("user_id", $data->id)->get();
             return view("Shopkeeper.AddToCart.addtocartmain", ["datacart" => $addtocart1, "catagory" => $this->catagorydata]);
+        
+        } elseif (Session::get("customeremail")) {
+
+            $data1 = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+            $addtocart = AddToCart::where("user_id", $data1->id)->get();
+            return view("IndexProductShow.AddToCart.addtocartindex", ["datacart" => $addtocart]);
+        
         } else {
 
             $cart = session()->get('cart');
@@ -72,10 +90,19 @@ class AddToCartController extends Controller
     {
 
         if (session()->get('cart')) {
+
             $cart = session()->get('cart');
             unset($cart[$cartid]);
             $cart = array_values($cart);
             session()->put('cart', $cart);
+            return redirect()->route("addtocart_get_all");
+
+        } elseif (Session::get("customeremail")) {
+
+            $data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+            $addtocart1 = AddToCart::where("product_id", $cartid)
+                ->where("user_id", $data->id)->first();
+            $addtocart1->delete();
             return redirect()->route("addtocart_get_all");
         } else {
 
@@ -89,19 +116,30 @@ class AddToCartController extends Controller
 
     public function update_queantity(Request $request)
     {
-        $cart = session()->get('cart', []);
-        if (isset($cart[$request->product_id])) {
-            if ($cart[$request->product_id]["quantity"] > $request->queantity) {
-                $cart[$request->product_id]["quantity"] = $cart[$request->product_id]["quantity"] - 1;
-            } else {
-                $cart[$request->product_id]["quantity"] = $cart[$request->product_id]["quantity"] + 1;
-            }
-        }
-        session()->put('cart', $cart);
+        if (Session::get("customeremail")) {
 
-         return response()->json([
+            $data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+            $addtocart1 = AddToCart::where("product_id", $request->product_id)
+                ->where("user_id", $data->id)->first();
+            $addtocart1->quantity = $request->queantity;
+            $addtocart1->save();
+
+        } else {
+
+            $cart = session()->get('cart', []);
+            if (isset($cart[$request->product_id])) {
+                if ($cart[$request->product_id]["quantity"] > $request->queantity) {
+                    $cart[$request->product_id]["quantity"] = $cart[$request->product_id]["quantity"] - 1;
+                } else {
+                    $cart[$request->product_id]["quantity"] = $cart[$request->product_id]["quantity"] + 1;
+                }
+            }
+            session()->put('cart', $cart);
+        }
+        return response()->json([
             'status' => 'success',
             'redirect_url' => route('addtocart_get_all')
         ]);
     }
+    
 }
