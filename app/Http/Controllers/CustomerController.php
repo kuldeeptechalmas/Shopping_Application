@@ -49,17 +49,18 @@ class CustomerController extends Controller
 
     public function getcity(Request $request)
     {
+    
         $contentcity = File::get(public_path('city.json'));
         $citylist = json_decode($contentcity, true);
         $stateId = $request->data;
 
         // dd($citylist);
 
-        $filterstate = array_filter($citylist, function ($item) use ($stateId) {
+        $filtercity = array_filter($citylist, function ($item) use ($stateId) {
             return $item["stateId"] === $stateId;
         });
 
-        return response()->json(["citylist" => $filterstate]);
+        return response()->json(["citylist" => $filtercity]);
     }
 
     public function registration(Request $request)
@@ -157,7 +158,9 @@ class CustomerController extends Controller
                 Session::put("customeremail", $customer->email);
                 // dd(Session::get("cart"));
                 $cart = Session::get("cart");
-
+                // dd(!empty($cart));
+                if(!empty($cart))
+                {
                 foreach ($cart as $key => $value) {
                     $cart = new AddToCart();
                     $cart->user_id = $customer->id;
@@ -165,6 +168,8 @@ class CustomerController extends Controller
                     $cart->quantity = 1;
                     $cart->save();
                 }
+                
+            }
                 Session::forget("cart");
                 return redirect()->route("MainIndex");
             } else {

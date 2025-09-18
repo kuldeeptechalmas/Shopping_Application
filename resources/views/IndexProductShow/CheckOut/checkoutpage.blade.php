@@ -88,17 +88,22 @@
             <div class="col-7">
                 <div class="checkout-container">
                     <h1>Checkout</h1>
-                    <form class="checkout-form">
+                    <form class="checkout-form" action="/order" method="POST">
+                        @csrf
                         <div class="section">
                             <h2>Shipping Information</h2>
-                            <label for="fullName">Full Name:</label>
-                            <input type="text" id="fullName" name="fullName" required>
+
+                            <input value="{{$customerdata}}" name="customer_data" hidden>
+                            <input type="text" value="{{$cart}}" name="cart_data" hidden>
+
+                            <label for="name">Full Name:</label>
+                            <input type="text" id="nem" name="name" value="{{$customerdata->name}}">
                             
                             <label for="email">Email:</label>
-                            <input type="text" id="email" name="email" required>
+                            <input type="text" id="email" name="email" value="{{$customerdata->email}}">
                             
                             <label for="phone">Phone No:</label>
-                            <input type="text" id="phone" name="phone" required>
+                            <input type="text" id="phone" name="phone" value="{{$customerdata->phone}}">
 
                             <label for="country">Country:</label>
                             <select class="form-select" style="width: 96%;height: 51px;" id="country"
@@ -106,7 +111,7 @@
                                 <option value="">Select</option>
                                 @if (isset($contrylist))
                                     @foreach ($contrylist as $item)
-                                        <option value={{$item['id']}} {{old('country') == $item['id'] ? 'selected' : ''}}>
+                                        <option value={{$item['id']}} {{$customerdata->country == $item['id'] ? 'selected' : ''}}>
                                             {{$item['name']}}</option>
                                     @endforeach
                                 @endif
@@ -120,22 +125,21 @@
                             </select>
                             <br>
 
-                            <label for="state">City:</label>
+                            <label for="city">City:</label>
                             <select placeholder="Select" style="width: 96%;height: 51px;" class="form-select" id="city"
                                 value="{{old('city')}}" name="city">
                                 <option value="">Select</option>
                             </select>
                             <br>
 
-                            <label for="zipCode">Zip Code:</label>
-                            <input type="text" id="zipCode" name="zipCode" required>
-
+                            <label for="pincode">Pin Code:</label>
+                            <input type="text" id="pincode" name="pincode" value="{{$customerdata->pincode}}">
 
                             <label for="address">Address:</label>
-                            <input type="text" id="address" name="address" required>
+                            <input type="text" id="address" name="address" value="{{$customerdata->address}}">
 
                         </div>
-                        <button type="submit" onclick="order()" class="place-order-btn">Place Order</button>
+                        <button type="submit" class="place-order-btn">Place Order</button>
                     </form>
                 </div>
 
@@ -192,24 +196,59 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         
-        // order
-        function order()
-        {
-            $.ajax({
-                type:"get",
-                url:"/order",
-                data:{
-                    product_list:"{{$cart}}",
-                },
-                success:function(res){
-                    console.log(res);
-                    
-                },
-                error:function(e){
+        $(document).ready(function(){
 
-                }
-            });
-        }
+            const selectElement = $('#state');
+            selectElement.empty();
+            $.ajax({
+                type: "get",
+                url: "/getstate",
+                data: {
+                    data: $('#country').val(),
+                },
+                success: function (res) {
+
+                    var oldstate = "{{$customerdata->state}}";
+                    $("#state").append(`<option value="">Select</option>`);
+                    $.each(res["statelist"], function (indexInArray, valueOfElement) {
+                        var selectstate = (oldstate == valueOfElement["id"]) ? "selected" : "";
+                    
+                        $("#state").append(`<option value="${valueOfElement["id"]}" ${selectstate} >${valueOfElement["name"]}</option>`);
+                    });
+                },
+                error: function (e) {
+                    console.log(e);
+
+                },
+            })
+            
+
+            const selectElement1 = $('#city');
+            selectElement1.empty();
+            $.ajax({
+                type: "get",
+                url: "/getcity",
+                data: {
+                    data: "{{$customerdata->state}}",
+                },
+                success: function (res) {
+
+                    var oldcity = "{{$customerdata->city}}";
+                    $("#city").append(`<option value="">Select</option>`);
+                    $.each(res["citylist"], function (indexInArray, valueOfElement) {
+                         var selectcity = (oldcity == valueOfElement["id"]) ? "selected" : "";
+                        $("#city").append(`<option value="${valueOfElement["id"]}" ${selectcity} >${valueOfElement["name"]}</option>`);
+
+                    });
+
+                },
+                error: function (e) {
+                    console.log(e);
+
+                },
+            })
+            
+        })
 
         function showpaymentdetail1() {
             $("#detail1").removeAttr("hidden");

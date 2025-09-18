@@ -78,9 +78,11 @@
             <br>
             @if ($productdatails->status == "in stock")
                 <div class="text-success">{{$productdatails->status}}</div>
+                
             @else
                 <div class="text-danger">{{$productdatails->status}}</div>
             @endif
+            <div>{{$productdatails->stock}}</div>
             @php
                 $dataString = $productdatails->description;
                 $items = explode('-', $dataString);

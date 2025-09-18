@@ -17,7 +17,8 @@ Route::redirect("/","/MyShop");
 Route::get("/MyShop",[MainController::class,"index"])->name("MainIndex");
 Route::get("/mainproductget",[MainController::class,"main_product_get_all"]);
 Route::get('/productdetailsunkown/{productid}', [MainController::class,'product_details']);
-Route::get('/checkout', [MainController::class,'checkout_page']);
+Route::get('/checkouttoconform', [MainController::class,'checkout_page']);
+Route::get('/search', [MainController::class,'search_product_name']);
 
 // Checkout Functionality
 Route::get('/checkout', [MainController::class,'checkout_product'])->name("checkout_product");
@@ -25,7 +26,8 @@ Route::get('/summryproductdetail', [MainController::class,'summry_product_detail
 Route::get('/deletecartsummry/{cartid}', [MainController::class,'delete_cart_summry']);
 
 // Order Functionality
-Route::get('/order', [MainController::class,'order_product']);
+Route::match(["post","get"],'/order', [MainController::class,'order_product']);
+Route::get('/deleteorder/{orderid}', [MainController::class,'order_delete']);
 
 // Customer Route
 Route::get("/welcome",function(){

@@ -6,7 +6,6 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <div class="row">
         <div class="col-2">
-
         </div>
         {{-- customer is found then show cart --}}
         @if (Session::get("customeremail"))
@@ -232,7 +231,7 @@
                         @endforeach
                         <div class="card" style="margin-left: 25px;text-align: end;">
                             <div style="margin-right: 68px;height: 55px;">
-                                <a href="/checkout">
+                                <a href="/checkouttoconform">
                                     <button class="btn " style="color:white;background:#fb641b;margin-top: 10px;">PLEASE
                                         ORDER</button>
                                 </a>

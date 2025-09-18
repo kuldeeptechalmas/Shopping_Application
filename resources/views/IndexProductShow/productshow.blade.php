@@ -1,7 +1,7 @@
 @extends('index')
 
 @section('content')
-    <div id="product" style="margin-left: 30px">
+    <div id="product">
 
     </div>
 
