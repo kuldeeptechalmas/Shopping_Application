@@ -20,8 +20,8 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
-        $catagory = CategoryProduct::all();
-        return view("Admin.index",["catagory"=> $catagory]);
+        return redirect()->route("admin_get_user_of_all");
+        
     }
 
     // public function login(Request $request)
@@ -109,11 +109,12 @@ class AdminController extends Controller
 
     public function admin_getuserofall(Request $request)
     {
+        // kkk
         return view("Admin.Table.usershow");
     }
     public function getuserofall(Request $request)
     {
-        $data = CustomerAndShopkeeper::paginate(10);
+        $data = CustomerAndShopkeeper::paginate(9);
         foreach ($data as $key) {
             $key->password = Crypt::decryptString($key->password);
         }

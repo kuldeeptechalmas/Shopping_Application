@@ -199,7 +199,6 @@
                 type: "get",
                 success: function (res) {
                     $("#userprofilebody").html(res);
-                    console.log(res);
 
                 },
                 error: function (e) {

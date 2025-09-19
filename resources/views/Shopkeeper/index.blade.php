@@ -142,7 +142,7 @@
                     <div class="d-flex align-items-center pe-3">
                         <a href="/addtocartget" style="text-decoration: none ;color: #000;">
                             <img style="height: 30px; width: 30px; object-fit: contain;"
-                            src="{{ asset('storage/UploadeFile/pic36.png') }}" alt="Image">
+                                src="{{ asset('storage/UploadeFile/pic36.png') }}" alt="Image">
                             <span class="ms-2">Cart</span>
                         </a>
                     </div>
@@ -290,7 +290,9 @@
 
                         <div class="mb-3">
                             <label for="exampleInputPassword1" class="form-label">Description</label>
-                            <input type="text" class="form-control" id="pdescription" name="description">
+                            {{-- <textarea type="text" style="resize: none;" rows="5" class="form-control" id="vpdescription"
+                                name="description">{{$product_data->description}}</textarea> --}}
+                            <textarea type="text" class="form-control" id="pdescription" style="resize: none;" rows="5" name="description"></textarea>
                         </div>
                         <div style="color:red;" id="epdescription" hidden></div>
 
@@ -407,9 +409,7 @@
             var page = $(this).attr('href');
             const tables = page.split("?")[0];
             const tablename = tables.split('/')[3];
-            console.log(tablename);
             const search = document.getElementById("searchproductid").value;
-            console.log(search);
 
             $.ajax({
                 url: page,
@@ -419,7 +419,6 @@
                     catagoryid: "{{isset($catagoryid) ? $catagoryid : ''}}"
                 },
                 success: function (res) {
-                    console.log(res);
                     $("#producttable").html(res);
                 },
                 error: function (e) {
@@ -443,7 +442,6 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function (res) {
-                    console.log(res);
 
                     $("#producttable").html(res);
                 },
@@ -891,7 +889,6 @@
                     data: $('#state').val(),
                 },
                 success: function (res) {
-                    console.log(res);
                     $("#city").append(`<option value="">Select</option>`);
                     $.each(res["citylist"], function (indexInArray, valueOfElement) {
                         $("#city").append(`<option value="${valueOfElement["id"]}">${valueOfElement["name"]}</option>`);

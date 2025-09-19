@@ -487,6 +487,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
 
+        
+
         (function () {
 
             'use strict';
@@ -505,11 +507,7 @@
 
         })();
 
-        $(document).ready(function () {
-            $('#usersnavbarid').trigger('click');
-            // console.log($("#usersnavbarid").find("a").trigger("click"));
 
-        })
 
         // searching product data
         function searchproduct() {
@@ -749,9 +747,7 @@
             var page = $(this).attr('href');
             const tables = page.split("?")[0];
             const tablename = tables.split('/')[3];
-            console.log(tablename);
             const search = document.getElementById("searchproductid").value;
-            console.log(search);
 
             $.ajax({
                 url: page,
@@ -895,7 +891,6 @@
                     data: $('#vstate').val(),
                 },
                 success: function (res) {
-                    console.log(res);
                     $("#vcity").append(`<option value="">Select</option>`);
                     $.each(res["citylist"], function (indexInArray, valueOfElement) {
                         $("#vcity").append(`<option value="${valueOfElement["id"]}">${valueOfElement["name"]}</option>`);

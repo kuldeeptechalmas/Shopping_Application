@@ -7,6 +7,7 @@ use App\Models\CategoryProduct;
 use App\Models\CustomerAndShopkeeper;
 use App\Models\CustomerOrder;
 use App\Models\Product;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
@@ -139,7 +140,22 @@ class MainController extends Controller
 
     public function search_product_name(Request $request)
     {
-        $product = Product::where("name","like","%".$request->search_data."%")->get();
-        return response()->json(["product_data"=>$product]);
+        $product = Product::where("name", "like", "%" . $request->search_data . "%")->get();
+        return response()->json(["product_data" => $product]);
     }
+
+    public function get_category_wise_product($categoryname)
+    {
+        try {
+
+            $category_data = CategoryProduct::where("category_name", $categoryname)->get();
+            $all_category_data = CategoryProduct::all();
+            // $product_data = Product::where("category_id", $category_data->id)->get();
+            return view("IndexProductShow.categorywiseproductshow", ["data" => $category_data,"alldata" => $all_category_data]);
+        
+        } catch (Exception $th) {
+            return response()->with("Not found data");
+        }
+    }
+
 }

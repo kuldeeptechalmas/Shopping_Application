@@ -183,7 +183,6 @@
                     deleteid: document.getElementById("deletecatagoryid").textContent
                 },
                 success: function (res) {
-                    console.log(res);
                     $(".closemodel").prev().trigger('click');
                     show_catagory();
                 },
@@ -207,7 +206,6 @@
                     deleteid: document.getElementById("deletesubcatagoryid").textContent
                 },
                 success: function (res) {
-                    console.log(res);
                     $(".closemodel").prev().trigger('click');
                     show_catagory();
                 },
@@ -234,7 +232,6 @@
                     name: document.getElementById("vcname").value,
                 },
                 success: function (res) {
-                    console.log(res);
                     $(".closemodel").prev().trigger('click');
                     show_catagory();
                 },
@@ -263,7 +260,6 @@
                     catagory: document.getElementById("sccatagory").value,
                 },
                 success: function (res) {
-                    console.log(res);
                     $(".closemodel").prev().trigger('click');
                     show_catagory();
                 },

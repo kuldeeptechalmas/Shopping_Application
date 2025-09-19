@@ -11,7 +11,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
         integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         /* profile */
         .hover-trigger {
@@ -52,7 +54,7 @@
         }
 
         .dropdown_search_content {
-            visibility: hidden;
+            /* visibility: hidden; */
             background-color: #ffffff;
             position: absolute;
             width: 97%;
@@ -61,11 +63,16 @@
             margin-top: 10px;
             border-radius: 0 0 5px 5px;
             box-shadow: 1px 1px 1px rgb(0 0 0 / 16%);
+            max-height: 146px;
+            z-index: 99;
+            overflow: hidden;
+            /* overflow-y: scroll; */
+            text-overflow: ellipsis
         }
 
-        .dropdown_search:focus~.dropdown_search_content {
+        /* .dropdown_search:focus~.dropdown_search_content {
             visibility: visible;
-        }
+        } */
     </style>
 </head>
 
@@ -84,17 +91,17 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <form class="d-flex dropdown_search_main" role="search" style="width: 300px;">
                     <input class="form-control dropdown_search me-2" type="search" id="search_id"
-                        oninput="search_product_navbar()" placeholder="Search" aria-label="Search" />
-                    <div class="dropdown_search_content">
-                        Data Hear<br>
-                        demo <br>
-                        demo1<br>
+                        oninput="search_product_navbar()" onfocus="search_product_focus()" placeholder="Search"
+                        aria-label="Search" />
+                    <div class="dropdown_search_content" style="text-decoration: none; color: #000;"
+                        id="searchdataname" hidden>
+
                     </div>
                 </form>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     @if (empty(Session::get("customerid")))
                         <div
-                            style="margin-left: 47px;width: 108px;margin-top: 19px;height: 37px;border-radius: 3px;text-align: center;background-color: #2874f0;">
+                            style="margin-left: 47px;width: 108px;margin-top: 5px;height: 37px;border-radius: 3px;text-align: center;background-color: #2874f0;">
 
                             <li class="nav-item" style="margin-top: 5px;">
                                 <a aria-current="page" href="/login" style="color: white;text-decoration: none;">
@@ -104,7 +111,7 @@
                         </div>
                     @endif
 
-                    <div class="row" style="width: 250px;margin-top: 19px;">
+                    <div class="row" style="width: 250px;margin-top: 5px;">
                         <div class="col-2"></div>
                         <div class="col-10"><a href="/addtocartget" style="text-decoration: none ;color: #000;">
                                 <img style="height: 30px; width: 30px; object-fit: contain;"
@@ -163,24 +170,61 @@
         crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
+
+        function search_product_focus() {
+            $("#searchdataname").empty();
+            $("#searchdataname").append(`
+                        <h7 class="fw-bolder">Trending</h7>
+                        <div style="margin: 10px 15px 5px;">
+                            <i class="fa-solid fa-magnifying-glass" style="padding-right:29px"></i><a style="color: #141619;text-decoration: none;" onclick="searchbox('Mobiles')">Mobiles</a><br>
+                        </div>
+                        <div style="margin: 10px 15px 5px;">
+                            <i class="fa-solid fa-magnifying-glass" style="padding-right:29px"></i><a style="color: #141619;text-decoration: none;" onclick="searchbox('Shoes')">Shoes</a><br>
+                        </div>
+                        <div style="margin: 10px 15px 5px;">
+                            <i class="fa-solid fa-magnifying-glass" style="padding-right:29px"></i><a style="color: #141619;text-decoration: none;" onclick="searchbox('Leptop')">Leptop</a><br>
+                        </div>
+                        <div style="margin: 10px 15px 5px;">
+                            <i class="fa-solid fa-magnifying-glass" style="padding-right:29px"></i><a style="color: #141619;text-decoration: none;" onclick="searchbox('Watches')">Watches</a><br>
+                        </div>
+            `);
+            $("#searchdataname").removeAttr("hidden");
+        }
+        
+        function searchbox(searchData){
+            
+            document.getElementById("search_id").value=searchData;
+            $("#searchdataname").attr("hidden",true);
+            
+        }
+
         function search_product_navbar() {
-            console.log($("#search_id").val());
+            // console.log($("#search_id").val());
 
+            $.ajax({
+                type: "get",
+                url: "/search",
+                data: {
+                    search_data: $("#search_id").val()
+                },
+                success: function (res) {
 
-            // $.ajax({
-            //     type: "get",
-            //     url: "/search",
-            //     data: {
-            //         search_data: $("#search_id").val()
-            //     },
-            //     success: function (res) {
-            //         console.log(res);
+                    console.log(res["product_data"]);
+                    $("#searchdataname").empty();
+                    $.each(res["product_data"], function (index, obj) {
+                        // console.log(obj.name);
+                        // $("#searchdataname").append( obj.name + "<br>");
+                        $("#searchdataname").append(`
+                            <div class="searchdatas" style="margin: 10px 15px 5px;text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
+                            <i class="fa-solid fa-magnifying-glass" style="padding-right:29px"></i><a href="/productdetailsunkown/${obj.id}" style="color: #141619;text-decoration: none;" onclick="searchbox('${obj.name}')">${obj.name}</a><br>
+                        </div>
+                        `);
+                    });
+                },
+                error: function (e) {
 
-            //     },
-            //     error: function (e) {
-
-            //     }
-            // });
+                }
+            });
         }
     </script>
 </body>

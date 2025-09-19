@@ -2,9 +2,10 @@
 
     <ul class="d-flex justify-content-around" style="list-style: none; box-shadow: 0px 3px 15px #afafaf; padding: 10px;">
         @foreach ($data as $item1)
-        <li>{{$item1->category_name}}</li>
+        <a href="/getcategroywiseproduct/{{$item1->category_name}}" style="text-decoration: none;color:black;"><li>{{$item1->category_name}}</li></a>
         @endforeach
     </ul>
+
     @foreach ($data as $item1)
         <h1 class="ps-3">{{$item1->category_name}}</h1>
         <div class="row w-100">

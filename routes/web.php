@@ -19,6 +19,7 @@ Route::get("/mainproductget",[MainController::class,"main_product_get_all"]);
 Route::get('/productdetailsunkown/{productid}', [MainController::class,'product_details']);
 Route::get('/checkouttoconform', [MainController::class,'checkout_page']);
 Route::get('/search', [MainController::class,'search_product_name']);
+Route::get('/getcategroywiseproduct/{categoryname}', [MainController::class,'get_category_wise_product']);
 
 // Checkout Functionality
 Route::get('/checkout', [MainController::class,'checkout_product'])->name("checkout_product");
@@ -65,7 +66,7 @@ Route::get('/adminruser', [AdminController::class, "profileuser"]);
 Route::post('/adminupdate', [AdminController::class, "updateuser"]);
 Route::get('/deleterecord', [AdminController::class, "deleterecord"]);
 Route::get('/getuserofall', [AdminController::class, "getuserofall"]);
-Route::get('/admingetuserofall', [AdminController::class, "admin_getuserofall"]);
+Route::get('/admingetuserofall', [AdminController::class, "admin_getuserofall"])->name("admin_get_user_of_all");
 Route::post('/adminviewupdate', [AdminController::class, "viewupdateuser"]);
 Route::get('/productdetailsadmin/{productid}', [AdminController::class,'product_details']);
 

@@ -330,7 +330,6 @@
                     data: $('#state').val(),
                 },
                 success: function (res) {
-                    console.log(res);
                     $("#city").append(`<option value="">Select</option>`);
                     $.each(res["citylist"], function (indexInArray, valueOfElement) {
                         $("#city").append(`<option value="${valueOfElement["id"]}">${valueOfElement["name"]}</option>`);
