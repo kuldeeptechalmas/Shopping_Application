@@ -266,12 +266,22 @@ class Product_Controller extends Controller
 
     public function product_view($productid)
     {
+        
         $data = CategoryProduct::where("category_name", Session::get("categoryname"))->first();
+       
         $subcatagorydata = SubCatagory::where("catagroy_id", $data->id)->get();
         $productdata = Product::where("id", $productid)->first();
         return view("Shopkeeper.Product.viewproduct", [
             "product_data" => $productdata,
             "subcatagory" => $subcatagorydata
+        ]);
+    }
+
+    public function product_view_admin($productid)
+    {
+        $productdata = Product::where("id", $productid)->first();
+        return view("Admin.ViewPage.productview", [
+            "product_data" => $productdata
         ]);
     }
 }

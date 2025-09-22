@@ -563,7 +563,7 @@
         function viewproduct_productshow(productid) {
             $.ajax({
                 type: "get",
-                url: "/productview/" + productid,
+                url: "/productviewadmin/" + productid,
                 success: function (res) {
                     $("#viewmodelform").html(res);
                 },
@@ -571,7 +571,6 @@
                     console.log(e);
                 }
             })
-
         }
         
         $('#viewproductmodel').on('hidden.bs.modal', function (e) {

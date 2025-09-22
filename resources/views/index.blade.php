@@ -66,13 +66,8 @@
             max-height: 146px;
             z-index: 99;
             overflow: hidden;
-            /* overflow-y: scroll; */
             text-overflow: ellipsis
         }
-
-        /* .dropdown_search:focus~.dropdown_search_content {
-            visibility: visible;
-        } */
     </style>
 </head>
 
@@ -113,7 +108,8 @@
 
                     <div class="row" style="width: 250px;margin-top: 5px;">
                         <div class="col-2"></div>
-                        <div class="col-10"><a href="/addtocartget" style="text-decoration: none ;color: #000;">
+                        <div class="col-10" style="display: flex;justify-content: center;align-items: center;">
+                            <a href="/addtocartget" style="text-decoration: none ;color: #000;">
                                 <img style="height: 30px; width: 30px; object-fit: contain;"
                                     src="{{ asset('storage/UploadeFile/pic36.png') }}" alt="Image">
                                 <span class="ms-2">Cart</span>
@@ -145,6 +141,11 @@
                                         <div style="padding: 10px; border-bottom: 1px solid #555;">
                                             <a style="text-decoration: none;  color: #000;" href="/order">
                                                 Order
+                                            </a>
+                                        </div>
+                                        <div style="padding: 10px; border-bottom: 1px solid #555;">
+                                            <a style="text-decoration: none;  color: #000;" href="/wishlist">
+                                                Wishlist
                                             </a>
                                         </div>
 

@@ -6,6 +6,7 @@ use App\Models\AddToCart;
 use App\Models\CategoryProduct;
 use App\Models\CustomerAndShopkeeper;
 use App\Models\CustomerOrder;
+use App\Models\FavouriceProduct;
 use App\Models\Product;
 use Exception;
 use Illuminate\Http\Request;
@@ -24,13 +25,24 @@ class MainController extends Controller
     public function main_product_get_all()
     {
         $data = CategoryProduct::with('productsdata')->get();
-        return view("IndexProductShow.product", ["data" => $data]);
+        if (Session::get("customeremail") != null) {
+            $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+            $wishlist = FavouriceProduct::where("user_id", $user_data->id)->get();
+            return view("IndexProductShow.product", ["data" => $data, "wishlist" => $wishlist]);
+        } else {
+            return view("IndexProductShow.product", ["data" => $data]);
+        }
     }
 
     public function product_details($productid)
     {
-
         $data = Product::where("id", $productid)->first();
+        if (Session::get("customeremail")) {
+            $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+            $wishlist = FavouriceProduct::where("user_id", $user_data->id)
+                ->where("product_id", $productid)->first();
+            return view("IndexProductShow.productdetail", ["productdatails" => $data, "wishlist" => $wishlist]);
+        }
         return view("IndexProductShow.productdetail", ["productdatails" => $data]);
     }
 
@@ -151,11 +163,43 @@ class MainController extends Controller
             $category_data = CategoryProduct::where("category_name", $categoryname)->get();
             $all_category_data = CategoryProduct::all();
             // $product_data = Product::where("category_id", $category_data->id)->get();
-            return view("IndexProductShow.categorywiseproductshow", ["data" => $category_data,"alldata" => $all_category_data]);
-        
+            return view("IndexProductShow.categorywiseproductshow", ["data" => $category_data, "alldata" => $all_category_data]);
         } catch (Exception $th) {
             return response()->with("Not found data");
         }
     }
 
+    public function add_to_favourite($productid)
+    {
+        if (Session::get("customeremail") != null) {
+            $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+
+            $favourite_product = new FavouriceProduct();
+            $favourite_product->product_id = $productid;
+            $favourite_product->user_id = $user_data->id;
+            $favourite_product->save();
+            return response()->json(["data" => "save"]);
+        } else {
+            return response()->json(["url" => route("customerlogin")]);
+        }
+    }
+
+    public function wishlist()
+    {
+        $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+        $favourite_product_list = FavouriceProduct::where("user_id", $user_data->id)->get();
+        return view("IndexProductShow.WishList.wishlistshow", ["wishlist" => $favourite_product_list]);
+    }
+
+    public function remove_wishlist_item($productid, Request $request)
+    {
+        $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+        $wishlist = FavouriceProduct::where("user_id", $user_data->id)
+            ->where("product_id", $productid)->delete();
+        if ($request->ajax()) {
+            return response()->json(["data" => "delete"]);
+        } else {
+            return redirect()->back();
+        }
+    }
 }

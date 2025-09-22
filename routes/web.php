@@ -20,6 +20,9 @@ Route::get('/productdetailsunkown/{productid}', [MainController::class,'product_
 Route::get('/checkouttoconform', [MainController::class,'checkout_page']);
 Route::get('/search', [MainController::class,'search_product_name']);
 Route::get('/getcategroywiseproduct/{categoryname}', [MainController::class,'get_category_wise_product']);
+Route::get('/favourite/{productid}', [MainController::class,'add_to_favourite']);
+Route::get('/wishlist', [MainController::class,'wishlist']);
+Route::get('/removewishlist/{productid}', [MainController::class,'remove_wishlist_item']);
 
 // Checkout Functionality
 Route::get('/checkout', [MainController::class,'checkout_product'])->name("checkout_product");
@@ -87,6 +90,7 @@ Route::get('/getproductshopkeeper', [Product_Controller::class,'product_list_get
 Route::get('/productaddshop/{category_name}', [Product_Controller::class,'product_add_show']);
 Route::get('/productdetails/{productid}', [Product_Controller::class,'product_details']);
 Route::get('/productview/{productid}', [Product_Controller::class,'product_view']);
+Route::get('/productviewadmin/{productid}', [Product_Controller::class,'product_view_admin']);
 
 
 // Catagory
