@@ -19,14 +19,14 @@
                                         <div class="col-4" style="width: 160px;">
                                             <a href="/productdetailsunkown/{{$item->product->id}}">
                                                 <img style="width: 100%; height: 100%; object-fit: cover;"
-                                                    src="{{ asset('storage/UploadeFile/' . $item->product->image) }}"
-                                                    alt="Image">
+                                                    src="{{ asset('storage/UploadeFile/' . $item->product->image) }}" alt="Image">
                                             </a>
                                         </div>
                                         <div class="col-8">
                                             <p class="card-text">{{$item->product->name}}</p>
-                                            <h5 class="card-title">₹{{$item->product->price}}</h5>
+                                            <h5 class="card-title">₹{{round($item->product->price-($item->product->price*$item->product->discount/100))}}</h5>
 
+                        <div style="color: green"><del>₹{{$item->product->price}}</del>     {{$item->product->discount}}%  off</div>
                                             {{-- quentity increament and decriment --}}
                                             <div style="margin-top:46px">
                                                 <input type="text" hidden value="{{$item->product->id}}">
@@ -48,12 +48,6 @@
                                                 <div
                                                     style="border-radius: 8px;text-align: center;margin-right: 11px;text-decoration: none;font-weight: bold;">
                                                     <p style="margin-top: 27px;">
-                                                        {{--
-                                                    <div data-bs-toggle="modal" data-bs-target="#removecart"
-                                                        data-description="This is a description of Product A."
-                                                        style="text-decoration: none;color:red; cursor: pointer;">Remove
-                                                    </div> --}}
-
                                                     <a href="/deletetocart/{{$item->product->id}}" id="remove_a">Remove</a>
 
                                                     <!--Remove Cart Modal -->
@@ -70,8 +64,8 @@
                                                                     Are you sure you want to remove this item?
                                                                 </div>
                                                                 <div class="modal-footer justify-content-center">
-                                                                    <a href="/deletetocart" id="remove_a"><button
-                                                                            type="button" id="remove_button"
+                                                                    <a href="/deletetocart" id="remove_a"><button type="button"
+                                                                            id="remove_button"
                                                                             class="btn btn-primary">REMOVE</button></a>
                                                                     <button type="button" class="btn btn-secondary"
                                                                         data-bs-dismiss="modal">CANCLE</button>
@@ -115,18 +109,26 @@
                                     <hr>
                                 </div>
                                 <div class="row">
-                                    <?php        $count = 0;
+                                    <?php        $count = 0; $discount=0;
                     $amount = 0; ?>
                                     @foreach ($datacart as $item)
 
                                                     <?php            $count++;
-                                        $amount = $amount + ($item->product->price * $item->quantity); ?>
+                                        $amount = $amount + (round($item->product->price-($item->product->price*$item->product->discount/100)) * $item->quantity); 
+                                        $discount = $discount + (round($item->product->price*$item->product->discount/100));
+                                        ?>
                                     @endforeach
 
+                                    
                                     <div class="col-8">
                                         <h6 class="card-subtitle mb-2 text-muted">Price ({{$count}} item)</h6>
                                     </div>
-                                    <div class="col-4 font-weight-bold">₹{{$amount}}</div>
+                                    <div class="col-4 font-weight-bold"> ₹{{$amount+$discount}}</div>
+                                    
+                                    <div class="col-8" style="margin-top: 20px;">
+                                        <h6 class="card-subtitle mb-2" style="color:green;">Discount</h6>
+                                    </div>
+                                    <div class="col-4 font-weight-bold" style="margin-top: 20px;color:green;">- ₹{{$discount}}</div>
 
                                 </div>
                                 <hr>
@@ -163,8 +165,11 @@
                                         </div>
                                         <div class="col-8">
                                             <p class="card-text">{{$item1['product_data']->name}}</p>
-                                            <h5 class="card-title">₹{{$item1['product_data']->price}}</h5>
 
+                                            <h5>₹{{round($item1['product_data']->price - ($item1['product_data']->price * $item1['product_data']->discount / 100))}}
+                                            </h5>
+                                            <div style="color: green"><del>₹{{$item1['product_data']->price}}</del>
+                                                {{$item1['product_data']->discount}}% off</div>
                                             {{-- quentity increament and decriment --}}
                                             <div style="margin-top:46px">
                                                 <input type="text" hidden value="{{$item1['product_data']->id}}">
@@ -186,12 +191,6 @@
                                                 <div
                                                     style="border-radius: 8px;text-align: center;margin-right: 11px;text-decoration: none;font-weight: bold;">
                                                     <p style="margin-top: 27px;">
-                                                        {{--
-                                                    <div data-bs-toggle="modal" data-bs-target="#removecart"
-                                                        data-description="This is a description of Product A."
-                                                        style="text-decoration: none;color:red; cursor: pointer;">Remove
-                                                    </div> --}}
-
                                                     <a href="/deletetocart/{{$removeid}}" id="remove_a">Remove</a>
 
                                                     <!--Remove Cart Modal -->
@@ -259,7 +258,7 @@
                                     @foreach ($datacart as $item1)
 
                                                     <?php            $count++;
-                                        $amount = $amount + ($item1['product_data']->price * $item1['quantity']); ?>
+                                        $amount = $amount + (round($item1['product_data']->price-($item1['product_data']->price*$item1['product_data']->discount/100))  * $item1['quantity']); ?>
                                     @endforeach
 
                                     <div class="col-8">

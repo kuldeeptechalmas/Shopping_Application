@@ -108,7 +108,8 @@
             <h5>{{$productdatails->name}}</h5>
             </p>
             <br>
-            <h2>₹{{$productdatails->price}}</h2>
+            <h2>₹{{round($productdatails->price- ($productdatails->price * $productdatails->discount /100))}}</h2>
+                        <div style="color: green"><del>₹{{$productdatails->price}}</del>     {{$productdatails->discount}}%  off</div>
             <br>
             @if ($productdatails->status == "in stock")
                 <div class="text-success">{{$productdatails->status}}</div>
@@ -128,6 +129,13 @@
                         @foreach($items as $item)
                             <li>{{ $item }}</li>
                         @endforeach
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        Available Offers:{{$couper}}
+                    </div>
+                    <div class="col-9">
                     </div>
                 </div>
             </div>

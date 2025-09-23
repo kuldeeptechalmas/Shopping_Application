@@ -22,6 +22,7 @@ class Product extends Model
         "price",
         "sub_category_id",
         "admin_id",
+        "discount",
     ];
 
     public function category()

@@ -18,11 +18,12 @@ Route::get("/MyShop",[MainController::class,"index"])->name("MainIndex");
 Route::get("/mainproductget",[MainController::class,"main_product_get_all"]);
 Route::get('/productdetailsunkown/{productid}', [MainController::class,'product_details']);
 Route::get('/checkouttoconform', [MainController::class,'checkout_page']);
-Route::get('/search', [MainController::class,'search_product_name']);
+Route::post('/search', [MainController::class,'search_product_name']);
 Route::get('/getcategroywiseproduct/{categoryname}', [MainController::class,'get_category_wise_product']);
 Route::get('/favourite/{productid}', [MainController::class,'add_to_favourite']);
-Route::get('/wishlist', [MainController::class,'wishlist']);
+Route::get('/wishlist', [MainController::class,'wishlist'])->name("wishlist");
 Route::get('/removewishlist/{productid}', [MainController::class,'remove_wishlist_item']);
+Route::post('/searchwishlist', [MainController::class,'search_wishlist_item']);
 
 // Checkout Functionality
 Route::get('/checkout', [MainController::class,'checkout_product'])->name("checkout_product");

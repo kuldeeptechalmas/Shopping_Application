@@ -20,8 +20,8 @@
                                         </div>
                                         <div class="col-8">
                                             <p class="card-text">{{$item->product->name}}</p>
-                                            <h5 class="card-title">₹{{$item->product->price}}</h5>
-
+                                            <h5 class="card-title">₹{{round($item->product->price-($item->product->price*$item->product->discount/100))}}</h5>
+                        <div style="color: green"><del>₹{{$item->product->price}}</del>     {{$item->product->discount}}%  off</div>
                                             <div class="d-flex justify-content-end">
                                                 <div
                                                     style="border-radius: 8px;text-align: center;margin-right: 11px;text-decoration: none;font-weight: bold;">

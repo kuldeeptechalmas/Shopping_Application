@@ -290,9 +290,10 @@
 
                         <div class="mb-3">
                             <label for="exampleInputPassword1" class="form-label">Description</label>
-                            {{-- <textarea type="text" style="resize: none;" rows="5" class="form-control" id="vpdescription"
-                                name="description">{{$product_data->description}}</textarea> --}}
-                            <textarea type="text" class="form-control" id="pdescription" style="resize: none;" rows="5" name="description"></textarea>
+                            {{-- <textarea type="text" style="resize: none;" rows="5" class="form-control"
+                                id="vpdescription" name="description">{{$product_data->description}}</textarea> --}}
+                            <textarea type="text" class="form-control" id="pdescription" style="resize: none;" rows="5"
+                                name="description"></textarea>
                         </div>
                         <div style="color:red;" id="epdescription" hidden></div>
 
@@ -340,6 +341,12 @@
                             {{-- <input type="text" class="form-control" id="status" name="status"> --}}
                         </div>
                         <div style="color:red;" id="epstatus" hidden></div>
+
+                        <div class="mb-3">
+                            <label for="exampleInputPassword1" class="form-label">Dicsount</label>
+                            <input type="text" class="form-control" id="discount" name="discount">
+                        </div>
+                        <div style="color:red;" id="epdiscount" hidden></div>
 
                     </form>
                 </div>
@@ -546,7 +553,7 @@
                 },
                 error: function (e) {
 
-                    const data = e['responseJSON']["errors"];
+                    const data = e["responseJSON"]["errors"];
                     console.log(data);
 
                     if (data['name']) {
@@ -698,6 +705,7 @@
             $("#epstatus").attr("hidden", true)
             $("#epstatus").attr("hidden", true)
             $("#epcatagory").attr("hidden", true)
+            $("#epdiscount").attr("hidden", true)
 
             const form = document.getElementById("product-from");
             const formData = new FormData(form);
@@ -740,6 +748,9 @@
                     }
                     if (data['catagory']) {
                         $("#epcatagory").text(data['catagory'][0]).removeAttr("hidden");
+                    }
+                    if (data['discount']) {
+                        $("#epdiscount").text(data['discount'][0]).removeAttr("hidden");
                     }
                 }
             });

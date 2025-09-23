@@ -1,18 +1,9 @@
-@if ($data->isNotEmpty())
+@extends('index')
 
-
-    <ul class="d-flex justify-content-around" style="list-style: none; box-shadow: 0px 3px 15px #afafaf; padding: 10px;">
-        @foreach ($data as $item1)
-            <a href="/getcategroywiseproduct/{{$item1->category_name}}" style="text-decoration: none;color:black;">
-                <li>{{$item1->category_name}}</li>
-            </a>
-        @endforeach
-    </ul>
-
-    @foreach ($data as $item1)
-        <h1 class="ps-3">{{$item1->category_name}}</h1>
+@section('content')
+    @if ($data->isNotEmpty())
         <div class="row w-100">
-            @foreach ($item1->productsdata as $item)
+            @foreach ($data as $item)
                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 card" style="width: 18rem; margin: 10px;">
                     <div class="likes">
                         @if (isset($wishlist))
@@ -39,13 +30,14 @@
                             {{$item->name}}
                         </p>
                         <p class="card-text" style="width: 100%;text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
-                        <h3>₹{{round($item->price- ($item->price * $item->discount /100))}}</h3>
-                        <div style="color: green"><del>₹{{$item->price}}</del>     {{$item->discount}}%  off</div>
+                        <h3>₹{{$item->price}}</h3>
                         </p>
                     </div>
                 </div>
             @endforeach
             <br>
         </div>
-    @endforeach
-@endif
+    @else
+        <h1 style="height: 100vh;display: flex;justify-content: center;align-items: center;color:red;">Product Not Found</h1>
+    @endif
+@endsection

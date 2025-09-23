@@ -145,14 +145,14 @@
                             </p>
                         </div>
                         <div class="col-2 d-flex align-items-center">
-                            <p>₹{{$item->product->price}}</p>
+                            <p>₹{{round($item->product->price-($item->product->price*$item->product->discount/100))}}</p>
                         </div>
                         <div class="col-2 d-flex align-items-center">
                             <p>{{$item->quantity}}</p>
                         </div>
                         <div class="col-2 d-flex align-items-center">
-                            <p>₹{{$item->product->price * $item->quantity}}</p>
-                            <?php        $total += ($item->product->price * $item->quantity); ?>
+                            <p>₹{{round($item->product->price-($item->product->price*$item->product->discount/100)) * $item->quantity}}</p>
+                            <?php        $total += (round($item->product->price-($item->product->price*$item->product->discount/100)) * $item->quantity); ?>
                         </div>
 
                     </div>

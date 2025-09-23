@@ -157,9 +157,9 @@
                         @foreach ($cart as $item)
                             <div class="row">
                                 <div class="col-6">{{$item->product->name}} × {{$item->quantity}}</div>
-                                <div class="col-6"> ₹{{$item->product->price}}</div>
+                                <div class="col-6"> ₹{{round($item->product->price-($item->product->price*$item->product->discount/100))}}</div>
 
-                                <?php        $amount = $amount + ($item->product->price * $item->quantity) ?>
+                                <?php        $amount = $amount + (round($item->product->price-($item->product->price*$item->product->discount/100)) * $item->quantity) ?>
                             </div>
                             <hr>
                         @endforeach

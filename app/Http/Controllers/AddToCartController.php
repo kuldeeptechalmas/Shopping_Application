@@ -121,8 +121,15 @@ class AddToCartController extends Controller
             $data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
             $addtocart1 = AddToCart::where("product_id", $request->product_id)
                 ->where("user_id", $data->id)->first();
-            $addtocart1->quantity = $request->queantity;
-            $addtocart1->save();
+            if($request->queantity==0)
+            {
+                $addtocart1->delete();
+            }
+            else
+            {
+                $addtocart1->quantity = $request->queantity;
+                $addtocart1->save();
+            }
 
         } else {
 

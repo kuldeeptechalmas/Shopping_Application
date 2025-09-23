@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AddToCart;
 use App\Models\CategoryProduct;
+use App\Models\Coupen;
 use App\Models\CustomerAndShopkeeper;
 use App\Models\CustomerOrder;
 use App\Models\FavouriceProduct;
@@ -41,7 +42,8 @@ class MainController extends Controller
             $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
             $wishlist = FavouriceProduct::where("user_id", $user_data->id)
                 ->where("product_id", $productid)->first();
-            return view("IndexProductShow.productdetail", ["productdatails" => $data, "wishlist" => $wishlist]);
+            $couper = Coupen::all();
+            return view("IndexProductShow.productdetail", ["productdatails" => $data,"couper"=>$couper, "wishlist" => $wishlist]);
         }
         return view("IndexProductShow.productdetail", ["productdatails" => $data]);
     }
@@ -152,8 +154,16 @@ class MainController extends Controller
 
     public function search_product_name(Request $request)
     {
-        $product = Product::where("name", "like", "%" . $request->search_data . "%")->get();
-        return response()->json(["product_data" => $product]);
+        // use json then implimented
+        // $product = Product::where("name", "like", "%" . $request->search_data . "%")->get();
+        // return response()->json(["product_data" => $product]);
+
+        $data_of_input = $request->search_data;
+        if ($data_of_input == '') {
+            return redirect()->route("MainIndex");
+        }
+        $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
+        return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input]);
     }
 
     public function get_category_wise_product($categoryname)
@@ -163,7 +173,9 @@ class MainController extends Controller
             $category_data = CategoryProduct::where("category_name", $categoryname)->get();
             $all_category_data = CategoryProduct::all();
             // $product_data = Product::where("category_id", $category_data->id)->get();
-            return view("IndexProductShow.categorywiseproductshow", ["data" => $category_data, "alldata" => $all_category_data]);
+            $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+            $favourite_product_list = FavouriceProduct::where("user_id", $user_data->id)->get();
+            return view("IndexProductShow.categorywiseproductshow", ["data" => $category_data, "alldata" => $all_category_data, "wishlist" => $favourite_product_list]);
         } catch (Exception $th) {
             return response()->with("Not found data");
         }
@@ -199,7 +211,17 @@ class MainController extends Controller
         if ($request->ajax()) {
             return response()->json(["data" => "delete"]);
         } else {
-            return redirect()->back();
+            return redirect()->route("wishlist");
         }
+    }
+
+    public function search_wishlist_item(Request $request)
+    {
+        $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+        $wishlist = FavouriceProduct::where("favourite_product.user_id", $user_data->id)
+            ->leftJoin('products', 'favourite_product.product_id', '=', 'products.id')
+            ->where("name", "like", "%" . $request->search_data . "%")
+            ->get();
+        return view("IndexProductShow.WishList.wishlistshow", ["wishlist" => $wishlist]);
     }
 }

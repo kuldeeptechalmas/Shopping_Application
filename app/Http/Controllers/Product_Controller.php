@@ -17,7 +17,6 @@ class Product_Controller extends Controller
 {
     public function product_add(Request $request)
     {
-
         $validator = $request->validate(
             [
                 "name" => "required",
@@ -58,6 +57,7 @@ class Product_Controller extends Controller
                 "stock" => $request->stock,
                 "status" => $request->status,
                 "sub_category_id" => $request->catagory,
+                "discount" => $request->discount,
             ]);
 
             if ($admin) {
@@ -85,6 +85,7 @@ class Product_Controller extends Controller
             $product->price = $request->price;
             $product->stock = $request->stock;
             $product->status = $request->status;
+            $product->discount = $request->discount;
             $product->admin_id = 0;
             $product->image = $request->file("image")[0]->getClientOriginalName();
             $product->save();
