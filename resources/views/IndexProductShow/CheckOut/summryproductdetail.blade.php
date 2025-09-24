@@ -126,12 +126,13 @@
         <h1>Your Shopping Cart</h1>
         <div id="cart-items" class="cart-items">
             @if ($cart->isNotEmpty())
-                <?php    $total = 0; ?>
+                <?php    $total = 0;$dis=0;?>
                 @foreach ($cart as $item)
-
+                    <?php        $discountusedata = 0; ?>
                     <div class="row" style="margin-bottom: 17px;">
                         <div class="col-2" style="justify-content: center;display: flex;align-items: center;">
-                            <a href="/deletecartsummry/{{$item->id}}" id="remove_a"><i class="fa-solid fa-circle-xmark cross"></i></a>
+                            <a href="/deletecartsummry/{{$item->id}}" id="remove_a"><i
+                                    class="fa-solid fa-circle-xmark cross"></i></a>
                         </div>
                         <div class="col-2" style="width: 86px;">
                             <a href="/productdetailsunkown/{{$item->product->id}}">
@@ -144,23 +145,56 @@
                                 {{$item->product->name}}
                             </p>
                         </div>
-                        <div class="col-2 d-flex align-items-center">
-                            <p>₹{{round($item->product->price-($item->product->price*$item->product->discount/100))}}</p>
-                        </div>
-                        <div class="col-2 d-flex align-items-center">
-                            <p>{{$item->quantity}}</p>
-                        </div>
-                        <div class="col-2 d-flex align-items-center">
-                            <p>₹{{round($item->product->price-($item->product->price*$item->product->discount/100)) * $item->quantity}}</p>
-                            <?php        $total += (round($item->product->price-($item->product->price*$item->product->discount/100)) * $item->quantity); ?>
-                        </div>
+                        @foreach ($couponuserdata as $cd)
+                            @if ($cd->product_id == $item->product->id)
+                                <?php                $discountusedata = 1;
+                                $dis=$dis+$cd->coupon->value; ?>
+                            @endif
+                        @endforeach
+
+                        @foreach ($couponuserdata as $cd)
+                            @if ($cd->product_id == $item->product->id)
+
+                                <div class="col-2 d-flex align-items-center">
+                                    <p>₹{{round($item->product->price - ($item->product->price * $item->product->discount / 100) -
+                                        $cd->coupon->value)}}
+                                    </p>
+                                </div>
+                                <div class="col-2 d-flex align-items-center">
+                                    <p>{{$item->quantity}}</p>
+                                </div>
+                                <div class="col-2 d-flex align-items-center">
+                                    <p>₹{{round($item->product->price - ($item->product->price * $item->product->discount / 100)) *
+                                        $item->quantity - $cd->coupon->value}}</p>
+                                    <?php                $total += (round($item->product->price - ($item->product->price * $item->product->discount / 100)) * $item->quantity); ?>
+                                </div>
+                            @endif
+                        @endforeach
+
+                        @if ($discountusedata == 0)
+
+
+                            <div class="col-2 d-flex align-items-center">
+                                <p>₹{{round($item->product->price - ($item->product->price * $item->product->discount / 100))}}
+                                </p>
+                            </div>
+                            <div class="col-2 d-flex align-items-center">
+                                <p>{{$item->quantity}}</p>
+                            </div>
+                            <div class="col-2 d-flex align-items-center">
+                                <p>₹{{round($item->product->price - ($item->product->price * $item->product->discount / 100)) *
+                                $item->quantity}}</p>
+                                <?php            $total += (round($item->product->price - ($item->product->price * $item->product->discount / 100)) * $item->quantity); ?>
+                            </div>
+                        @endif
 
                     </div>
                 @endforeach
             @endif
         </div>
+       
         <div class="cart-summary">
-            <p>Total: ₹<span id="cart-total">{{$total}}</span></p>
+            <p>Total: ₹<span id="cart-total">{{$total-$dis}}</span></p>
             <a href="/checkout"><button class="checkout-button">Checkout</button></a>
         </div>
     </div>

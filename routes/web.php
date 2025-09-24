@@ -24,6 +24,8 @@ Route::get('/favourite/{productid}', [MainController::class,'add_to_favourite'])
 Route::get('/wishlist', [MainController::class,'wishlist'])->name("wishlist");
 Route::get('/removewishlist/{productid}', [MainController::class,'remove_wishlist_item']);
 Route::post('/searchwishlist', [MainController::class,'search_wishlist_item']);
+Route::get('/discountcoupun/{couponid}/{productid}', [MainController::class,'discount_coupun']);
+Route::get('/removediscount/{productid}', [MainController::class,'remove_discount_coupun']);
 
 // Checkout Functionality
 Route::get('/checkout', [MainController::class,'checkout_product'])->name("checkout_product");
@@ -73,6 +75,8 @@ Route::get('/getuserofall', [AdminController::class, "getuserofall"]);
 Route::get('/admingetuserofall', [AdminController::class, "admin_getuserofall"])->name("admin_get_user_of_all");
 Route::post('/adminviewupdate', [AdminController::class, "viewupdateuser"]);
 Route::get('/productdetailsadmin/{productid}', [AdminController::class,'product_details']);
+Route::get('/viewallorder', [AdminController::class,'view_all_order']);
+Route::get('/vieworder/{orderid}', [AdminController::class,'view_order']);
 
 // Error
 Route::get('/error', function(){

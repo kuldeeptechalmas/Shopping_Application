@@ -9,6 +9,7 @@ use App\Models\CustomerAndShopkeeper;
 use App\Models\CustomerOrder;
 use App\Models\FavouriceProduct;
 use App\Models\Product;
+use App\Models\UserCoupunData;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -38,14 +39,20 @@ class MainController extends Controller
     public function product_details($productid)
     {
         $data = Product::where("id", $productid)->first();
+        $couper = Coupen::all();
         if (Session::get("customeremail")) {
+
             $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+
             $wishlist = FavouriceProduct::where("user_id", $user_data->id)
                 ->where("product_id", $productid)->first();
-            $couper = Coupen::all();
-            return view("IndexProductShow.productdetail", ["productdatails" => $data,"couper"=>$couper, "wishlist" => $wishlist]);
+
+            $coupondata = UserCoupunData::where("user_id", $user_data->id)
+                ->where("product_id", $productid)->first();
+
+            return view("IndexProductShow.productdetail", ["productdatails" => $data, "coupen" => $couper, "coupenuserdata" => $coupondata, "wishlist" => $wishlist]);
         }
-        return view("IndexProductShow.productdetail", ["productdatails" => $data]);
+        return view("IndexProductShow.productdetail", ["productdatails" => $data, "coupen" => $couper]);
     }
 
     public function checkout_page()
@@ -78,7 +85,10 @@ class MainController extends Controller
         $data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
         $data->password = Crypt::decryptString($data->password);
 
-        return view("IndexProductShow.CheckOut.checkoutpage", ["customerdata" => $data, "cart" => $addtocart, "contrylist" => $contrylist]);
+        // coupon data
+        $coupon = UserCoupunData::where("user_id",$data1->id)->get();
+
+        return view("IndexProductShow.CheckOut.checkoutpage", ["customerdata" => $data,"couponuserdata"=>$coupon, "cart" => $addtocart, "contrylist" => $contrylist]);
     }
 
     public function summry_product_detail()
@@ -89,7 +99,9 @@ class MainController extends Controller
         if ($addtocart->isEmpty()) {
             return redirect()->route("addtocart_get_all");
         }
-        return view("IndexProductShow.CheckOut.summryproductdetail", ["cart" => $addtocart]);
+
+        $coupon = UserCoupunData::where("user_id",$data1->id)->get();
+        return view("IndexProductShow.CheckOut.summryproductdetail", ["cart" => $addtocart,"couponuserdata"=>$coupon]);
     }
 
     public function delete_cart_summry($cartid)
@@ -101,10 +113,12 @@ class MainController extends Controller
 
     public function order_product(Request $request)
     {
+        $data1 = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+        $coupon = UserCoupunData::where("user_id",$data1->id)->get();
         if ($request->isMethod("post")) {
 
 
-            $data1 = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+            
             $addtocart = AddToCart::where("user_id", $data1->id)->get();
 
             foreach ($addtocart as $item) {
@@ -121,6 +135,7 @@ class MainController extends Controller
                 $order->customer_id = $item->user_id;
                 $order->product_id = $item->product_id;
                 $order->quantity = $item->quantity;
+                $order->status = "Pending";
                 $order->order_date = now();
                 $order->delivery_date = now()->addDays(7);
                 $order->save();
@@ -131,11 +146,11 @@ class MainController extends Controller
             }
 
             $data = CustomerOrder::where("email", Session::get("customeremail"))->get();
-            return view("IndexProductShow.Order.ordershow", ["order" => $data]);
+            return view("IndexProductShow.Order.ordershow", ["order" => $data,"couponuserdata"=>$coupon]);
         }
         $data = CustomerOrder::where("email", Session::get("customeremail"))->get();
 
-        return view("IndexProductShow.Order.ordershow", ["order" => $data]);
+        return view("IndexProductShow.Order.ordershow", ["order" => $data,"couponuserdata"=>$coupon]);
     }
 
     public function order_delete($orderid)
@@ -168,16 +183,32 @@ class MainController extends Controller
 
     public function get_category_wise_product($categoryname)
     {
-        try {
 
+        if (Session::get("customeremail")) {
             $category_data = CategoryProduct::where("category_name", $categoryname)->get();
             $all_category_data = CategoryProduct::all();
-            // $product_data = Product::where("category_id", $category_data->id)->get();
             $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
             $favourite_product_list = FavouriceProduct::where("user_id", $user_data->id)->get();
-            return view("IndexProductShow.categorywiseproductshow", ["data" => $category_data, "alldata" => $all_category_data, "wishlist" => $favourite_product_list]);
-        } catch (Exception $th) {
-            return response()->with("Not found data");
+            dd($favourite_product_list);
+            return view(
+                "IndexProductShow.categorywiseproductshow",
+                [
+                    "data" => $category_data,
+                    "alldata" => $all_category_data,
+                    "wishlist" => $favourite_product_list
+                ]
+            );
+        } else {
+            $category_data = CategoryProduct::where("category_name", $categoryname)->get();
+            $all_category_data = CategoryProduct::all();
+
+            return view(
+                "IndexProductShow.categorywiseproductshow",
+                [
+                    "data" => $category_data,
+                    "alldata" => $all_category_data,
+                ]
+            );
         }
     }
 
@@ -223,5 +254,38 @@ class MainController extends Controller
             ->where("name", "like", "%" . $request->search_data . "%")
             ->get();
         return view("IndexProductShow.WishList.wishlistshow", ["wishlist" => $wishlist]);
+    }
+
+    public function discount_coupun($coupon_id, $product_id)
+    {
+        if (Session::get("customeremail")) {
+            
+            $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+            $coupon = new UserCoupunData();
+            $coupon->user_id = $user_data->id;
+            $coupon->product_id = $product_id;
+            $coupon->coupon_id = $coupon_id;
+            $coupon->save();
+        } else {
+            Session::put("discountamount", [
+                "product_id" => $product_id,
+                "amount" => $coupon_id
+            ]);
+        }
+
+        return redirect()->back();
+    }
+
+    public function remove_discount_coupun($product_id)
+    {
+
+        if (Session::get("customeremail")) {
+            $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+            $coupon = UserCoupunData::where("user_id", $user_data->id)
+                ->where("product_id", $product_id)->delete();
+        } else {
+            Session::forget("discountamount");
+        }
+        return redirect()->back();
     }
 }

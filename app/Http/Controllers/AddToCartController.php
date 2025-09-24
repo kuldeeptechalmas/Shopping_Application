@@ -6,6 +6,7 @@ use App\Models\AddToCart;
 use App\Models\CategoryProduct;
 use App\Models\CustomerAndShopkeeper;
 use App\Models\Product;
+use App\Models\UserCoupunData;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -77,7 +78,8 @@ class AddToCartController extends Controller
 
             $data1 = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
             $addtocart = AddToCart::where("user_id", $data1->id)->get();
-            return view("IndexProductShow.AddToCart.addtocartindex", ["datacart" => $addtocart]);
+            $couponuserdata= UserCoupunData::where("user_id",$data1->id)->get();
+            return view("IndexProductShow.AddToCart.addtocartindex", ["datacart" => $addtocart,"usercoupondata"=>$couponuserdata]);
         
         } else {
 
@@ -134,14 +136,21 @@ class AddToCartController extends Controller
         } else {
 
             $cart = session()->get('cart', []);
-            if (isset($cart[$request->product_id])) {
+            if ($cart[$request->product_id]) {
+                $cart_data_find=$cart[$request->product_id];
                 if ($cart[$request->product_id]["quantity"] > $request->queantity) {
                     $cart[$request->product_id]["quantity"] = $cart[$request->product_id]["quantity"] - 1;
                 } else {
                     $cart[$request->product_id]["quantity"] = $cart[$request->product_id]["quantity"] + 1;
                 }
+                session()->put('cart', $cart);
+                if ($cart[$request->product_id]["quantity"]==0) {
+                    // dd($cart_data_find);
+                    unset($cart[$request->product_id]);
+                }
+            
             }
-            session()->put('cart', $cart);
+            
         }
         return response()->json([
             'status' => 'success',

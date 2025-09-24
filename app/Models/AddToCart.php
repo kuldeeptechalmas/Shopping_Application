@@ -25,4 +25,8 @@ class AddToCart extends Model
     {
         return $this->belongsTo(CustomerAndShopkeeper::class);
     }
+    public function coupon()
+    {
+        return $this->belongsTo(UserCoupunData::class);
+    }
 }

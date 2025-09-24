@@ -24,6 +24,7 @@ class CustomerOrder extends Model
         "product_id",
         "order_date",
         "delivery_date",
+        "status",
     ];
 
     public function product()

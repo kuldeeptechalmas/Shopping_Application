@@ -98,10 +98,10 @@
 
                             <label for="name">Full Name:</label>
                             <input type="text" id="nem" name="name" value="{{$customerdata->name}}">
-                            
+
                             <label for="email">Email:</label>
                             <input type="text" id="email" name="email" value="{{$customerdata->email}}">
-                            
+
                             <label for="phone">Phone No:</label>
                             <input type="text" id="phone" name="phone" value="{{$customerdata->phone}}">
 
@@ -153,20 +153,31 @@
                     </div>
                     <hr>
                     @if ($cart->isNotEmpty())
-                        <?php    $amount = 0; ?>
-                        @foreach ($cart as $item)
-                            <div class="row">
-                                <div class="col-6">{{$item->product->name}} × {{$item->quantity}}</div>
-                                <div class="col-6"> ₹{{round($item->product->price-($item->product->price*$item->product->discount/100))}}</div>
+                                    <?php    $amount = 0;
+                        $dis = 0;  ?>
+                                    @foreach ($cart as $item)
+                    <?php $discountusedata=0; ?>
+                                        {{-- coupon data --}}
+                                        @foreach ($couponuserdata as $cd)
+                                            @if ($cd->product_id == $item->product->id)
+                                                <?php     $discountusedata = $discountusedata+ $cd->coupon->value;
+                                                $dis = $dis + $cd->coupon->value; ?>
+                                            @endif
+                                        @endforeach
 
-                                <?php        $amount = $amount + (round($item->product->price-($item->product->price*$item->product->discount/100)) * $item->quantity) ?>
-                            </div>
-                            <hr>
-                        @endforeach
+                                        <div class="row">
+                                            <div class="col-6">{{$item->product->name}} × {{$item->quantity}}</div>
+                                            <div class="col-6">
+                                                ₹{{round($item->product->price - ($item->product->price * $item->product->discount / 100)-$discountusedata)}}</div>
+
+                                            <?php        $amount = $amount + (round($item->product->price - ($item->product->price * $item->product->discount / 100)) * $item->quantity) ?>
+                                        </div>
+                                        <hr>
+                                    @endforeach
                     @endif
                     <div class="row">
                         <div class="col-6 fw-bold">Total</div>
-                        <div class="col-6 fw-bold"> ₹{{$amount}}</div>
+                        <div class="col-6 fw-bold"> ₹{{$amount-$dis}}</div>
                     </div>
                 </div>
                 <div class="checkout-container font-weight-bold" style="margin-top: 24px;">
@@ -195,8 +206,8 @@
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
-        
-        $(document).ready(function(){
+
+        $(document).ready(function () {
 
             const selectElement = $('#state');
             selectElement.empty();
@@ -212,7 +223,7 @@
                     $("#state").append(`<option value="">Select</option>`);
                     $.each(res["statelist"], function (indexInArray, valueOfElement) {
                         var selectstate = (oldstate == valueOfElement["id"]) ? "selected" : "";
-                    
+
                         $("#state").append(`<option value="${valueOfElement["id"]}" ${selectstate} >${valueOfElement["name"]}</option>`);
                     });
                 },
@@ -221,7 +232,7 @@
 
                 },
             })
-            
+
 
             const selectElement1 = $('#city');
             selectElement1.empty();
@@ -236,7 +247,7 @@
                     var oldcity = "{{$customerdata->city}}";
                     $("#city").append(`<option value="">Select</option>`);
                     $.each(res["citylist"], function (indexInArray, valueOfElement) {
-                         var selectcity = (oldcity == valueOfElement["id"]) ? "selected" : "";
+                        var selectcity = (oldcity == valueOfElement["id"]) ? "selected" : "";
                         $("#city").append(`<option value="${valueOfElement["id"]}" ${selectcity} >${valueOfElement["name"]}</option>`);
 
                     });
@@ -247,7 +258,7 @@
 
                 },
             })
-            
+
         })
 
         function showpaymentdetail1() {

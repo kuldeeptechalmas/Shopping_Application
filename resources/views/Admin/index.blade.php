@@ -117,6 +117,9 @@
                     <a href="/admingetproductall" class="nav-link">
                         <i class="nav-icon cil-speedometer"></i> Products
                     </a>
+                    <a href="/viewallorder" class="nav-link">
+                        <i class="nav-icon cil-speedometer"></i> Order
+                    </a>
                 </li>
 
             </ul>
@@ -130,26 +133,7 @@
             <div class="body flex-grow-1 px-3" style="margin-left: 21%;">
 
                 @yield('content')
-                {{-- <div class="container-lg" id="outputoftable">
-
-                </div> --}}
-                {{--
-                <div class="container-lg" id="producttablediv">
-                    <h1>Show Product</h1>
-                    <button type="button" class="btn btn-primary" style="margin-left: 87%;margin-top: -5%;"
-                        data-bs-toggle="modal" data-bs-target="#addproductmodel" aria-current="page">
-                        Add Product
-                    </button>
-                    <form class="d-flex" style="margin-bottom: 23px;width: 52%;">
-                        <input class="form-control me-2" oninput="searchproduct()" id="searchproductid" type="search"
-                            placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" onclick="searchproduct()" type="button">Search</button>
-                    </form>
-                    <div class="container-lg" id="producttable">
-
-                    </div>
-                </div> --}}
-
+                
             </div>
         </div>
     </div>
@@ -480,7 +464,7 @@
             </div>
         </div>
     </div>
-
+@yield('script_content')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>

@@ -20,7 +20,92 @@
             padding: 15px;
             margin-top: 29px;
         }
+
+        /* coupen css */
+
+
+        .coupon-container {
+            width: 188px;
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            text-align: center;
+            height: 361px;
+
+        }
+
+        .coupon-header {
+            background-color: #ff6347;
+            /* Tomato color */
+            color: white;
+            padding: 15px 0;
+            border-bottom: 2px solid #e0523a;
+        }
+
+        .coupon-header h2 {
+            margin: 0;
+            font-size: 1.8em;
+            text-transform: uppercase;
+        }
+
+        .coupon-body {
+            padding: 20px;
+        }
+
+        .discount-amount {
+            font-size: 3em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .deal-description {
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .coupon-code {
+            background-color: #f8f8f8;
+            border: 1px solid #eee;
+            padding: 10px 15px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .code-label {
+            font-weight: bold;
+            color: #777;
+            margin-right: 5px;
+        }
+
+        .code-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #ff6347;
+        }
+
+        .expiration {
+            font-size: 0.9em;
+            color: #888;
+        }
+
+        .coupon-footer {
+            background-color: #f2f2f2;
+            padding: 10px 0;
+            border-top: 1px solid #eee;
+        }
+
+        .disclaimer {
+            font-size: 0.8em;
+            color: #a0a0a0;
+            margin: 0;
+        }
     </style>
+
     @toastifyCss
 
     <div class="row">
@@ -99,17 +184,45 @@
                             style="color: #c2c2c2;"></i>
                     @endif
                 @else
-            
-                <i class="fa-solid fa-heart" onclick="favourite_product_data_save(this,'{{$productdatails->id}}')"
-                    style="color: #c2c2c2;"></i>
+
+                    <i class="fa-solid fa-heart" onclick="favourite_product_data_save(this,'{{$productdatails->id}}')"
+                        style="color: #c2c2c2;"></i>
                 @endif
             </div>
             <p>
             <h5>{{$productdatails->name}}</h5>
             </p>
             <br>
-            <h2>₹{{round($productdatails->price- ($productdatails->price * $productdatails->discount /100))}}</h2>
-                        <div style="color: green"><del>₹{{$productdatails->price}}</del>     {{$productdatails->discount}}%  off</div>
+
+            @if (Session::get("discountamount"))
+                @if (Session::get("discountamount")["product_id"] == $productdatails->id)
+
+                    <h2>₹{{round($productdatails->price - ($productdatails->price * $productdatails->discount / 100) - Session::get("discountamount")["amount"])}}
+                    </h2>
+                    <div style="color: green">
+                        <p> ₹{{Session::get("discountamount")["amount"]}} off <a
+                                href="/removediscount/{{$productdatails->id}}">Remove</a></p>
+                    </div>
+                    <div style="color: green"><del>₹{{$productdatails->price}}</del> {{$productdatails->discount}}% off</div>
+                @else
+                    <h2>₹{{round($productdatails->price - ($productdatails->price * $productdatails->discount / 100))}}</h2>
+                    <div style="color: green"><del>₹{{$productdatails->price}}</del> {{$productdatails->discount}}% off</div>
+                @endif
+            @else
+            
+                @if (isset($coupenuserdata))
+                    <h2>₹{{round($productdatails->price - ($productdatails->price * $productdatails->discount / 100) - $coupenuserdata->coupon->value)}}
+                    </h2>
+                    <div style="color: green">
+                        <p> ₹{{$coupenuserdata->coupon->value}} off <a href="/removediscount/{{$productdatails->id}}">Remove</a></p>
+                    </div>
+                    <div style="color: green"><del>₹{{$productdatails->price}}</del> {{$productdatails->discount}}% off</div>
+                @else
+                    <h2>₹{{round($productdatails->price - ($productdatails->price * $productdatails->discount / 100))}}</h2>
+                    <div style="color: green"><del>₹{{$productdatails->price}}</del> {{$productdatails->discount}}% off</div>
+                @endif
+
+            @endif
             <br>
             @if ($productdatails->status == "in stock")
                 <div class="text-success">{{$productdatails->status}}</div>
@@ -133,10 +246,37 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        Available Offers:{{$couper}}
+                        Available Offers:
+                        @if ($coupen->isNotEmpty())
+                            <div class="row" style="margin-top: 26px;">
+                                @foreach ($coupen as $item)
+                                    <div class="col-4">
+                                        <div class="coupon-container">
+                                            <div class="coupon-header">
+                                                <h2>Special Discount!</h2>
+                                            </div>
+                                            <div class="coupon-body">
+                                                <p class="deal-description">{{$item->name}}</p>
+                                                <p class="deal-description">Discount ₹{{$item->value}}</p>
+                                                <div class="coupon-code">
+                                                    <span class="code-label">CODE:</span>
+                                                    <span class="code-value">{{$item->code}}</span>
+                                                </div>
+                                                @if (Session::get("customeremail"))
+                                                    <a href="/discountcoupun/{{$item->id}}/{{$productdatails->id}}">Apply</a>
+                                                @else
+                                                    <a href="/discountcoupun/{{$item->value}}/{{$productdatails->id}}">Apply</a>
+
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
-                    <div class="col-9">
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -159,11 +299,11 @@
                         }
                         else {
                             $(rs)[0].style.color = "red";
-                        toastify().success('Add to Wishlist !!!', {
-                            position: 'center',
-                        });
+                            toastify().success('Add to Wishlist !!!', {
+                                position: 'center',
+                            });
                         }
-                        
+
                     },
                     error: function (e) {
                         console.log(e);

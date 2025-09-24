@@ -156,7 +156,7 @@ class CustomerController extends Controller
             if ($customer->rols == "Customer") {
                 Session::put("customerid", $customer->name);
                 Session::put("customeremail", $customer->email);
-                // dd(Session::get("cart"));
+                Session::forget("discountamount");
                 $cart = Session::get("cart");
                 // dd(!empty($cart));
                 if(!empty($cart))

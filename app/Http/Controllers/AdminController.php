@@ -7,6 +7,7 @@ use App\Models\Admin;
 use App\Models\CategoryProduct;
 use App\Models\Customer;
 use App\Models\CustomerAndShopkeeper;
+use App\Models\CustomerOrder;
 use App\Models\Product;
 use FFI\Exception;
 use Illuminate\Http\Request;
@@ -187,5 +188,14 @@ class AdminController extends Controller
         $catagorydata = CategoryProduct::all();
         $data = Product::where("id", $productid)->first();
         return view("Admin.productdetail", ["productdatails" => $data, "catagory" => $catagorydata,]);
+    }
+
+    public function  view_all_order() {
+        $data = CustomerOrder::all();
+        return view("Admin.ViewOrder.viewallorder",["data"=>$data]);
+    }   
+    public function  view_order($orderid) {
+        $data = CustomerOrder::find($orderid);
+        return view("Admin.ViewOrder.vieworderdetail",["order"=>$data]);
     }
 }
