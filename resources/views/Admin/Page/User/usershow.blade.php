@@ -1,30 +1,6 @@
 @extends('Admin.index')
 
 @section('content')
-
-    {{-- <div id="datatable">
-
-    </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script>
-
-        // Product data are get all
-        function showuserdataget() {
-            $.ajax({
-                type: "GET",
-                url: "/getuserofall",
-                success: function (res) {
-
-                    $("#datatable").html(res);
-
-                },
-                error: function (e) {
-                    console.log(e);
-                },
-            })
-        }
-        showuserdataget();
-    </script> --}}
     <div id="dataOutput" class="mt-3" style="">
         <h1>Show Users</h1>
         <table class="table table-striped">
@@ -50,14 +26,27 @@
                             <th scope="col">{{$item->email}}</th>
                             <th scope="col">{{$item->rols}}</th>
                             <th scope="col">
-                                <button type="button" class="btn btn-primary" onclick="customerAndshopkeeperview('{{$item->id}}')"
-                                    data-bs-toggle="modal" data-bs-target="#viewmodel">
-                                    Edit
-                                </button>
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                    onclick="deletedataname('{{$item->email}}')" data-bs-target="#deletemodel">
-                                    Delete
-                                </button>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <form action="{{route('admindashboard')}}" method="post">
+                                            @csrf
+                                            <input type="text" name="editid" hidden value="{{$item->id}}">
+                                            <button type="submit" class="btn btn-primary">
+                                                Edit
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <div class="col-8">
+                                        <form action="{{route('admindashboard')}}" method="post">
+                                            @csrf
+                                            <input type="text" name="deleteid" hidden value="{{$item->id}}">
+                                            <button type="submit" class="btn btn-danger">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
 
                             </th>
                         </tr>

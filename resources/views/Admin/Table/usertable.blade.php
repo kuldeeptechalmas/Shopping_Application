@@ -23,10 +23,7 @@
                         <th scope="col">{{$item->email}}</th>
                         <th scope="col">{{$item->rols}}</th>
                         <th scope="col">
-                            <button type="button" class="btn btn-primary" onclick="viewdataname('{{$item->id}}','{{$item->name}}',
-                                            '{{$item->phone}}','{{$item->gender}}','{{$item->address}}','{{$item->city}}',
-                                            '{{$item->state}}','{{$item->country}}','{{$item->pincode}}','{{$item->email}}'
-                                            ,'{{$item->password}}')" data-bs-toggle="modal" data-bs-target="#viewmodel">
+                            <button type="button" class="btn btn-primary" onclick="customerAndshopkeeperview('{{$item->id}}')" data-bs-toggle="modal" data-bs-target="#viewmodel">
                                 Edit
                             </button>
                             <button type="button" class="btn btn-danger" data-bs-toggle="modal" onclick="deletedataname('{{$item->email}}')" data-bs-target="#deletemodel">

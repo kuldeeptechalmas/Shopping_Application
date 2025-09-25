@@ -24,8 +24,8 @@
             </thead>
             <tbody>
 
-                @if (isset($data))
-                    @foreach ($data as $item)
+                @if (isset($order))
+                    @foreach ($order as $item)
                         <tr>
                             <th scope="col">{{$item->product->name}}</th>
                             <th scope="col">
@@ -62,7 +62,7 @@
 
         <div class="paginationDiv" style="margin-right: 73%;">
             <p>
-                Paginate Index : {{ $data->links('pagination::bootstrap-4') }}
+                Paginate Index : {{ $order->links('pagination::bootstrap-4') }}
             </p>
         </div>
 
@@ -108,10 +108,8 @@
                     },
                     error: function (e) {
                         console.log(e);
-
                     }
                 })
-
             }
         </script>
     @endsection

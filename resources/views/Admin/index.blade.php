@@ -64,6 +64,8 @@
             }
         }
     </style>
+
+    @yield('css_content')
 </head>
 
 <body>
@@ -103,7 +105,7 @@
         <div class="sidebar sidebar-white sidebar-fixed" id="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-brand">
-                    <a href="/admindashboard">
+                    <a href="/AdminInUser">
                         <img style="width: 100%; height: 100%; object-fit: cover;"
                             src="{{ asset('storage/UploadeFile/logo.png') }}" alt="Image">
                     </a>
@@ -111,13 +113,13 @@
             </div>
             <ul class="sidebar-nav">
                 <li class="nav-item">
-                    <a href="/admingetuserofall" id="usersnavbarid" class="nav-link">
+                    <a href="/AdminInUser" id="usersnavbarid" class="nav-link">
                         <i class="nav-icon cil-speedometer"></i> Users
                     </a>
-                    <a href="/admingetproductall" class="nav-link">
+                    <a href="/AdminInProduct" class="nav-link">
                         <i class="nav-icon cil-speedometer"></i> Products
                     </a>
-                    <a href="/viewallorder" class="nav-link">
+                    <a href="/AdminInOrder" class="nav-link">
                         <i class="nav-icon cil-speedometer"></i> Order
                     </a>
                 </li>
@@ -133,7 +135,7 @@
             <div class="body flex-grow-1 px-3" style="margin-left: 21%;">
 
                 @yield('content')
-                
+
             </div>
         </div>
     </div>
@@ -212,7 +214,7 @@
         </div>
     </div>
 
-    <!--User View Modal -->
+    <!--Customer And Shopkeeper View Modal -->
     <div class="modal fade" id="viewmodel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -220,127 +222,33 @@
                     <h1 class="modal-title fs-5" id="exampleModalLabel"> View Modal</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <form class="mx-1 mx-md-4" method="post" action="/registration">
-                        @csrf
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                <label class="form-label" for="form3Example1c">Your Name</label>
-                                <input type="text" id="vname" value="{{old('vname')}}" name='vname'
-                                    class="form-control" />
+                <div class="modal-body" id="userviewid">
 
-                                <div style="color:red;" id="enames" hidden></div>
-
-                            </div>
-                        </div>
-                        <input type="text" name="id" id="vid" hidden>
-                        <input type="text" name="rols" id="roles" hidden>
-
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                <label class="form-label" for="form3Example1c">Phone No</label>
-                                <input type="text" id="vphone" value="{{old('vphone')}}" name="vphone"
-                                    class="form-control" />
-
-                                <div style="color:red;" id="ephone" hidden></div>
-
-                            </div>
-                        </div>
-
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                <label class="form-label" for="form3Example1c">Gender</label>
-                                <input type="radio" id="gender1" value="male" name="gender" {{old('gender') == 'male'
-    ? 'checked' : '' }}>Male</input>
-                                <input type="radio" id="gender2" value="female" name="gender" {{old('gender') == 'female'
-    ? 'checked' : '' }}>Female</input>
-
-                                <div style="color:red;" id="egender" hidden></div>
-
-                            </div>
-                        </div>
-
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                <label class="form-label" for="form3Example1c">Address</label>
-                                <input type="text" id="vaddress" value="{{old('address')}}" name="address"
-                                    class="form-control" />
-                                <div style="color:red;" id="eaddress" hidden></div>
-                            </div>
-                        </div>
-
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                <label class="form-label" for="form3Example1c">Country</label>
-                                <select class="form-select" id="vcountry" value="{{old('country')}}" name="country">
-
-                                </select>
-                                <div style="color:red;" hidden id="ecountry"></div>
-                            </div>
-                        </div>
-
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                <label class="form-label" for="state">State</label>
-                                <select class="form-select" id="vstate" value="{{old('state')}}" name="state">
-                                </select>
-                                <div style="color:red;" hidden id="estate"></div>
-                            </div>
-                        </div>
-
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                <label class="form-label" for="form3Example1c">City</label>
-                                <select placeholder="Select" class="form-select" id="vcity" value="{{old('city')}}"
-                                    name="city">
-                                </select>
-                                <div style="color:red;" hidden id="ecity"></div>
-                            </div>
-                        </div>
-
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                <label class="form-label" for="form3Example1c">Pincode</label>
-                                <input type="text" id="vpincode" value="{{old('pincode')}}" name="pincode"
-                                    class="form-control" />
-                                <div style="color:red;" id="epincode" hidden></div>
-                            </div>
-                        </div>
-
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                <label class="form-label" for="form3Example3c">Your Email</label>
-                                <input type="text" id="vemail" value="{{old('email')}}" name="email"
-                                    class="form-control" />
-                                <div style="color:red;" hidden id="eemails"></div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" onclick="savechange()" class="btn btn-primary">Save changes</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!--User Delete Modal -->
+    <!--customer and shopkeeper Delete Modal -->
     <div class="modal fade" id="deletemodel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Modal</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are You Sore This Record Delete
-                    <label id="deletename" style="font-weight: bold"></label>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-danger" onclick="deleteReacord()">Delete</button>
-                </div>
+                <form action="/deleterecord">
+                    @csrf
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Modal</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are You Sore This Record Delete
+                        {{-- <label id="deletename" style="font-weight: bold"></label> --}}
+                        <input type="text" name="email" id="deletename" hidden>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -380,7 +288,8 @@
                                         @endforeach
                                     @endif
                                 </select>
-                                <div style="color:red;" hidden id="epcatagory"></div>
+                                <div style="color:red;" hidden id="epcatagory">
+                                </div>
                             </div>
                         </div>
 
@@ -435,10 +344,6 @@
                 <div class="modal-body" style="margin-right: 10%;margin-left: 9%;" id="viewmodelform">
                     {{-- body other page "viewproduct.blade.php" --}}
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" id="viewsave" class="btn btn-primary">save change</button>
-                </div>
             </div>
         </div>
     </div>
@@ -448,52 +353,84 @@
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Product Delete Modal</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are You Sore This Record Delete
-                    <label id="deletenameproduct" style="font-weight: bold"></label>
-                    <label id="deleteid" hidden></label>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-danger" onclick="deleteReacordProduct()">Delete</button>
-                </div>
+                <form action="{{ route('delete_product_admin') }}" method="post">
+                    @csrf
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Product Delete Modal</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are You Sore This Record Delete
+                        <input type="text" name="deleteid" id="deleteid" hidden>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-@yield('script_content')
+
+    @yield('script_content')
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
 
-        
+        // delete customer and shopkeeper
+        // done
+        function deletedataname(name) {
+            document.getElementById("deletename").value = name;
+        }
 
-        (function () {
+        // delete product
+        // done
+        function deleteproductdata(id, name) {
+            document.getElementById("deleteid").value = id;
+        }
 
-            'use strict';
+        // view product
+        // done
+        function viewproduct_productshow(productid) {
+            $.ajax({
+                type: "get",
+                url: "/productviewadmin/" + productid,
+                success: function (res) {
+                    $("#viewmodelform").html(res);
+                },
+                error: function (e) {
+                    console.log(e);
+                }
+            })
+        }
 
-            $('.input-file').each(function () {
-                var $input = $(this),
-                    $label = $input.next('.js-labelFile'),
-                    labelVal = $label.html();
+        // status change 
+        // done
+        function statuscheck_viewproduct() {
+            if (document.getElementById('vpstock').value == "0") {
+                document.getElementById('vpstatus').value = "out of stock";
+            }
+            else {
+                if (document.getElementById('vpstock').value > 0) {
+                    document.getElementById('vpstatus').value = "in stock";
+                }
+                else {
+                    document.getElementById('vpstatus').value = "";
+                }
+            }
 
-                $input.on('change', function (element) {
-                    var fileName = '';
-                    if (element.target.value) fileName = element.target.value.split('\\').pop();
-                    fileName ? $label.addClass('has-file').find('.js-fileName').html(fileName) : $label.removeClass('has-file').html(labelVal);
-                });
-            });
-
-        })();
-
-
+        }
+        $("#pstatus").on("change", function () {
+            if (document.getElementById('pstatus').value == "out of stock") {
+                document.getElementById('pstock').value = 0;
+            }
+        })
 
         // searching product data
+        // done use ajax
         function searchproduct() {
             const data = document.getElementById("searchproductid").value;
             $.ajax({
@@ -514,217 +451,96 @@
             });
         }
 
-        // delete product
-        function deleteproductdata(id, name) {
-            document.getElementById("deletenameproduct").textContent = name;
-            document.getElementById("deleteid").textContent = id;
-        }
-
-        function deleteReacordProduct() {
-            const did = document.getElementById("deleteid").textContent;
-            console.log(did);
-
-            $.ajax({
-                type: "delete",
-                url: '/deleteproduct',
-                data: {
-                    id: did,
-                },
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function (res) {
-                    $('#productdeletemodel').modal("hide");
-                    producttable();
-                },
-                error: function (e) {
-
-                },
-            });
-        }
-        // view product
+        // contry change
         // done
-        function viewproduct_productshow(productid) {
+        $("#vcountry").on("change", function () {
+            const selectElement = $('#vstate');
+            selectElement.empty();
+            const selectElement1 = $('#vcity');
+            selectElement1.empty();
             $.ajax({
                 type: "get",
-                url: "/productviewadmin/" + productid,
+                url: "/getstate",
+                data: {
+                    data: $('#vcountry').val(),
+                },
                 success: function (res) {
-                    $("#viewmodelform").html(res);
+                    var oldstate = "{{old('state')}}";
+                    console.log(oldstate);
+                    $("#vstate").append(`<option value="">Select</option>`);
+                    $("#vcity").append(`<option value="">Select</option>`);
+                    $.each(res["statelist"], function (indexInArray, valueOfElement) {
+                        var selectstate = (oldstate == valueOfElement["id"]) ? "selected" : "";
+                        console.log(selectstate);
+
+                        $("#vstate").append(`<option value="${valueOfElement["id"]}" ${selectstate} >${valueOfElement["name"]}</option>`);
+                    });
                 },
                 error: function (e) {
                     console.log(e);
-                }
+
+                },
             })
-        }
-        
-        $('#viewproductmodel').on('hidden.bs.modal', function (e) {
-            $("#vepname").attr("hidden", true);
-            $("#vepdescription").attr("hidden", true);
-            $("#vepprice").attr("hidden", true);
-            $("#vepstock").attr("hidden", true);
-            $("#vepimage").attr("hidden", true);
-            $("#vepstatus").attr("hidden", true)
-            $("#vepstatus").attr("hidden", true)
         });
 
-        $('#viewsave').on("click", function (e) {
-            e.preventDefault();
-            $("#vepname").attr("hidden", true);
-            $("#vepdescription").attr("hidden", true);
-            $("#vepprice").attr("hidden", true);
-            $("#vepstock").attr("hidden", true);
-            $("#vepimage").attr("hidden", true);
-            $("#vepstatus").attr("hidden", true)
-            var formData = new FormData(document.getElementById("view-product-from"));
-            console.log(formData);
-
+        // state change
+        // done
+        $("#vstate").on("change", function () {
+            const selectElement = $('#vcity');
+            selectElement.empty();
             $.ajax({
-                type: "post",
-                url: '/productadd',
-                processData: false,
-                contentType: false,
-                data: formData,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                type: "get",
+                url: "/getcity",
+                data: {
+                    data: $('#vstate').val(),
                 },
                 success: function (res) {
-                    $('#viewproductmodel').modal("hide");
-                    producttable();
-                },
-                error: function (e) {
+                    $("#vcity").append(`<option value="">Select</option>`);
+                    $.each(res["citylist"], function (indexInArray, valueOfElement) {
+                        $("#vcity").append(`<option value="${valueOfElement["id"]}">${valueOfElement["name"]}</option>`);
 
-                    const data = e["responseJSON"]["errors"];
-                    if (data['name']) {
-                        $("#vepname").text(data['name'][0]).removeAttr("hidden");
-                    }
-                    if (data['description']) {
-                        $("#vepdescription").text(data['description'][0]).removeAttr("hidden");
-                    }
-                    if (data['image']) {
-                        $("#vepimage").text(data['image'][0]).removeAttr("hidden");
-                    }
-                    if (data['price']) {
-                        $("#vepprice").text(data['price'][0]).removeAttr("hidden");
-                    }
-                    if (data['status']) {
-                        $("#vepstatus").text(data['status'][0]).removeAttr("hidden");
-                    }
-                    if (data['stock']) {
-                        $("#vepstock").text(data['stock'][0]).removeAttr("hidden");
-                    }
-                    if (data['catagory']) {
-                        $("#vepcountry").text(data['catagory'][0]).removeAttr("hidden");
-                    }
-                },
-            });
-        });
-
-        function statuscheck_viewproduct() {
-            if (document.getElementById('vpstock').value == "0") {
-                document.getElementById('vpstatus').value = "out of stock";
-            }
-            else {
-                if (document.getElementById('vpstock').value > 0) {
-                    document.getElementById('vpstatus').value = "in stock";
-                }
-                else {
-                    document.getElementById('vpstatus').value = "";
-                }
-            }
-
-        }
-        // add product
-        $('#addproductmodel').on('hidden.bs.modal', function (e) {
-
-            document.getElementById('pname').value = "",
-                document.getElementById('pdescription').value = "",
-                document.getElementById('pprice').value = "",
-                document.getElementById('pstock').value = "",
-                document.getElementById('pimage').value = "",
-                document.getElementById('pstatus').value = "",
-
-                $("#epname").attr("hidden", true);
-            $("#epdescription").attr("hidden", true);
-            $("#epprice").attr("hidden", true);
-            $("#epstock").attr("hidden", true);
-            $("#epimage").attr("hidden", true);
-            $("#epstatus").attr("hidden", true)
-            $("#epcatagory").attr("hidden", true)
-        });
-
-        $("#pstatus").on("change", function () {
-            if (document.getElementById('pstatus').value == "out of stock") {
-                document.getElementById('pstock').value = 0;
-            }
-        })
-
-        function statuscheck_addproduct() {
-
-            if (document.getElementById('pstock').value == "0") {
-                document.getElementById('pstatus').value = "out of stock";
-            }
-            else {
-                if (document.getElementById('pstock').value > 0) {
-                    document.getElementById('pstatus').value = "in stock";
-                }
-                else {
-                    document.getElementById('pstatus').value = "";
-                }
-            }
-        }
-
-        function addproduct() {
-
-            $("#epname").attr("hidden", true);
-            $("#epdescription").attr("hidden", true);
-            $("#epprice").attr("hidden", true);
-            $("#epstock").attr("hidden", true);
-            $("#epimage").attr("hidden", true);
-            $("#epstatus").attr("hidden", true)
-            $("#epcatagory").attr("hidden", true)
-
-            const form = document.getElementById("product-from");
-            const formData = new FormData(form);
-
-            $.ajax({
-                url: '/productadd',
-                type: 'post',
-                processData: false,
-                contentType: false,
-                data: formData,
-                success: function (response) {
-                    $('#addproductmodel').modal("hide");
-                    producttable();
+                    });
 
                 },
                 error: function (e) {
-                    const data = e['responseJSON']['errors'];
-                    if (data['name']) {
-                        $("#epname").text(data['name'][0]).removeAttr("hidden");
-                    }
-                    if (data['description']) {
-                        $("#epdescription").text(data['description'][0]).removeAttr("hidden");
-                    }
-                    if (data['image']) {
-                        $("#epimage").text(data['image'][0]).removeAttr("hidden");
-                    }
-                    if (data['price']) {
-                        $("#epprice").text(data['price'][0]).removeAttr("hidden");
-                    }
-                    if (data['status']) {
-                        $("#epstatus").text(data['status'][0]).removeAttr("hidden");
-                    }
-                    if (data['stock']) {
-                        $("#epstock").text(data['stock'][0]).removeAttr("hidden");
-                    }
-                    if (data['catagory']) {
-                        $("#epcatagory").text(data['catagory'][0]).removeAttr("hidden");
-                    }
-                }
-            });
+                    console.log(e);
+
+                },
+            })
+        });
+
+        // password 
+        // done
+        function passwordshow() {
+            $("#passwordhidden").removeAttr("hidden");
+            $("#passwordshow").attr("hidden", true);
+            document.getElementById('password').type = 'text';
+            document.getElementById('vpassword').type = 'text';
+        }
+        function passwordhidden() {
+            $("#passwordshow").removeAttr("hidden");
+            $("#passwordhidden").attr('hidden', true);
+            document.getElementById('password').type = 'password';
+            document.getElementById('vpassword').type = 'password';
         }
 
-        // pagination mate
+        // config password
+        // done
+        function conformpasswordshow() {
+            $("#conformpasswordhidden").removeAttr("hidden");
+            $("#conformpasswordshow").attr("hidden", true);
+            document.getElementById('conpassword').type = 'text';
+            document.getElementById('vconpassword').type = 'text';
+        }
+        function conformpasswordhidden() {
+            $("#conformpasswordshow").removeAttr("hidden");
+            $("#conformpasswordhidden").attr('hidden', true);
+            document.getElementById('conpassword').type = 'password';
+            document.getElementById('vconpassword').type = 'password';
+        }
+
+        // pagination data all
+        // done
         $(document).on('click', '.pagination a', function (e) {
             e.preventDefault();
             var page = $(this).attr('href');
@@ -757,254 +573,21 @@
             });
         });
 
-        // save change user function
-        function savechange() {
-            $("#enames").attr("hidden", true);
-            $("#estate").attr("hidden", true);
-            $("#epincode").attr("hidden", true);
-            $("#ephone").attr("hidden", true);
-            $("#epassword").attr("hidden", true);
-            $("#eemails").attr("hidden", true);
-            $("#ecountry").attr("hidden", true);
-            $("#econpassword").attr("hidden", true);
-            $("#ecity").attr("hidden", true);
-            $("#egender").attr("hidden", true);
-            $("#eaddress").attr("hidden", true);
 
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        // customer and shopkeeper view data
+        // done
+        function customerAndshopkeeperview(id) {
+
+            $.ajax({
+                type: "get",
+                url: "/productuseradmin/" + id,
+                success: function (res) {
+                    $("#userviewid").html(res);
+                },
+                error: function (e) {
+                    console.log(e);
                 }
-            });
-
-            $.ajax({
-                type: 'post',
-                url: "/adminviewupdate",
-                data: {
-                    id: $('#vid').val(),
-                    name: $('#vname').val(),
-                    phone: $('#vphone').val(),
-                    email: $('#vemail').val(),
-                    address: $('#vaddress').val(),
-                    gender: $('input[name="gender"]:checked').val(),
-                    city: $('#vcity').val(),
-                    state: $('#vstate').val(),
-                    country: $('#vcountry').val(),
-                    pincode: $('#vpincode').val(),
-                },
-                success: function (res) {
-                    if (res.status == "success") {
-                        $("#viewmodel").modal("hide")
-                        usertable();
-                    }
-                },
-                error: function (e) {
-                    const data = e['responseJSON']['errors'];
-
-                    if (data['name']) {
-                        $("#enames").text(data['name'][0]).removeAttr("hidden");
-                    }
-                    if (data['gender']) {
-                        $("#egender").text(data['gender'][0]).removeAttr("hidden");
-                    }
-                    if (data['address']) {
-                        $("#eaddress").text(data['address'][0]).removeAttr("hidden");
-                    }
-                    if (data['city']) {
-                        $("#ecity").text(data['city'][0]).removeAttr("hidden");
-                    }
-                    if (data['country']) {
-                        $("#ecountry").text(data['country'][0]).removeAttr("hidden");
-                    }
-                    if (data['email']) {
-                        $("#eemails").text(data['email'][0]).removeAttr("hidden");
-                    }
-                    if (data['phone']) {
-                        $("#ephone").text(data['phone'][0]).removeAttr("hidden");
-                    }
-                    if (data['pincode']) {
-                        $("#epincode").text(data['pincode'][0]).removeAttr("hidden");
-                    }
-                    if (data['state']) {
-                        $("#estate").text(data['state'][0]).removeAttr("hidden");
-                    }
-                }
-            });
-
-        }
-
-        // contry change
-        $("#vcountry").on("change", function () {
-            const selectElement = $('#vstate');
-            selectElement.empty();
-            const selectElement1 = $('#vcity');
-            selectElement1.empty();
-            $.ajax({
-                type: "get",
-                url: "/getstate",
-                data: {
-                    data: $('#vcountry').val(),
-                },
-                success: function (res) {
-                    var oldstate = "{{old('state')}}";
-                    console.log(oldstate);
-                    $("#vstate").append(`<option value="">Select</option>`);
-                    $("#vcity").append(`<option value="">Select</option>`);
-                    $.each(res["statelist"], function (indexInArray, valueOfElement) {
-                        var selectstate = (oldstate == valueOfElement["id"]) ? "selected" : "";
-                        console.log(selectstate);
-
-                        $("#vstate").append(`<option value="${valueOfElement["id"]}" ${selectstate} >${valueOfElement["name"]}</option>`);
-                    });
-                },
-                error: function (e) {
-                    console.log(e);
-
-                },
             })
-        });
-        // state change
-        $("#vstate").on("change", function () {
-            const selectElement = $('#vcity');
-            selectElement.empty();
-            $.ajax({
-                type: "get",
-                url: "/getcity",
-                data: {
-                    data: $('#vstate').val(),
-                },
-                success: function (res) {
-                    $("#vcity").append(`<option value="">Select</option>`);
-                    $.each(res["citylist"], function (indexInArray, valueOfElement) {
-                        $("#vcity").append(`<option value="${valueOfElement["id"]}">${valueOfElement["name"]}</option>`);
-
-                    });
-
-                },
-                error: function (e) {
-                    console.log(e);
-
-                },
-            })
-        });
-
-        function deleteReacord() {
-            $.ajax({
-                type: "get",
-                url: "/deleterecord",
-                data: {
-                    email: document.getElementById("deletename").textContent,
-                },
-                success: function (res) {
-                    if (res.data == "delete") {
-                        $("#deletemodel").modal("hide");
-                        usertable();
-                    }
-                },
-                error: function (e) {
-                    console.log(e);
-                },
-            });
-        }
-
-        // view function
-        function viewdataname(id, name, phone, gender, address, city, state, country, pincode, email, password) {
-            // error clean
-            $("#enames").attr("hidden", true);
-            $("#estate").attr("hidden", true);
-            $("#epincode").attr("hidden", true);
-            $("#ephone").attr("hidden", true);
-            $("#epassword").attr("hidden", true);
-            $("#eemails").attr("hidden", true);
-            $("#ecountry").attr("hidden", true);
-            $("#econpassword").attr("hidden", true);
-            $("#ecity").attr("hidden", true);
-            $("#egender").attr("hidden", true);
-            $("#eaddress").attr("hidden", true);
-
-            //get data 
-            document.getElementById("vid").value = id;
-            document.getElementById("vname").value = name;
-            document.getElementById("vphone").value = phone;
-            document.getElementById("vaddress").value = address;
-            document.getElementById("vpincode").value = pincode;
-            document.getElementById("vemail").value = email;
-
-            if (gender == "male") {
-                document.getElementById('gender1').checked = true;
-            }
-            else {
-                document.getElementById('gender2').checked = true;
-            }
-
-            var oldcountry = country;
-            $.ajax({
-                type: "get",
-                url: "/getcountry",
-                data: {
-                    data: country,
-                },
-                success: function (res) {
-
-                    $("#vcountry").append(`<option value="">Select</option>`);
-                    $.each(res["countrylist"], function (indexInArray, valueOfElement) {
-                        var selectstate = (oldcountry == valueOfElement["id"]) ? "selected" : "";
-                        $("#vcountry").append(`<option value="${valueOfElement["id"]}" ${selectstate} >${valueOfElement["name"]}</option>`);
-                    });
-                },
-                error: function (e) {
-                    console.log(e);
-
-                },
-            })
-
-            var oldstate = state;
-            $.ajax({
-                type: "get",
-                url: "/getstate",
-                data: {
-                    data: country,
-                },
-                success: function (res) {
-
-                    $("#vstate").append(`<option value="">Select</option>`);
-                    $.each(res["statelist"], function (indexInArray, valueOfElement) {
-                        var selectstate = (oldstate == valueOfElement["id"]) ? "selected" : "";
-                        $("#vstate").append(`<option value="${valueOfElement["id"]}" ${selectstate} >${valueOfElement["name"]}</option>`);
-                    });
-                },
-                error: function (e) {
-                    console.log(e);
-
-                },
-            })
-
-            var oldcity = city;
-            $.ajax({
-                type: "get",
-                url: "/getcity",
-                data: {
-                    data: state,
-                },
-                success: function (res) {
-                    $("#vcity").append(`<option value="">Select</option>`);
-                    $.each(res["citylist"], function (indexInArray, valueOfElement) {
-                        var selectcity = (oldcity == valueOfElement["id"]) ? "selected" : "";
-                        $("#vcity").append(`<option value="${valueOfElement["id"]}" ${selectcity}>${valueOfElement["name"]}</option>`);
-
-                    });
-
-                },
-                error: function (e) {
-                    console.log(e);
-
-                },
-            })
-
-        }
-
-        function deletedataname(name) {
-            document.getElementById("deletename").textContent = name;
         }
 
         // update admin data
@@ -1052,47 +635,6 @@
             });
         }
 
-        // $('#showCustomer').on('click', function () {
-        //     console.log("customer");
-        //     $("#usertable").removeAttr("hidden");
-        //     $("#producttablediv").attr("hidden", true);
-        // });
-
-        // $('#showProduct').on('click', function () {
-        //     console.log("product");
-        //     $("#producttablediv").removeAttr("hidden");
-        //     $("#usertable").attr("hidden", true);
-
-        // });
-
-        // password 
-        function passwordshow() {
-            $("#passwordhidden").removeAttr("hidden");
-            $("#passwordshow").attr("hidden", true);
-            document.getElementById('password').type = 'text';
-            document.getElementById('vpassword').type = 'text';
-        }
-        function passwordhidden() {
-            $("#passwordshow").removeAttr("hidden");
-            $("#passwordhidden").attr('hidden', true);
-            document.getElementById('password').type = 'password';
-            document.getElementById('vpassword').type = 'password';
-        }
-
-        // config password
-        function conformpasswordshow() {
-            $("#conformpasswordhidden").removeAttr("hidden");
-            $("#conformpasswordshow").attr("hidden", true);
-            document.getElementById('conpassword').type = 'text';
-            document.getElementById('vconpassword').type = 'text';
-        }
-        function conformpasswordhidden() {
-            $("#conformpasswordshow").removeAttr("hidden");
-            $("#conformpasswordhidden").attr('hidden', true);
-            document.getElementById('conpassword').type = 'password';
-            document.getElementById('vconpassword').type = 'password';
-        }
-
         getadminprofile();
 
         // admin profile
@@ -1117,6 +659,25 @@
                 }
             });
         }
+
+        // baki
+        (function () {
+
+            'use strict';
+
+            $('.input-file').each(function () {
+                var $input = $(this),
+                    $label = $input.next('.js-labelFile'),
+                    labelVal = $label.html();
+
+                $input.on('change', function (element) {
+                    var fileName = '';
+                    if (element.target.value) fileName = element.target.value.split('\\').pop();
+                    fileName ? $label.addClass('has-file').find('.js-fileName').html(fileName) : $label.removeClass('has-file').html(labelVal);
+                });
+            });
+
+        })();
 
     </script>
 </body>

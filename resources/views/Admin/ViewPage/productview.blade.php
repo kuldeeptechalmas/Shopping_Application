@@ -1,9 +1,10 @@
-<form id="view-product-from" enctype="multipart/form-data">
+<form id="view-product-from" action="{{route('product_add_update')}}" enctype="multipart/form-data" method="post">
     @csrf
     <input type="text" name="id" value="{{$product_data->id}}" id="vpid" hidden>
     <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Name </label>
-        <input type="text" class="form-control" value="{{$product_data->name}}" id="vpname" name="name" aria-describedby="emailHelp">
+        <input type="text" class="form-control" value="{{$product_data->name}}" id="vpname" name="name"
+            aria-describedby="emailHelp">
     </div>
     <div style="color:red;" id="vepname" hidden></div>
 
@@ -19,7 +20,7 @@
             <label class="form-label" for="form3Example1c">Sub-Catagory</label>
             <select class="form-select" id="vpcatagory" name="catagory">
                 <option value="">Select</option>
-                    <option value="{{$product_data->sub_category_id}}" selected>{{$product_data->sub_category_id}}</option>
+                <option value="{{$product_data->sub_category_id}}" selected>{{$product_data->sub_category_id}}</option>
             </select>
             <div style="color:red;" hidden id="vepcatagory"></div>
         </div>
@@ -33,7 +34,8 @@
 
     <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Stock</label>
-        <input type="text" class="form-control" id="vpstock" value="{{$product_data->stock}}" oninput="statuscheck_viewproduct()" name="stock">
+        <input type="text" class="form-control" id="vpstock" value="{{$product_data->stock}}"
+            oninput="statuscheck_viewproduct()" name="stock">
     </div>
     <div style="color:red;" id="vepstock" hidden></div>
 
@@ -52,13 +54,26 @@
     </div>
     <div style="color:red;" id="vepimage" hidden></div>
 
-    <div class="mb-3">   
+    <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Status</label>
         <select class="form-select" id="vpstatus" name="status">
             <option value="">Select</option>
-            <option value="in stock" {{$product_data->status=='in stock'?'selected':''}}>in stock</option>
-            <option value="out of stock" {{$product_data->status=='out of stock'?'selected':''}}>out of stock</option>
+            <option value="in stock" {{$product_data->status == 'in stock' ? 'selected' : ''}}>in stock</option>
+            <option value="out of stock" {{$product_data->status == 'out of stock' ? 'selected' : ''}}>out of stock
+            </option>
         </select>
     </div>
     <div style="color:red;" id="vepstatus" hidden></div>
+
+    <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Discount</label>
+        <input type="text" class="form-control" id="vpstock" value="{{$product_data->discount}}" name="discount">
+    </div>
+    <div style="color:red;" id="vepstock" hidden></div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">save change</button>
+        {{-- <button type="button" id="viewsave" class="btn btn-primary">save change</button> --}}
+    </div>
 </form>

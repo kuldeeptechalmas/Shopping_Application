@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
         integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
         integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
@@ -94,11 +94,14 @@
                 </a>
             </div>
             <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
-                <form class="d-flex dropdown_search_main" action="/search" method="post" role="search" style="width: 300px;">
+                <form class="d-flex dropdown_search_main" action="/search" method="post" role="search"
+                    style="width: 300px;">
                     @csrf
-                    <input class="form-control dropdown_search me-2" type="search" id="search_id" placeholder="Search" aria-label="Search" name="search_data" value="{{isset($inputdata)?$inputdata:''}}" />
+                    <input class="form-control dropdown_search me-2" type="search" id="search_id" placeholder="Search"
+                        aria-label="Search" name="search_data" value="{{isset($inputdata) ? $inputdata : ''}}" />
                     <button type="submit" class="btn btn-primary" name="submit">Search</button>
-                    <div class="dropdown_search_content" style="text-decoration: none; color: #000;" id="searchdataname" hidden>
+                    <div class="dropdown_search_content" style="text-decoration: none; color: #000;" id="searchdataname"
+                        hidden>
 
                     </div>
                 </form>
@@ -145,7 +148,7 @@
                                         </div>
                                         <div style="padding: 10px; border-bottom: 1px solid #555;">
                                             <a style="text-decoration: none;  color: #000;" href="/order">
-                                                Order
+                                                My Order
                                             </a>
                                         </div>
                                         <div style="padding: 10px; border-bottom: 1px solid #555;">
@@ -176,7 +179,7 @@
         crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-     <script>
+    <script>
         function favourite_product_data_save(rs, productid) {
 
             var element = $(rs)[0].style.color;
@@ -229,62 +232,62 @@
     </script>
     <script>
 
-    //     function search_product_focus() {
-    //         $("#searchdataname").empty();
-    //         $("#searchdataname").append(`
-    //                     <h7 class="fw-bolder">Trending</h7>
-    //                     <div style="margin: 10px 15px 5px;">
-    //                         <i class="fa-solid fa-magnifying-glass" style="padding-right:29px"></i><a style="color: #141619;text-decoration: none;" onclick="searchbox('Mobiles')">Mobiles</a><br>
-    //                     </div>
-    //                     <div style="margin: 10px 15px 5px;">
-    //                         <i class="fa-solid fa-magnifying-glass" style="padding-right:29px"></i><a style="color: #141619;text-decoration: none;" onclick="searchbox('Shoes')">Shoes</a><br>
-    //                     </div>
-    //                     <div style="margin: 10px 15px 5px;">
-    //                         <i class="fa-solid fa-magnifying-glass" style="padding-right:29px"></i><a style="color: #141619;text-decoration: none;" onclick="searchbox('Leptop')">Leptop</a><br>
-    //                     </div>
-    //                     <div style="margin: 10px 15px 5px;">
-    //                         <i class="fa-solid fa-magnifying-glass" style="padding-right:29px"></i><a style="color: #141619;text-decoration: none;" onclick="searchbox('Watches')">Watches</a><br>
-    //                     </div>
-    //         `);
-    //         $("#searchdataname").removeAttr("hidden");
-    //     }
+        //     function search_product_focus() {
+        //         $("#searchdataname").empty();
+        //         $("#searchdataname").append(`
+        //                     <h7 class="fw-bolder">Trending</h7>
+        //                     <div style="margin: 10px 15px 5px;">
+        //                         <i class="fa-solid fa-magnifying-glass" style="padding-right:29px"></i><a style="color: #141619;text-decoration: none;" onclick="searchbox('Mobiles')">Mobiles</a><br>
+        //                     </div>
+        //                     <div style="margin: 10px 15px 5px;">
+        //                         <i class="fa-solid fa-magnifying-glass" style="padding-right:29px"></i><a style="color: #141619;text-decoration: none;" onclick="searchbox('Shoes')">Shoes</a><br>
+        //                     </div>
+        //                     <div style="margin: 10px 15px 5px;">
+        //                         <i class="fa-solid fa-magnifying-glass" style="padding-right:29px"></i><a style="color: #141619;text-decoration: none;" onclick="searchbox('Leptop')">Leptop</a><br>
+        //                     </div>
+        //                     <div style="margin: 10px 15px 5px;">
+        //                         <i class="fa-solid fa-magnifying-glass" style="padding-right:29px"></i><a style="color: #141619;text-decoration: none;" onclick="searchbox('Watches')">Watches</a><br>
+        //                     </div>
+        //         `);
+        //         $("#searchdataname").removeAttr("hidden");
+        //     }
 
-    //     function searchbox(searchData) {
+        //     function searchbox(searchData) {
 
-    //         document.getElementById("search_id").value = searchData;
-    //         $("#searchdataname").attr("hidden", true);
+        //         document.getElementById("search_id").value = searchData;
+        //         $("#searchdataname").attr("hidden", true);
 
-    //     }
+        //     }
 
-    //     function search_product_navbar() {
-    //         // console.log($("#search_id").val());
+        //     function search_product_navbar() {
+        //         // console.log($("#search_id").val());
 
-    //         $.ajax({
-    //             type: "get",
-    //             url: "/search",
-    //             data: {
-    //                 search_data: $("#search_id").val()
-    //             },
-    //             success: function (res) {
+        //         $.ajax({
+        //             type: "get",
+        //             url: "/search",
+        //             data: {
+        //                 search_data: $("#search_id").val()
+        //             },
+        //             success: function (res) {
 
-    //                 console.log(res["product_data"]);
-    //                 $("#searchdataname").empty();
-    //                 $.each(res["product_data"], function (index, obj) {
-    //                     // console.log(obj.name);
-    //                     // $("#searchdataname").append( obj.name + "<br>");
-    //                     $("#searchdataname").append(`
-    //                         <div class="searchdatas" style="margin: 10px 15px 5px;text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
-    //                         <i class="fa-solid fa-magnifying-glass" style="padding-right:29px"></i><a href="/productdetailsunkown/${obj.id}" style="color: #141619;text-decoration: none;" onclick="searchbox('${obj.name}')">${obj.name}</a><br>
-    //                     </div>
-    //                     `);
-    //                 });
-    //             },
-    //             error: function (e) {
+        //                 console.log(res["product_data"]);
+        //                 $("#searchdataname").empty();
+        //                 $.each(res["product_data"], function (index, obj) {
+        //                     // console.log(obj.name);
+        //                     // $("#searchdataname").append( obj.name + "<br>");
+        //                     $("#searchdataname").append(`
+        //                         <div class="searchdatas" style="margin: 10px 15px 5px;text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
+        //                         <i class="fa-solid fa-magnifying-glass" style="padding-right:29px"></i><a href="/productdetailsunkown/${obj.id}" style="color: #141619;text-decoration: none;" onclick="searchbox('${obj.name}')">${obj.name}</a><br>
+        //                     </div>
+        //                     `);
+        //                 });
+        //             },
+        //             error: function (e) {
 
-    //             }
-    //         });
-    //     }
-    // </script>
+        //             }
+        //         });
+        //     }
+        // </script>
 </body>
 
 </html>

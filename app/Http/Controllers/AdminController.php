@@ -12,6 +12,7 @@ use App\Models\Product;
 use FFI\Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
@@ -19,11 +20,39 @@ use Illuminate\Validation\Rules\Password;
 
 class AdminController extends Controller
 {
-    public function dashboard()
+
+    // Customer And Shopkeeper
+    public function CustomerAndShopkeeper_Manage(Request $request)
     {
-        return redirect()->route("admin_get_user_of_all");
-        
+        if ($request->isMethod("post")) {
+            if ($request->editid) {
+                $userEdit = CustomerAndShopkeeper::where("id", $request->editid)->first();
+                return view("Admin.Page.User.useredit", ["usereditdata" => $userEdit]);
+            } elseif ($request->deleteid) {
+                dd($request->deleteid);
+            }
+        }
+        $customerandshopkeeper = CustomerAndShopkeeper::paginate(9);
+
+        return view("Admin.Page.User.usershow", ["data" => $customerandshopkeeper]);
     }
+
+    public function Product_Manage()
+    {
+        $product = Product::paginate(9);
+        return view("Admin.Page.Product.productshow", ["data" => $product]);
+    }
+
+    public function Order_Manage()
+    {
+        $order = CustomerOrder::paginate(10);
+        return view("Admin.Page.Order.ordershow", ["order" => $order]);
+    }
+
+    // public function dashboard()
+    // {
+    //     // return redirect()->route("admin_get_user_of_all");
+    // }
 
     // public function login(Request $request)
     // {
@@ -104,26 +133,31 @@ class AdminController extends Controller
 
     public function deleterecord(Request $request)
     {
-        $delete = CustomerAndShopkeeper::where("email", $request->email)->delete();
-        return response()->json(["data" => "delete"]);
+        $delete = CustomerAndShopkeeper::where("email", $request->email)->first();
+        if ($delete) {
+            $delete->delete();
+        } else {
+            return response()->withCookie(["erroradmin" => "User Not Found"]);
+        }
+        return redirect()->route("admin_get_user_of_all");
     }
 
-    public function admin_getuserofall(Request $request)
-    {
-        // kkk
-        return view("Admin.Table.usershow");
-    }
-    public function getuserofall(Request $request)
-    {
-        $data = CustomerAndShopkeeper::paginate(9);
-        foreach ($data as $key) {
-            $key->password = Crypt::decryptString($key->password);
-        }
-        if ($request->ajax()) {
-            return view("Admin.Table.usertable", ["data" => $data]);
-        }
-        return view("Admin.Table.usertable", ["data" => $data]);
-    }
+    // public function admin_getuserofall(Request $request)
+    // {
+    //     return view("Admin.Table.usershow");
+    // }
+
+    // public function getuserofall(Request $request)
+    // {
+    //     $data = CustomerAndShopkeeper::paginate(9);
+    //     foreach ($data as $key) {
+    //         $key->password = Crypt::decryptString($key->password);
+    //     }
+    //     if ($request->ajax()) {
+    //         return view("Admin.Table.usertable", ["data" => $data]);
+    //     }
+    //     return view("Admin.Table.usertable", ["data" => $data]);
+    // }
 
     public function viewupdateuser(Request $request)
     {
@@ -146,7 +180,7 @@ class AdminController extends Controller
             "country" => "required",
             "pincode" => "required|numeric|digits:6",
             "gender" => "required",
-        ],[
+        ], [
             "name.required" => "Enter Name is Required.",
             'email.required' => "Enter Email is Required.",
             'email.email' => "Enter Only Email is Required.",
@@ -178,9 +212,7 @@ class AdminController extends Controller
             "gender" => $request->gender,
         ]);
 
-        return response()->json([
-            'status' => 'success'
-        ]);
+        return redirect()->back();
     }
 
     public function product_details($productid)
@@ -190,12 +222,38 @@ class AdminController extends Controller
         return view("Admin.productdetail", ["productdatails" => $data, "catagory" => $catagorydata,]);
     }
 
-    public function  view_all_order() {
-        $data = CustomerOrder::all();
-        return view("Admin.ViewOrder.viewallorder",["data"=>$data]);
-    }   
-    public function  view_order($orderid) {
+    public function  view_all_order()
+    {
+        $data = CustomerOrder::paginate(10);
+        return view("Admin.ViewOrder.viewallorder", ["data" => $data]);
+    }
+    public function  view_order($orderid)
+    {
         $data = CustomerOrder::find($orderid);
-        return view("Admin.ViewOrder.vieworderdetail",["order"=>$data]);
+        return view("Admin.ViewOrder.vieworderdetail", ["order" => $data]);
+    }
+
+    public function update_order_admin(Request $request)
+    {
+        $order = CustomerOrder::find($request->orderid);
+        if ($order) {
+            $order->status = $request->status;
+            $order->save();
+        }
+        return redirect()->route("viewallorder");
+    }
+
+    public function get_user_admin($id)
+    {
+        // contry data
+        $content = File::get(public_path('countries.json'));
+        $contrylist = json_decode($content, true);
+
+        $product_data = CustomerAndShopkeeper::find($id);
+        if ($product_data) {
+            return view("Admin.ViewPage.userview", ["data" => $product_data, "country" => $contrylist]);
+        } else {
+            return redirect()->back();
+        }
     }
 }

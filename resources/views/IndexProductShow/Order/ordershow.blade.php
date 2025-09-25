@@ -4,8 +4,8 @@
 
     @if ($order->isNotEmpty())
         <div class="row">
-            <div class="col">
-                <h1>Yours Buy Product</h1>
+            <div class="col" style="padding: 10px 270px;">
+                <h3 style="text-align: center;">My Order History</h3>
                 @foreach ($order as $item)
                     {{-- @dd($item->product->id) --}}
                     <div class="card" style="margin-left: 25px;margin-top: 25px;">
@@ -21,24 +21,30 @@
 
                                     <p class="card-text">{{$item->product->name}}</p>
                                     <h5 class="card-title">
-                                        <?php $dis=0; ?>
+                                        <?php        $dis = 0; ?>
                                         @foreach ($couponuserdata as $cd)
                                             @if ($cd->product_id == $item->product->id)
-                                            <?php $dis=1; ?>
+                                                    <?php                $dis = 1; ?>
                                                     ₹{{round($item->product->price - ($item->product->price * $item->product->discount / 100) - $cd->coupon->value)}}
                                                 </h5>
                                                 <div style="color: green">₹{{$cd->coupon->value}}off</div>
                                             @endif
                                         @endforeach
 
-                                        @if ($dis==0)
-                                            ₹{{round($item->product->price - ($item->product->price * $item->product->discount / 100))}}
-                                        @endif
+                                    @if ($dis == 0)
+                                        ₹{{round($item->product->price - ($item->product->price * $item->product->discount / 100))}}
+                                    @endif
 
                                     <div style="color: green"><del>₹{{$item->product->price}}</del> {{$item->product->discount}}%
                                         off</div>
                                     <div style="margin-top: 14px;">
-                                        {{$item->status}}
+                                        @if ($item->status == "Pending")
+                                            <span class="text-warning">{{$item->status}}</span>
+                                        @elseif ($item->status == "Processing" || $item->status == "Shipped")
+                                            <span class="text-info">{{$item->status}}</span>
+                                        @elseif ($item->status == "Delivered")
+                                            <span class="text-success">{{$item->status}}</span>
+                                        @endif
                                     </div>
                                     <div class="d-flex justify-content-end">
                                         <div

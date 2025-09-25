@@ -15,8 +15,9 @@ use Illuminate\Support\Facades\Storage;
 
 class Product_Controller extends Controller
 {
-    public function product_add(Request $request)
+    public function product_add_and_update(Request $request)
     {
+
         $validator = $request->validate(
             [
                 "name" => "required",
@@ -26,6 +27,7 @@ class Product_Controller extends Controller
                 "status" => "required",
                 "image.*" => "required|image|mimes:png,jpg|max:2048",
                 "catagory" => "required",
+                "discount" => "required",
             ],
             [
                 "name.required" => "Enter Name Are Required.",
@@ -42,6 +44,7 @@ class Product_Controller extends Controller
                 "image.mimes" => "Enter PNG Or JPG Image Are Required.",
                 "image.max" => "Enter Less then 2 Mb Image Are Required.",
                 "catagory.required" => "Enter Catagory Are Required.",
+                "discount.required" => "Enter Discount Are Required.",
             ]
         );
 
@@ -101,7 +104,7 @@ class Product_Controller extends Controller
             }
         }
 
-        return response()->json(["success" => "save"]);
+        return redirect()->back();
     }
 
     public function Admin_product_get_all(Request $request)
@@ -118,80 +121,28 @@ class Product_Controller extends Controller
         }
 
         return view("Admin.Table.producttable", ["data" => $data]);
-        // return view("Admin.Table.productshow");
     }
 
-    // public function product_edit(Request $request)
 
+    // public function product_remove(Request $request)
     // {
-    //     $request->validate(
-    //         [
-    //             "name" => "required",
-    //             "description" => "required",
-    //             "price" => "required|numeric",
-    //             "stock" => "required|numeric",
-    //             "status" => "required",
-    //             "catagory" => "required",
-    //             "file.*" => "required|image|mimes:png,jpg|max:2048",
-    //         ],
-    //         [
-    //             "name.required" => "Enter Name Are Required.",
-    //             "description.required" => "Enter Description Are Required.",
-    //             "price.required" => "Enter Price Are Required.",
-    //             "price.numeric" => "Enter Price Is Numeric Required.",
-    //             "price.gt" => "Enter Price Is Greater Then 0 Required.",
-    //             "stock.required" => "Enter Stock Are Required.",
-    //             "stock.numeric" => "Enter Stock Is Numeric Required.",
-    //             "stock.gt" => "Enter Stock Is Greater Then -1 Required.",
-    //             "status.required" => "Enter Status Are Required.",
-    //             "image.required" => "Enter Image Are Required.",
-    //             "image.image" => "Enter Only Image Are Required.",
-    //             "image.mimes" => "Enter PNG Or JPG Image Are Required.",
-    //             "image.max" => "Enter Less then 2 Mb Image Are Required.",
-    //             "catagory.required" => "Enter Catagory Are Required.",
-    //         ]
-    //     );
-
-
-    //     $product = Product::find($request->id);
-
-    //     $admin = Admin::where("name", $request->adminid)->first();
-
-    //     $product->update([
-    //         "name" => $request->name,
-    //         "description" => $request->description,
-    //         "price" => $request->price,
-    //         "stock" => $request->stock,
-    //         "status" => $request->status,
-    //         "sub_category_id" => $request->catagory,
-    //     ]);
-
-    //     if ($admin) {
-    //         $product->admin_id = $admin->id;
-    //         $product->save();
+    //     $db = Product::find($request->id)->first();
+    //     if ($db) {
+    //         return response()->json(["success" => "delete"]);
+    //     } else {
+    //         return response()->json(["error" => "Data is not Found"]);
     //     }
-    //     if ($files = $request->file("file")) {
-    //         foreach ($files as $file) {
-    //             $file->storeAs("public/UploadeFile", $file->getClientOriginalName());
-    //             $image = new Images();
-    //             $image->image_name = $file->getClientOriginalName();
-    //             $image->product_id = $product->id;
-    //             $image->save();
-    //         }
-    //     }
-
-    //     return response()->json(["success" => "save"]);
     // }
 
-    
-    public function product_remove(Request $request)
+    public function admin_product_remove(Request $request)
     {
-        $db = Product::find($request->id)->first();
+        $db = Product::find($request->deleteid)->first();
         if ($db) {
-            return response()->json(["success" => "delete"]);
+            $db->delete();
         } else {
-            return response()->json(["error" => "Data is not Found"]);
+            return response()->withCookie(["erroradmin" => "Not Found Data"]);
         }
+        return redirect()->back();
     }
 
     public function product_search(Request $request)
@@ -255,21 +206,18 @@ class Product_Controller extends Controller
     {
         $catagorydata = CategoryProduct::all();
         $data = Product::where("id", $productid)->first();
-        if(!empty(Session::get("adminname")))
-        {
+        if (!empty(Session::get("adminname"))) {
             return view("Admin.productdetail", ["productdatails" => $data, "catagory" => $catagorydata,]);
-        }
-        else
-        {
+        } else {
             return view("Shopkeeper.productdetail", ["productdatails" => $data, "catagory" => $catagorydata,]);
         }
     }
 
     public function product_view($productid)
     {
-        
+
         $data = CategoryProduct::where("category_name", Session::get("categoryname"))->first();
-       
+
         $subcatagorydata = SubCatagory::where("catagroy_id", $data->id)->get();
         $productdata = Product::where("id", $productid)->first();
         return view("Shopkeeper.Product.viewproduct", [

@@ -49,7 +49,7 @@ class CustomerController extends Controller
 
     public function getcity(Request $request)
     {
-    
+
         $contentcity = File::get(public_path('city.json'));
         $citylist = json_decode($contentcity, true);
         $stateId = $request->data;
@@ -159,17 +159,15 @@ class CustomerController extends Controller
                 Session::forget("discountamount");
                 $cart = Session::get("cart");
                 // dd(!empty($cart));
-                if(!empty($cart))
-                {
-                foreach ($cart as $key => $value) {
-                    $cart = new AddToCart();
-                    $cart->user_id = $customer->id;
-                    $cart->product_id = $key;
-                    $cart->quantity = 1;
-                    $cart->save();
+                if (!empty($cart)) {
+                    foreach ($cart as $key => $value) {
+                        $cart = new AddToCart();
+                        $cart->user_id = $customer->id;
+                        $cart->product_id = $key;
+                        $cart->quantity = 1;
+                        $cart->save();
+                    }
                 }
-                
-            }
                 Session::forget("cart");
                 return redirect()->route("MainIndex");
             } else {
