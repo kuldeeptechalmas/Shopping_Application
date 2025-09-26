@@ -123,17 +123,6 @@ class Product_Controller extends Controller
         return view("Admin.Table.producttable", ["data" => $data]);
     }
 
-
-    // public function product_remove(Request $request)
-    // {
-    //     $db = Product::find($request->id)->first();
-    //     if ($db) {
-    //         return response()->json(["success" => "delete"]);
-    //     } else {
-    //         return response()->json(["error" => "Data is not Found"]);
-    //     }
-    // }
-
     public function admin_product_remove(Request $request)
     {
         $db = Product::find($request->deleteid)->first();
@@ -207,7 +196,7 @@ class Product_Controller extends Controller
         $catagorydata = CategoryProduct::all();
         $data = Product::where("id", $productid)->first();
         if (!empty(Session::get("adminname"))) {
-            return view("Admin.productdetail", ["productdatails" => $data, "catagory" => $catagorydata,]);
+            return view("Admin.Page.Product.productdetail", ["productdatails" => $data, "catagory" => $catagorydata,]);
         } else {
             return view("Shopkeeper.productdetail", ["productdatails" => $data, "catagory" => $catagorydata,]);
         }

@@ -1,7 +1,7 @@
 @extends('Admin.index')
 
 @section('content')
-    <div id="dataOutput" class="mt-3" style="">
+    <div id="dataOutput" class="mt-3">
         <h1>Show Users</h1>
         <table class="table table-striped">
             <thead>
@@ -30,7 +30,8 @@
                                     <div class="col-4">
                                         <form action="{{route('admindashboard')}}" method="post">
                                             @csrf
-                                            <input type="text" name="editid" hidden value="{{$item->id}}">
+                                            <input type="text" name="action" hidden value="editGet">
+                                            <input type="text" name="id" hidden value="{{$item->id}}">
                                             <button type="submit" class="btn btn-primary">
                                                 Edit
                                             </button>
@@ -39,15 +40,14 @@
                                     <div class="col-8">
                                         <form action="{{route('admindashboard')}}" method="post">
                                             @csrf
-                                            <input type="text" name="deleteid" hidden value="{{$item->id}}">
+                                            <input type="text" name="action" hidden value="remove">
+                                            <input type="text" name="id" hidden value="{{$item->id}}">
                                             <button type="submit" class="btn btn-danger">
                                                 Delete
                                             </button>
                                         </form>
                                     </div>
                                 </div>
-
-
                             </th>
                         </tr>
                     @endforeach

@@ -49,7 +49,7 @@
                 padding: 0 10px;
                 cursor: pointer;
 
-                .icon:before {
+                /* .icon:before {
                     //font-awesome
                     content: "\f093";
                 }
@@ -60,7 +60,7 @@
                         content: "\f00c";
                         color: #5AAC7B;
                     }
-                }
+                } */
             }
         }
     </style>
@@ -71,7 +71,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-white bg-white">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">Navbar</a>
+            <a class="navbar-brand"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -79,7 +79,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    li
+
                 </ul>
                 <div style="margin-right: 62px;">
                     <form class="d-flex">
@@ -214,7 +214,7 @@
         </div>
     </div>
 
-    <!--Customer And Shopkeeper View Modal -->
+    <!-- Customer And Shopkeeper View Modal -->
     <div class="modal fade" id="viewmodel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -348,49 +348,22 @@
         </div>
     </div>
 
-    <!--Product Delete Modal -->
-    <div class="modal fade" id="productdeletemodel" tabindex="-1" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form action="{{ route('delete_product_admin') }}" method="post">
-                    @csrf
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Product Delete Modal</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        Are You Sore This Record Delete
-                        <input type="text" name="deleteid" id="deleteid" hidden>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    @yield('script_content')
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script>
 
+
+    @stack("script_content")
+
+    <script>
         // delete customer and shopkeeper
         // done
         function deletedataname(name) {
             document.getElementById("deletename").value = name;
         }
 
-        // delete product
-        // done
-        function deleteproductdata(id, name) {
-            document.getElementById("deleteid").value = id;
-        }
 
         // view product
         // done
@@ -412,12 +385,10 @@
         function statuscheck_viewproduct() {
             if (document.getElementById('vpstock').value == "0") {
                 document.getElementById('vpstatus').value = "out of stock";
-            }
-            else {
+            } else {
                 if (document.getElementById('vpstock').value > 0) {
                     document.getElementById('vpstatus').value = "in stock";
-                }
-                else {
+                } else {
                     document.getElementById('vpstatus').value = "";
                 }
             }
@@ -517,6 +488,7 @@
             document.getElementById('password').type = 'text';
             document.getElementById('vpassword').type = 'text';
         }
+
         function passwordhidden() {
             $("#passwordshow").removeAttr("hidden");
             $("#passwordhidden").attr('hidden', true);
@@ -532,6 +504,7 @@
             document.getElementById('conpassword').type = 'text';
             document.getElementById('vconpassword').type = 'text';
         }
+
         function conformpasswordhidden() {
             $("#conformpasswordshow").removeAttr("hidden");
             $("#conformpasswordhidden").attr('hidden', true);
@@ -646,7 +619,9 @@
             $.ajax({
                 type: 'GET',
                 url: "/adminruser",
-                data: { adminname: "{{session('adminname')}}" },
+                data: {
+                    adminname: "{{session('adminname')}}"
+                },
                 success: function (res) {
                     document.getElementById('name').value = res[0]['name'];
                     document.getElementById('email').value = res[0]['email'];
@@ -678,7 +653,6 @@
             });
 
         })();
-
     </script>
 </body>
 

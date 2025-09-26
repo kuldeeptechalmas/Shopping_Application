@@ -47,12 +47,6 @@
         .btn:active:focus,
         .btn.active:focus {
             box-shadow: none !important;
-            /* color: var(--bs-btn-color);
-        background-color: var(--bs-btn-bg);
-        border-color: var(--bs-btn-bg);
-        color: var(--cui-btn-active-color);
-        background-color: var(--cui-btn-active-bg);
-        border-color: var(--cui-btn-active-border-color); */
         }
 
         .btn:first-child:active {
@@ -107,15 +101,15 @@
                 </form>
                 <ul class="navbar-nav mb-lg-0 d-flex align-items-center justify-content-between" style="width: 230px; ">
                     @if (empty(Session::get("customerid")))
-                        <div
-                            style="width: 108px;margin-top: 5px;height: 37px;border-radius: 3px;text-align: center;background-color: #2874f0;">
+                        <li class="nav-item">
+                            <a aria-current="page" href="/login" style="color: white;text-decoration: none;">
+                                <div
+                                    style="align-items: center;justify-content: center;display: flex;width: 108px;margin-top: 5px;height: 37px;border-radius: 3px;text-align: center;background-color: #2874f0;">
 
-                            <li class="nav-item" style="margin-top: 5px;">
-                                <a aria-current="page" href="/login" style="color: white;text-decoration: none;">
                                     Login
-                                </a>
-                            </li>
-                        </div>
+                                </div>
+                            </a>
+                        </li>
                     @endif
 
                     <a href="/addtocartget" style="text-decoration: none ;color: #000;">
@@ -230,64 +224,6 @@
             }
         }
     </script>
-    <script>
-
-        //     function search_product_focus() {
-        //         $("#searchdataname").empty();
-        //         $("#searchdataname").append(`
-        //                     <h7 class="fw-bolder">Trending</h7>
-        //                     <div style="margin: 10px 15px 5px;">
-        //                         <i class="fa-solid fa-magnifying-glass" style="padding-right:29px"></i><a style="color: #141619;text-decoration: none;" onclick="searchbox('Mobiles')">Mobiles</a><br>
-        //                     </div>
-        //                     <div style="margin: 10px 15px 5px;">
-        //                         <i class="fa-solid fa-magnifying-glass" style="padding-right:29px"></i><a style="color: #141619;text-decoration: none;" onclick="searchbox('Shoes')">Shoes</a><br>
-        //                     </div>
-        //                     <div style="margin: 10px 15px 5px;">
-        //                         <i class="fa-solid fa-magnifying-glass" style="padding-right:29px"></i><a style="color: #141619;text-decoration: none;" onclick="searchbox('Leptop')">Leptop</a><br>
-        //                     </div>
-        //                     <div style="margin: 10px 15px 5px;">
-        //                         <i class="fa-solid fa-magnifying-glass" style="padding-right:29px"></i><a style="color: #141619;text-decoration: none;" onclick="searchbox('Watches')">Watches</a><br>
-        //                     </div>
-        //         `);
-        //         $("#searchdataname").removeAttr("hidden");
-        //     }
-
-        //     function searchbox(searchData) {
-
-        //         document.getElementById("search_id").value = searchData;
-        //         $("#searchdataname").attr("hidden", true);
-
-        //     }
-
-        //     function search_product_navbar() {
-        //         // console.log($("#search_id").val());
-
-        //         $.ajax({
-        //             type: "get",
-        //             url: "/search",
-        //             data: {
-        //                 search_data: $("#search_id").val()
-        //             },
-        //             success: function (res) {
-
-        //                 console.log(res["product_data"]);
-        //                 $("#searchdataname").empty();
-        //                 $.each(res["product_data"], function (index, obj) {
-        //                     // console.log(obj.name);
-        //                     // $("#searchdataname").append( obj.name + "<br>");
-        //                     $("#searchdataname").append(`
-        //                         <div class="searchdatas" style="margin: 10px 15px 5px;text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
-        //                         <i class="fa-solid fa-magnifying-glass" style="padding-right:29px"></i><a href="/productdetailsunkown/${obj.id}" style="color: #141619;text-decoration: none;" onclick="searchbox('${obj.name}')">${obj.name}</a><br>
-        //                     </div>
-        //                     `);
-        //                 });
-        //             },
-        //             error: function (e) {
-
-        //             }
-        //         });
-        //     }
-        // </script>
 </body>
 
 </html>

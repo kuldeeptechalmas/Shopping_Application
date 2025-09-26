@@ -27,6 +27,7 @@ class CustomerController extends Controller
         return view("Customer.index", ["contrylist" => $contrylist]);
     }
 
+    // get state data of customer and shopkeeper
     public function getstate(Request $request)
     {
         $contentstate = File::get(public_path('state.json'));
@@ -49,7 +50,6 @@ class CustomerController extends Controller
 
     public function getcity(Request $request)
     {
-
         $contentcity = File::get(public_path('city.json'));
         $citylist = json_decode($contentcity, true);
         $stateId = $request->data;

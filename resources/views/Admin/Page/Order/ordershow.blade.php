@@ -6,7 +6,7 @@
 
 @section('content')
 
-    <div id="dataOutput" class="mt-3" style="">
+    <div id="dataOutput" class="mt-3">
         <h1>Show Order</h1>
         <table class="table table-striped">
             <thead>
@@ -29,7 +29,7 @@
                         <tr>
                             <th scope="col">{{$item->product->name}}</th>
                             <th scope="col">
-                                <a href="/productdetails/{{$item->product->id}}">
+                                <a href="/AdminProductDetail/{{$item->product->id}}">
                                     <div style="height: 100px; width: 100%;">
                                         <img style="width: 100%; height: 100%; object-fit: cover;"
                                             src="{{asset("storage/UploadeFile/" . $item->product->image)}}" alt="">
@@ -50,10 +50,16 @@
                                     <span class="text-success">{{$item->status}}</span>
                                 @endif
                             </th>
-                            <th scope="col"><button type="button" class="btn btn-primary"
-                                    onclick="vieworderspcific('{{$item->id}}')" data-bs-toggle="modal" data-bs-target="#orderview">
-                                    View
-                                </button></th>
+                            <th scope="col">
+                                <form action="{{ route('order.Manage') }}" method="post">
+                                    @csrf
+                                    <input type="text" name="action" value="view" hidden>
+                                    <input type="text" name="id" value="{{ $item->id }}" hidden>
+                                    <button type="submit" class="btn btn-primary">
+                                        View
+                                    </button>
+                                </form>
+                            </th>
                         </tr>
                     @endforeach
                 @endif
@@ -84,12 +90,12 @@
 
 @endsection
 
-    @section('script_content')
+    @push("script_content")
+
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
         <script>
-
             $(document).on('click', '.pagination a', function (e) {
                 e.preventDefault();
                 var page = $(this).attr('href');
@@ -112,4 +118,4 @@
                 })
             }
         </script>
-    @endsection
+    @endpush

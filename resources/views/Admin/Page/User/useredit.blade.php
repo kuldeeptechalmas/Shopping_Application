@@ -1,14 +1,28 @@
 @extends('Admin.index')
 
 @section('content')
-    <form class="mx-1 mx-md-4" method="post" action="/adminviewupdate">
+
+    <div class="d-flex justify-content-center" style="height: 62px;text-align: center;margin-top: 16px;">
+        <h3
+            style="width: 192px;border: solid;border-radius: 27px;align-items: center;display: flex;justify-content: center;">
+            Edit User</h3>
+    </div>
+    <form class="mx-1 mx-md-4" method="post" action="{{ route("admindashboard") }}" style="padding: 10px 169px;">
         @csrf
+
+        <input type="text" name="action" hidden value="editUserData">
+
         <div class="d-flex flex-row align-items-center mb-4">
             <div usereditdata-mdb-input-init class="form-outline flex-fill mb-0">
                 <label class="form-label" for="form3Example1c">Your Name</label>
                 <input type="text" id="vname" value="{{$usereditdata->name}}" name='name' class="form-control" />
 
-                <div style="color:red;" id="enames" hidden></div>
+                @if (isset($validator))
+                    @if (isset($validator->errors()->messages()['name'][0]))
+                        <div class="alert alert-danger">{{ $validator->errors()->messages()['name'][0] }}</div>
+
+                    @endif
+                @endif
 
             </div>
         </div>
@@ -17,8 +31,12 @@
             <div usereditdata-mdb-input-init class="form-outline flex-fill mb-0">
                 <label class="form-label" for="form3Example1c">Phone No</label>
                 <input type="text" id="vphone" value="{{$usereditdata->phone}}" name="phone" class="form-control" />
+                @if (isset($validator))
+                    @if (isset($validator->errors()->messages()['phone'][0]))
+                        <div class="alert alert-danger">{{ $validator->errors()->messages()['phone'][0] }}</div>
 
-                <div style="color:red;" id="ephone" hidden></div>
+                    @endif
+                @endif
 
             </div>
         </div>
@@ -31,7 +49,12 @@
                 <input type="radio" id="gender2" value="female" name="gender" {{$usereditdata->gender == 'female'
         ? 'checked' : '' }}>Female</input>
 
-                <div style="color:red;" id="egender" hidden></div>
+                @if (isset($validator))
+                    @if (isset($validator->errors()->messages()['gender'][0]))
+                        <div class="alert alert-danger">{{ $validator->errors()->messages()['gender'][0] }}</div>
+
+                    @endif
+                @endif
 
             </div>
         </div>
@@ -40,7 +63,13 @@
             <div usereditdata-mdb-input-init class="form-outline flex-fill mb-0">
                 <label class="form-label" for="form3Example1c">Address</label>
                 <input type="text" id="vaddress" value="{{$usereditdata->address}}" name="address" class="form-control" />
-                <div style="color:red;" id="eaddress" hidden></div>
+
+                @if (isset($validator))
+                    @if (isset($validator->errors()->messages()['address'][0]))
+                        <div class="alert alert-danger">{{ $validator->errors()->messages()['address'][0] }}</div>
+
+                    @endif
+                @endif
             </div>
         </div>
 
@@ -57,7 +86,13 @@
                         @endforeach
                     @endif
                 </select>
-                <div style="color:red;" hidden id="ecountry"></div>
+
+                @if (isset($validator))
+                    @if (isset($validator->errors()->messages()['country'][0]))
+                        <div class="alert alert-danger">{{ $validator->errors()->messages()['country'][0] }}</div>
+
+                    @endif
+                @endif
             </div>
         </div>
 
@@ -67,7 +102,13 @@
                 <select class="form-select" id="vstate" name="state">
 
                 </select>
-                <div style="color:red;" hidden id="estate"></div>
+
+                @if (isset($validator))
+                    @if (isset($validator->errors()->messages()['state'][0]))
+                        <div class="alert alert-danger">{{ $validator->errors()->messages()['state'][0] }}</div>
+
+                    @endif
+                @endif
             </div>
         </div>
 
@@ -76,7 +117,12 @@
                 <label class="form-label" for="form3Example1c">City</label>
                 <select placeholder="Select" class="form-select" id="vcity" value="{{$usereditdata->city}}" name="city">
                 </select>
-                <div style="color:red;" hidden id="ecity"></div>
+                @if (isset($validator))
+                    @if (isset($validator->errors()->messages()['city'][0]))
+                        <div class="alert alert-danger">{{ $validator->errors()->messages()['city'][0] }}</div>
+
+                    @endif
+                @endif
             </div>
         </div>
 
@@ -84,7 +130,13 @@
             <div usereditdata-mdb-input-init class="form-outline flex-fill mb-0">
                 <label class="form-label" for="form3Example1c">Pincode</label>
                 <input type="text" id="vpincode" value="{{$usereditdata->pincode}}" name="pincode" class="form-control" />
-                <div style="color:red;" id="epincode" hidden></div>
+                @if (isset($validator))
+                    @if (isset($validator->errors()->messages()['pincode'][0]))
+                        <div class="alert alert-danger">{{ $validator->errors()->messages()['pincode'][0] }}</div>
+
+                    @endif
+                @endif
+
             </div>
         </div>
 
@@ -92,27 +144,44 @@
             <div usereditdata-mdb-input-init class="form-outline flex-fill mb-0">
                 <label class="form-label" for="form3Example3c">Your Email</label>
                 <input type="text" id="vemail" value="{{$usereditdata->email}}" name="email" class="form-control" />
-                <div style="color:red;" hidden id="eemails"></div>
+                @if (isset($validator))
+                    @if (isset($validator->errors()->messages()['email'][0]))
+                        <div class="alert alert-danger">{{ $validator->errors()->messages()['email'][0] }}</div>
+
+                    @endif
+                @endif
             </div>
         </div>
 
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" usereditdata-bs-dismiss="modal">Close</button>
+        <div class="modal-footer" style="padding: 11px 20px 55px 10px;">
+            <div style="margin-right: 32px;">
+                <a href="/AdminInUser">
+                    <button type="button" class="btn btn-secondary" usereditdata-bs-dismiss="modal">Back</button>
+                </a>
+            </div>
             <button type="submit" class="btn btn-primary">Save changes</button>
         </div>
     </form>
 
-    <script>
 
+@endsection
+
+@push("script_content")
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script>
+        // get state and city use Ajax
         var oldstate = "{{$usereditdata->state}}";
 
         $.ajax({
             type: "get",
             url: "/getstate",
-            usereditdata: {
-                usereditdata: "{{$usereditdata->country}}",
+            data: {
+                data: "{{ $usereditdata->country }}",
             },
             success: function (res) {
+                console.log(res);
 
                 $("#vstate").append(`<option value="">Select</option>`);
                 $.each(res["statelist"], function (indexInArray, valueOfElement) {
@@ -127,11 +196,12 @@
         })
 
         var oldcity = "{{$usereditdata->city}}";
+
         $.ajax({
             type: "get",
             url: "/getcity",
-            usereditdata: {
-                usereditdata: "{{$usereditdata->state}}",
+            data: {
+                data: "{{$usereditdata->state}}",
             },
             success: function (res) {
 
@@ -149,5 +219,4 @@
             },
         })
     </script>
-
-@endsection
+@endpush

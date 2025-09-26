@@ -8,6 +8,7 @@ use App\Models\CategoryProduct;
 use App\Models\Customer;
 use App\Models\CustomerAndShopkeeper;
 use App\Models\CustomerOrder;
+use App\Models\Images;
 use App\Models\Product;
 use FFI\Exception;
 use Illuminate\Http\Request;
@@ -15,38 +16,240 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 class AdminController extends Controller
 {
 
-    // Customer And Shopkeeper
+    // Customer And Shopkeeper Manage
     public function CustomerAndShopkeeper_Manage(Request $request)
     {
         if ($request->isMethod("post")) {
-            if ($request->editid) {
-                $userEdit = CustomerAndShopkeeper::where("id", $request->editid)->first();
-                return view("Admin.Page.User.useredit", ["usereditdata" => $userEdit]);
-            } elseif ($request->deleteid) {
-                dd($request->deleteid);
+
+            // Edit customer and shopkeeper data get
+            if ($request->action == "editGet") {
+                $userEdit = CustomerAndShopkeeper::where("id", $request->id)->first();
+                if ($userEdit) {
+
+                    // contry data
+                    $content = File::get(public_path('countries.json'));
+                    $contryList = json_decode($content, true);
+
+                    return view("Admin.Page.User.useredit", ["usereditdata" => $userEdit, "country" => $contryList]);
+                }
+            }
+
+            // Remove customer and shopkeeper
+            elseif ($request->action == "remove") {
+                $userRemove = CustomerAndShopkeeper::where("id", $request->id)->first();
+                if ($userRemove) {
+                    $userRemove->delete();
+                    return redirect()->back();
+                }
+            }
+
+            //Edit customer ans shopkeeper
+            elseif ($request->action == "editUserData") {
+
+                $validator = Validator::make($request->all(), [
+                    "name" => "required",
+                    'email' => [
+                        'required',
+                        'email',
+                        Rule::unique('CustomerAndShopkeeper', 'email')->ignore($request->id),
+                    ],
+                    "phone" => [
+                        'required',
+                        'numeric',
+                        "digits:10",
+                        Rule::unique('CustomerAndShopkeeper', 'phone')->ignore($request->id),
+                    ],
+                    "address" => "required",
+                    "city" => "required",
+                    "state" => "required",
+                    "country" => "required",
+                    "pincode" => "required|numeric|digits:6",
+                    "gender" => "required",
+                ], [
+                    "name.required" => "Enter Name is Required.",
+                    "email.required" => "Enter email is Required.",
+                    "phone.required" => "Enter phone is Required.",
+                    "address.required" => "Enter address is Required.",
+                    "city.required" => "Enter city is Required.",
+                    "country.required" => "Enter country is Required.",
+                    "pincode.required" => "Enter pincode is Required.",
+                    "gender.required" => "Enter gender is Required.",
+                ]);
+
+                if ($validator->fails()) {
+                    $userEdit = CustomerAndShopkeeper::where("id", $request->id)->first();
+                    if ($userEdit) {
+
+                        // contry data
+                        $content = File::get(public_path('countries.json'));
+                        $contryList = json_decode($content, true);
+
+                        return view("Admin.Page.User.useredit", ["usereditdata" => $userEdit, "country" => $contryList, "validator" => $validator]);
+                    }
+                }
+
+                $customer = CustomerAndShopkeeper::where("email", $request->email)->first();
+                $customer->update([
+                    "name" => $request->name,
+                    "address" => $request->address,
+                    "email" => $request->email,
+                    "phone" => $request->phone,
+                    "city" => $request->city,
+                    "state" => $request->state,
+                    "country" => $request->country,
+                    "pincode" => $request->pincode,
+                    "gender" => $request->gender,
+                ]);
             }
         }
         $customerandshopkeeper = CustomerAndShopkeeper::paginate(9);
-
         return view("Admin.Page.User.usershow", ["data" => $customerandshopkeeper]);
     }
 
-    public function Product_Manage()
+    // Product Manage
+    public function Product_Manage(Request $request)
     {
+        if ($request->isMethod("post")) {
+
+            // Remove porduct
+            if ($request->action == "remove") {
+                // dd($request->id);
+                $productData = Product::where("id", $request->id)->first();
+                if ($productData) {
+                    $productData->delete();
+                }
+                return redirect()->back();
+            }
+
+            // Edit product data get
+            if ($request->action == "editProductData") {
+                $productData = Product::where("id", $request->id)->first();
+                if ($productData) {
+                    return view("Admin.Page.Product.productedit", ["productData" => $productData]);
+                }
+            }
+
+            // Edit product info
+            if ($request->action == "edit") {
+
+                $validator = Validator::make(
+                    $request->all(),
+                    [
+                        "name" => "required",
+                        "description" => "required",
+                        "price" => "required|numeric|gt:0",
+                        "stock" => "required|numeric|gt:-1",
+                        "status" => "required",
+                        "image.*" => "required|image|mimes:png,jpg|max:2048",
+                        "catagory" => "required",
+                        "discount" => "required",
+                    ],
+                    [
+                        "name.required" => "Enter Name Are Required.",
+                        "description.required" => "Enter Description Are Required.",
+                        "price.required" => "Enter Price Are Required.",
+                        "price.numeric" => "Enter Price Is Numeric Required.",
+                        "price.gt" => "Enter Price Is Greater Then 0 Required.",
+                        "stock.required" => "Enter Stock Are Required.",
+                        "stock.numeric" => "Enter Stock Is Numeric Required.",
+                        "stock.gt" => "Enter Stock Is Greater Then -1 Required.",
+                        "status.required" => "Enter Status Are Required.",
+                        "image.required" => "Enter Image Are Required.",
+                        "image.image" => "Enter Only Image Are Required.",
+                        "image.mimes" => "Enter PNG Or JPG Image Are Required.",
+                        "image.max" => "Enter Less then 2 Mb Image Are Required.",
+                        "catagory.required" => "Enter Catagory Are Required.",
+                        "discount.required" => "Enter Discount Are Required.",
+                    ]
+                );
+
+                if ($validator->fails()) {
+                    $productData = Product::where("id", $request->id)->first();
+                    if ($productData) {
+                        return view("Admin.Page.Product.productedit", ["validator" => $validator, "productData" => $productData,]);
+                    }
+                }
+
+                $product = Product::find($request->id);
+
+                $admin = Admin::where("name", $request->adminid)->first();
+
+                $product->update([
+                    "name" => $request->name,
+                    "description" => $request->description,
+                    "price" => $request->price,
+                    "stock" => $request->stock,
+                    "status" => $request->status,
+                    "sub_category_id" => $request->catagory,
+                    "discount" => $request->discount,
+                ]);
+
+                if ($admin) {
+                    $product->admin_id = $admin->id;
+                    $product->save();
+                }
+                if ($files = $request->file("file")) {
+                    foreach ($files as $file) {
+                        $file->storeAs("public/UploadeFile", $file->getClientOriginalName());
+                        $image = new Images();
+                        $image->image_name = $file->getClientOriginalName();
+                        $image->product_id = $product->id;
+                        $image->save();
+                    }
+                }
+            }
+        }
+
         $product = Product::paginate(9);
         return view("Admin.Page.Product.productshow", ["data" => $product]);
     }
 
-    public function Order_Manage()
+    public function Order_Manage(Request $request)
     {
+        if ($request->isMethod("post")) {
+            if ($request->action == "view") {
+
+                $orderData = CustomerOrder::find($request->id);
+                if ($orderData) {
+                    return view("Admin.Page.Order.orderedit", ["orderData" => $orderData]);
+                }
+            }
+            if ($request->action == "editOrderData") {
+                $validator = Validator::make($request->all(), [
+                    "status" => "required"
+                ], [
+                    "status.required" => "Select Status of Order Product."
+                ]);
+
+                if ($validator->fails()) {
+                    $orderData = CustomerOrder::find($request->id);
+                    if ($orderData) {
+                        return view("Admin.Page.Order.orderedit", ["validator" => $validator, "orderData" => $orderData]);
+                    }
+                }
+
+                $orderData = CustomerOrder::find($request->id);
+                if ($orderData) {
+                    $orderData->status = $request->status;
+                    $orderData->save();
+                }
+            }
+        }
         $order = CustomerOrder::paginate(10);
         return view("Admin.Page.Order.ordershow", ["order" => $order]);
+    }
+
+    public function Admin_Product_Detail($productid)
+    {
+        $data = Product::where("id", $productid)->first();
+        return view("Admin.Page.Product.productdetail", ["productdatails" => $data]);
     }
 
     // public function dashboard()
@@ -142,22 +345,22 @@ class AdminController extends Controller
         return redirect()->route("admin_get_user_of_all");
     }
 
-    // public function admin_getuserofall(Request $request)
-    // {
-    //     return view("Admin.Table.usershow");
-    // }
+    public function admin_getuserofall(Request $request)
+    {
+        return view("Admin.Table.usershow");
+    }
 
-    // public function getuserofall(Request $request)
-    // {
-    //     $data = CustomerAndShopkeeper::paginate(9);
-    //     foreach ($data as $key) {
-    //         $key->password = Crypt::decryptString($key->password);
-    //     }
-    //     if ($request->ajax()) {
-    //         return view("Admin.Table.usertable", ["data" => $data]);
-    //     }
-    //     return view("Admin.Table.usertable", ["data" => $data]);
-    // }
+    public function getuserofall(Request $request)
+    {
+        $data = CustomerAndShopkeeper::paginate(9);
+        foreach ($data as $key) {
+            $key->password = Crypt::decryptString($key->password);
+        }
+        if ($request->ajax()) {
+            return view("Admin.Table.usertable", ["data" => $data]);
+        }
+        return view("Admin.Table.usertable", ["data" => $data]);
+    }
 
     public function viewupdateuser(Request $request)
     {

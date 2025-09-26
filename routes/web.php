@@ -13,11 +13,18 @@ use Illuminate\Support\Facades\Route;
 
 
 // Admin New Raouter
-Route::match(["get", "post"], '/AdminInUser', [AdminController::class, 'CustomerAndShopkeeper_Manage'])->name('admindashboard')->middleware('adminCheck');
-Route::get('/AdminInProduct', [AdminController::class, 'Product_Manage'])->name('product.manage');
-Route::get('/AdminInOrder', [AdminController::class, 'Order_Manage'])->name('order.manage');
+Route::middleware("adminCheck")->group(function () {
 
-Route::get('/admingetuserofall', [AdminController::class, "admin_getuserofall"])->name("admin_get_user_of_all");
+    Route::match(["get", "post"], '/AdminInUser', [AdminController::class, 'CustomerAndShopkeeper_Manage'])->name('admindashboard');
+    Route::match(["get", "post"], '/AdminInProduct', [AdminController::class, 'Product_Manage'])->name('product.manage');
+    Route::match(["get", "post"], '/AdminInOrder', [AdminController::class, 'Order_Manage'])->name('order.Manage');
+    Route::get('/AdminProductDetail/{productid}', [AdminController::class, 'Admin_Product_Detail']);
+});
+
+// Route::get('/admingetuserofall', [AdminController::class, "admin_getuserofall"])->name("admin_get_user_of_all");
+
+// State & City Data get
+Route::get('/getstate', [CustomerController::class, "getstate"]);
 
 // Main page Route
 Route::redirect("/", "/MyShop");
@@ -53,7 +60,7 @@ Route::get('/logout', [CustomerController::class, 'logout'])->name('customerlogo
 Route::get('/customerdashboard', [CustomerController::class, "dashboard"])->name("customerdashboard")->middleware("customerCheck");
 Route::post('/customerupdate', [CustomerController::class, "updateuser"]);
 Route::get('/customeruser', [CustomerController::class, "profileuser"]);
-Route::get('/getstate', [CustomerController::class, "getstate"]);
+
 Route::get('/getcity', [CustomerController::class, "getcity"]);
 Route::get('/getcountry', [CustomerController::class, "getcountry"]);
 Route::get('/customerprofile/{customeremail}', [CustomerController::class, "customer_profile"]);
