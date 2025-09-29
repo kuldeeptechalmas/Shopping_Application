@@ -18,9 +18,24 @@ Route::middleware("adminCheck")->group(function () {
     Route::match(["get", "post"], '/AdminInUser', [AdminController::class, 'CustomerAndShopkeeper_Manage'])->name('admindashboard');
     Route::match(["get", "post"], '/AdminInProduct', [AdminController::class, 'Product_Manage'])->name('product.manage');
     Route::match(["get", "post"], '/AdminInOrder', [AdminController::class, 'Order_Manage'])->name('order.Manage');
+    Route::match(["get", "post"], '/AdminProfile', [AdminController::class, 'Admin_Profile_Manage'])->name('admin.Profile.Manage');
+
     Route::get('/AdminProductDetail/{productid}', [AdminController::class, 'Admin_Product_Detail']);
+    Route::get('/Logout', [AdminController::class, 'Admin_Logout'])->name("admin.Logout");
 });
 
+
+// Main Route
+Route::get("/Welcome", function () {
+    return view("Main.welcome");
+});
+Route::match(['get', 'post'], '/Registration', [MainController::class, 'Registration'])->name('registration');
+Route::match(['get', 'post'], '/Login', [MainController::class, 'Login'])->name('login')->middleware("checksession");
+Route::match(["post", "get"], '/ForgetPassword', [MainController::class, "Forget_Password_Email_Find"])->name("forget.Password");
+Route::match(["get", "post"], '/ForgetPasswords', [MainController::class, "Forget_Password"])->name("forget.Password.Data");
+
+
+// Route::match(["get", "post"], '/forgetpasswords', [ShopkeeperController::class, "shopkeeper_forget_password"])->name("forgetpassword");
 // Route::get('/admingetuserofall', [AdminController::class, "admin_getuserofall"])->name("admin_get_user_of_all");
 
 // State & City Data get
@@ -54,8 +69,6 @@ Route::get('/deleteorder/{orderid}', [MainController::class, 'order_delete']);
 Route::get("/welcome", function () {
     return view("welcome");
 });
-Route::match(['get', 'post'], '/registration', [CustomerController::class, 'registration'])->name('customerregistration');
-Route::match(['get', 'post'], '/login', [CustomerController::class, 'login'])->name('customerlogin')->middleware("checksession");
 Route::get('/logout', [CustomerController::class, 'logout'])->name('customerlogout');
 Route::get('/customerdashboard', [CustomerController::class, "dashboard"])->name("customerdashboard")->middleware("customerCheck");
 Route::post('/customerupdate', [CustomerController::class, "updateuser"]);
@@ -72,27 +85,13 @@ Route::get('/shopkeeperuser', [ShopkeeperController::class, "profileuser"]);
 Route::post('/shopkeeperupdate', [ShopkeeperController::class, "updateuser"]);
 Route::get('/shopkeeperprofile/{shopkeeperid}', [ShopkeeperController::class, "shopkeeper_profile"]);
 Route::match(["post", "get"], '/shopkeeperchangepassword/{shopkeeperid}', [ShopkeeperController::class, "shopkeeper_change_password"]);
-Route::match(["get", "post"], '/forgetpasswords', [ShopkeeperController::class, "shopkeeper_forget_password"])->name("forgetpassword");
+// Route::match(["get", "post"], '/forgetpasswords', [ShopkeeperController::class, "shopkeeper_forget_password"])->name("forgetpassword");
 Route::get('/viewprofile/{email}', [ShopkeeperController::class, "view_profile"]);
+Route::match(['get', 'post'], '/ShopkeeperOrderList', [ShopkeeperController::class, "Shopkeeper_Order_List"])->name("shopkeeper.Order.List");
 
 // forgetpassword user
-Route::match(["post", "get"], '/forgetpassword', [ShopkeeperController::class, "forget_password"]);
+// Route::match(["post", "get"], '/forgetpassword', [ShopkeeperController::class, "forget_password"]);
 
-
-// Admin Route
-// Route::get('/admindashboard', [AdminController::class, 'dashboard'])->name('admindashboard')->middleware('adminCheck');
-Route::get('/adminlogout', [AdminController::class, 'logout'])->name('adminlogout');
-Route::get('/adminruser', [AdminController::class, "profileuser"]);
-Route::post('/adminupdate', [AdminController::class, "updateuser"]);
-Route::get('/deleterecord', [AdminController::class, "deleterecord"]);
-Route::get('/getuserofall', [AdminController::class, "getuserofall"]);
-
-Route::post('/adminviewupdate', [AdminController::class, "viewupdateuser"]);
-Route::get('/productdetailsadmin/{productid}', [AdminController::class, 'product_details']);
-Route::get('/viewallorder', [AdminController::class, 'view_all_order'])->name("viewallorder");;
-Route::get('/vieworder/{orderid}', [AdminController::class, 'view_order']);
-Route::post('/updateorderadmin', [AdminController::class, 'update_order_admin']);
-Route::get('/productuseradmin/{id}', [AdminController::class, 'get_user_admin']);
 
 // Error
 Route::get('/error', function () {
@@ -132,3 +131,24 @@ Route::get('/addtocart_desbord/{product_id}', [AddToCartController::class, 'inde
 Route::get('/addtocartget', [AddToCartController::class, 'addtocart_get_all'])->name("addtocart_get_all");
 Route::get('/deletetocart/{cartid}', [AddToCartController::class, 'delete_cart']);
 Route::get('/addtocartqueantitychange', [AddToCartController::class, 'update_queantity']);
+
+
+
+
+
+
+// old code
+
+// Admin Route
+// Route::get('/admindashboard', [AdminController::class, 'dashboard'])->name('admindashboard')->middleware('adminCheck');
+// Route::get('/adminlogout', [AdminController::class, 'logout'])->name('adminlogout');
+// Route::get('/adminruser', [AdminController::class, "profileuser"]);
+// Route::post('/adminupdate', [AdminController::class, "updateuser"]);
+// Route::get('/deleterecord', [AdminController::class, "deleterecord"]);
+// Route::get('/getuserofall', [AdminController::class, "getuserofall"]);
+// Route::post('/adminviewupdate', [AdminController::class, "viewupdateuser"]);
+// Route::get('/productdetailsadmin/{productid}', [AdminController::class, 'product_details']);
+// Route::get('/viewallorder', [AdminController::class, 'view_all_order'])->name("viewallorder");;
+// Route::get('/vieworder/{orderid}', [AdminController::class, 'view_order']);
+// Route::post('/updateorderadmin', [AdminController::class, 'update_order_admin']);
+// Route::get('/productuseradmin/{id}', [AdminController::class, 'get_user_admin']);

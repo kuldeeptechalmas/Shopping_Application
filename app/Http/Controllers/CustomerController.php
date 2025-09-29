@@ -63,121 +63,121 @@ class CustomerController extends Controller
         return response()->json(["citylist" => $filtercity]);
     }
 
-    public function registration(Request $request)
-    {
+    // public function registration(Request $request)
+    // {
 
-        $content = File::get(public_path('countries.json'));
-        $contrylist = json_decode($content, true);
+    //     $content = File::get(public_path('countries.json'));
+    //     $contrylist = json_decode($content, true);
 
 
-        if ($request->isMethod("post")) {
+    //     if ($request->isMethod("post")) {
 
-            $validator = $request->validate([
-                "name" => "required",
-                "conformpassword" => [
-                    "required",
-                    "same:password",
-                    Password::min(8)
-                        ->mixedCase()
-                        ->symbols()
-                        ->numbers()
-                ],
-                "password" => [
-                    "required",
-                    Password::min(8)
-                        ->mixedCase()
-                        ->symbols()
-                        ->numbers()
-                ],
-                "email" => "required|email|unique:CustomerAndShopkeeper,email",
-                "phone" => "required|numeric|digits:10|unique:CustomerAndShopkeeper,phone",
-                "address" => "required",
-                "city" => "required",
-                "state" => "required",
-                "country" => "required",
-                "pincode" => "required|numeric|digits:6",
-                "gender" => "required",
-            ]);
+    //         $validator = $request->validate([
+    //             "name" => "required",
+    //             "conformpassword" => [
+    //                 "required",
+    //                 "same:password",
+    //                 Password::min(8)
+    //                     ->mixedCase()
+    //                     ->symbols()
+    //                     ->numbers()
+    //             ],
+    //             "password" => [
+    //                 "required",
+    //                 Password::min(8)
+    //                     ->mixedCase()
+    //                     ->symbols()
+    //                     ->numbers()
+    //             ],
+    //             "email" => "required|email|unique:CustomerAndShopkeeper,email",
+    //             "phone" => "required|numeric|digits:10|unique:CustomerAndShopkeeper,phone",
+    //             "address" => "required",
+    //             "city" => "required",
+    //             "state" => "required",
+    //             "country" => "required",
+    //             "pincode" => "required|numeric|digits:6",
+    //             "gender" => "required",
+    //         ]);
 
-            $customer = new CustomerAndShopkeeper();
-            $customer->name = $request->name;
-            $customer->address = $request->address;
-            $customer->password = Crypt::encryptString($request->password);
-            $customer->email = $request->email;
-            $customer->phone = $request->phone;
-            $customer->rols = $request->rols;
-            $customer->city = $request->city;
-            $customer->state = $request->state;
-            $customer->country = $request->country;
-            $customer->pincode = $request->pincode;
-            $customer->gender = $request->gender;
-            $customer->save();
+    //         $customer = new CustomerAndShopkeeper();
+    //         $customer->name = $request->name;
+    //         $customer->address = $request->address;
+    //         $customer->password = Crypt::encryptString($request->password);
+    //         $customer->email = $request->email;
+    //         $customer->phone = $request->phone;
+    //         $customer->rols = $request->rols;
+    //         $customer->city = $request->city;
+    //         $customer->state = $request->state;
+    //         $customer->country = $request->country;
+    //         $customer->pincode = $request->pincode;
+    //         $customer->gender = $request->gender;
+    //         $customer->save();
 
-            return redirect()->route("customerlogin");
-        }
-        return view("registration", ["contrylist" => $contrylist]);
-        // "statelist"=>$statelist,"citylist"=>$citylist]);
-    }
+    //         return redirect()->route("customerlogin");
+    //     }
+    //     return view("registration", ["contrylist" => $contrylist]);
+    //     // "statelist"=>$statelist,"citylist"=>$citylist]);
+    // }
 
-    public function login(Request $request)
-    {
+    // public function login(Request $request)
+    // {
 
-        if ($request->isMethod("post")) {
+    //     if ($request->isMethod("post")) {
 
-            $validator = $request->validate([
-                "email" => "required",
-                "password" => "required",
-            ]);
+    //         $validator = $request->validate([
+    //             "email" => "required",
+    //             "password" => "required",
+    //         ]);
 
-            $customer = CustomerAndShopkeeper::where("email", $request->email)->first();
-            $admin = Admin::where("email", $request->email)->first();
+    //         $customer = CustomerAndShopkeeper::where("email", $request->email)->first();
+    //         $admin = Admin::where("email", $request->email)->first();
 
-            if ($admin) {
-                if ($request->password == $admin->password) {
-                    Session::put("adminname", $admin->name);
-                    return redirect()->route("admindashboard");
-                } else {
-                    return redirect()->back()->with("passworderror", "The password is Invalid password")->withInput();
-                }
-            }
-            if (empty($customer)) {
-                return redirect()->route("error");
-            }
+    //         if ($admin) {
+    //             if ($request->password == $admin->password) {
+    //                 Session::put("adminname", $admin->name);
+    //                 return redirect()->route("admindashboard");
+    //             } else {
+    //                 return redirect()->back()->with("passworderror", "The password is Invalid password")->withInput();
+    //             }
+    //         }
+    //         if (empty($customer)) {
+    //             return redirect()->route("error");
+    //         }
 
-            if (!empty($customer->rols)) {
-                if (empty($customer)) {
-                    return redirect()->back()->with("notfound", $customer->rols . " not found")->withInput();
-                }
-            }
-            if ($request->password != Crypt::decryptString($customer->password)) {
-                return redirect()->back()->with("passworderror", "The password is Invalid password")->withInput();
-            }
+    //         if (!empty($customer->rols)) {
+    //             if (empty($customer)) {
+    //                 return redirect()->back()->with("notfound", $customer->rols . " not found")->withInput();
+    //             }
+    //         }
+    //         if ($request->password != Crypt::decryptString($customer->password)) {
+    //             return redirect()->back()->with("passworderror", "The password is Invalid password")->withInput();
+    //         }
 
-            if ($customer->rols == "Customer") {
-                Session::put("customerid", $customer->name);
-                Session::put("customeremail", $customer->email);
-                Session::forget("discountamount");
-                $cart = Session::get("cart");
-                // dd(!empty($cart));
-                if (!empty($cart)) {
-                    foreach ($cart as $key => $value) {
-                        $cart = new AddToCart();
-                        $cart->user_id = $customer->id;
-                        $cart->product_id = $key;
-                        $cart->quantity = 1;
-                        $cart->save();
-                    }
-                }
-                Session::forget("cart");
-                return redirect()->route("MainIndex");
-            } else {
-                Session::put("shopkeeperid", $customer->name);
-                Session::put("shopkeeperemail", $customer->email);
-                return redirect()->route("shopkeeperdashboard");
-            }
-        }
-        return view("login");
-    }
+    //         if ($customer->rols == "Customer") {
+    //             Session::put("customerid", $customer->name);
+    //             Session::put("customeremail", $customer->email);
+    //             Session::forget("discountamount");
+    //             $cart = Session::get("cart");
+    //             // dd(!empty($cart));
+    //             if (!empty($cart)) {
+    //                 foreach ($cart as $key => $value) {
+    //                     $cart = new AddToCart();
+    //                     $cart->user_id = $customer->id;
+    //                     $cart->product_id = $key;
+    //                     $cart->quantity = 1;
+    //                     $cart->save();
+    //                 }
+    //             }
+    //             Session::forget("cart");
+    //             return redirect()->route("MainIndex");
+    //         } else {
+    //             Session::put("shopkeeperid", $customer->name);
+    //             Session::put("shopkeeperemail", $customer->email);
+    //             return redirect()->route("shopkeeperdashboard");
+    //         }
+    //     }
+    //     return view("login");
+    // }
 
     public function logout(Request $request)
     {

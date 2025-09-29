@@ -1,11 +1,11 @@
-@extends('Admin.index')
+@extends('Shopkeeper.index')
 
 @section('content')
 <div class="d-flex justify-content-center" style="height: 62px;text-align: center;margin-top: 16px;">
     <h3 style="width: 225px;border: solid;border-radius: 27px;align-items: center;display: flex;justify-content: center;">
         Edit Order</h3>
 </div>
-<form action="{{ route('order.Manage') }}" method="post" style="padding: 10px 169px;">
+<form action="{{ route('shopkeeper.Order.List') }}" method="post" style="padding: 10px 169px;">
 
     @csrf
     <div class="mb-3">
@@ -31,6 +31,7 @@
     </div>
     <div class="mb-3">
         <label class="form-label">orderData Date</label>
+        {{-- <input type="date" value="{{$orderData->orderData_date}}" readonly class="form-control"> --}}
         <input type="date" value="{{$orderData->order_date}}" readonly class="form-control">
     </div>
     <div class="mb-3">
@@ -55,12 +56,16 @@
     </div>
 
     <div class="modal-footer" style="padding: 10px 20px 29px;">
-        <a href="{{ route('order.Manage') }}">
+        <a href="{{ route('shopkeeper.Order.List') }}">
             <button type="button" class="btn btn-secondary" style="margin-right: 32px;">back</button>
         </a>
 
-        <input type="text" name="action" value="editOrderData" hidden>
+        <input type="text" name="action" value="editOrder" hidden>
         <button type="submit" class="btn btn-primary">Save changes</button>
     </div>
+
+    @if (isset($your_field))
+    {{ $your_field }}
+    @endif
 </form>
 @endsection

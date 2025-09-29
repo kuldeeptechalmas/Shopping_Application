@@ -1,11 +1,6 @@
-@extends('Admin.index')
-
-@section('css_content')
-
-@endsection
+@extends('Shopkeeper.index')
 
 @section('content')
-
 <div id="dataOutput" class="mt-3">
     <h1>Show Order</h1>
     <table class="table table-striped">
@@ -24,12 +19,12 @@
         </thead>
         <tbody>
 
-            @if (isset($order))
-            @foreach ($order as $item)
+            @if (isset($order_Data))
+            @foreach ($order_Data as $item)
             <tr>
                 <th scope="col">{{$item->product->name}}</th>
                 <th scope="col">
-                    <a href="/AdminProductDetail/{{$item->product->id}}">
+                    <a href="/productdetails/{{$item->product->id}}">
                         <div style="height: 100px; width: 100%;">
                             <img style="width: 100%; height: 100%; object-fit: cover;" src="{{asset("storage/UploadeFile/" . $item->product->image)}}" alt="">
                         </div>
@@ -50,9 +45,9 @@
                     @endif
                 </th>
                 <th scope="col">
-                    <form action="{{ route('order.Manage') }}" method="post">
+                    <form action="{{ route('shopkeeper.Order.List') }}" method="post">
                         @csrf
-                        <input type="text" name="action" value="view" hidden>
+                        <input type="text" name="action" value="edit" hidden>
                         <input type="text" name="id" value="{{ $item->id }}" hidden>
                         <button type="submit" class="btn btn-primary">
                             View
@@ -65,57 +60,10 @@
         </tbody>
     </table>
 
-    <div class="paginationDiv" style="margin-right: 73%;">
+    {{-- <div class="paginationDiv" style="margin-right: 73%;">
         <p>
-            Paginate Index : {{ $order->links('pagination::bootstrap-4') }}
-        </p>
-    </div>
+            Paginate Index : {{ $order_Data->links('pagination::bootstrap-4') }}
+    </p>
+</div> --}}
 
-
-    <!-- View Order Modal -->
-    <div class="modal fade" id="orderview" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">View Order</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="vieworderdetail">
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    @endsection
-
-    @push("script_content")
-
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
-    <script>
-        $(document).on('click', '.pagination a', function(e) {
-            e.preventDefault();
-            var page = $(this).attr('href');
-            console.log(page);
-            window.location.href = page;
-        });
-
-        function vieworderspcific(orderid) {
-            console.log(orderid);
-
-            $.ajax({
-                url: "/vieworder/" + orderid
-                , type: "get"
-                , success: function(res) {
-                    $("#vieworderdetail").html(res);
-                }
-                , error: function(e) {
-                    console.log(e);
-                }
-            })
-        }
-
-    </script>
-    @endpush
+@endsection

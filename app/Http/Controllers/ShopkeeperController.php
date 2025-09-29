@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CategoryProduct;
 use App\Models\CustomerAndShopkeeper;
+use App\Models\CustomerOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
@@ -121,55 +122,99 @@ class ShopkeeperController extends Controller
         return view("Shopkeeper.Profile.changepassword", ["catagory" => $catagory, "shopkeeper_data" => $shopkeeper_profile]);
     }
 
-    public function shopkeeper_forget_password(Request $request)
+    // public function shopkeeper_forget_password(Request $request)
+    // {
+    //     if ($request->isMethod("post")) {
+
+    //         $request->validate([
+    //             "newpassword" => "required",
+    //             "confpassword" => "required|same:newpassword",
+    //         ], [
+    //             "newpassword.required" => "Enter New Password are Required",
+    //             "confpassword.required" => "Enter Conform Password are Required",
+    //             "confpassword.same" => "Enter Password are Not Match to New Password",
+    //         ]);
+    //         $shopkeeperdata = CustomerAndShopkeeper::where("email", Session::get("emailforgotpassword"))->first();
+    //         $shopkeeperdata->password = Crypt::encryptString($request->confpassword);
+    //         $shopkeeperdata->save();
+
+    //         return redirect()->route("login");
+    //     }
+    //     return view("Main.ForgetPassword.forgotpassword", ["notshowemail" => "yes"]);
+    // }
+
+    // public function forget_password(Request $request)
+    // {
+    //     if ($request->isMethod("post")) {
+    //         $request->validate([
+    //             "email" => "required|email"
+    //         ], [
+    //             "email.required" => "Enter Email is Required",
+    //             "email.email" => "Enter Only Email is Required"
+    //         ]);
+
+    //         $shopkeeperdata = CustomerAndShopkeeper::where("email", $request->email)->first();
+    //         if ($shopkeeperdata) {
+    //             Session::put("emailforgotpassword", $shopkeeperdata->email);
+    //             return redirect()->route("forgetpassword");
+    //         } else {
+    //             return back()->withInput()->with(["emailerror" => "Enter Email is Not Exist !"]);
+    //         }
+    //     }
+    //     return view("ForgetPassword.emailvarify");
+    // }
+
+    public function view_profile($email)
     {
-        if ($request->isMethod("post")) {
-
-            $request->validate([
-                "newpassword" => "required",
-                "confpassword" => "required|same:newpassword",
-            ], [
-                "newpassword.required" => "Enter New Password are Required",
-                "confpassword.required" => "Enter Conform Password are Required",
-                "confpassword.same" => "Enter Password are Not Match to New Password",
-            ]);
-            $shopkeeperdata = CustomerAndShopkeeper::where("email", Session::get("emailforgotpassword"))->first();
-            $shopkeeperdata->password=Crypt::encryptString($request->confpassword);
-            $shopkeeperdata->save();
-
-            return redirect()->route("customerlogin");
-        }
-        return view("ForgetPassword.forgotpassword",["notshowemail"=>"yes"]);
-    }
-
-    public function forget_password(Request $request)
-    {
-        if ($request->isMethod("post")) {
-            $request->validate([
-                "email" => "required|email"
-            ], [
-                "email.required" => "Enter Email is Required",
-                "email.email" => "Enter Only Email is Required"
-            ]);
-
-            $shopkeeperdata = CustomerAndShopkeeper::where("email", $request->email)->first();
-            if ($shopkeeperdata) {
-                Session::put("emailforgotpassword",$shopkeeperdata->email);
-                return redirect()->route("forgetpassword");
-            } else {
-                return back()->withInput()->with(["emailerror" => "Enter Email is Not Exist !"]);
-            }
-        }
-        return view("ForgetPassword.emailvarify");
-    }
-
-    public function view_profile($email){
 
         // contry data
         $content = File::get(public_path('countries.json'));
         $contrylist = json_decode($content, true);
 
-        $data=CustomerAndShopkeeper::where("email",$email)->first();
-        return view("Shopkeeper.Profile.viewuserprofile",["data"=>$data,"contrylist" => $contrylist]);
+        $data = CustomerAndShopkeeper::where("email", $email)->first();
+        return view("Shopkeeper.Profile.viewuserprofile", ["data" => $data, "contrylist" => $contrylist]);
+    }
+
+    public function Shopkeeper_Order_List(Request $request)
+    {
+        if ($request->isMethod("post")) {
+
+            // view data get
+            if ($request->action == 'edit') {
+                $view_Order = CustomerOrder::find($request->id);
+                if ($view_Order) {
+                    return view("Shopkeeper.Order.orderedit", ['orderData' => $view_Order]);
+                }
+            }
+
+            // edit data
+            if ($request->action == 'editOrder') {
+
+                $validator = Validator::make($request->all(), [
+                    "status" => "required"
+                ], [
+                    "status.required" => "Select Status of Order Product."
+                ]);
+                if ($validator->fails()) {
+                    $view_Order = CustomerOrder::find($request->id);
+                    return view('Shopkeeper.Order.orderedit', ['orderData' => $view_Order, 'validator' => $validator]);
+                }
+
+                $orderData = CustomerOrder::find($request->id);
+                if ($orderData) {
+                    $orderData->status = $request->status;
+                    $orderData->save();
+                }
+            }
+        }
+        $order_Data = CustomerOrder::all();
+        $shopkeeper_Data = CustomerAndShopkeeper::where("email", Session::get('shopkeeperemail'))->first();
+        $sid = $shopkeeper_Data->id;
+        $filtered = $order_Data->filter(function ($item) use ($sid) {
+            if ($item->product->user_id == $sid) {
+                return $item;
+            }
+        });
+        return view("Shopkeeper.Order.orderlist", ['order_Data' => $filtered]);
     }
 }

@@ -2,11 +2,8 @@
 <html lang="en">
 
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
-        integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Select2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
@@ -35,10 +32,9 @@
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                                 <label class="form-label" for="form3Example1c">Your Name</label>
-                                                <input type="text" id="form3Example1c" value="{{old('name')}}"
-                                                    name='name' class="form-control" />
+                                                <input type="text" id="form3Example1c" value="{{old('name')}}" name='name' class="form-control" />
                                                 @error('name')
-                                                    <div style="color:red;">{{$message}}</div>
+                                                <div style="color:red;">{{$message}}</div>
                                                 @enderror
                                             </div>
                                         </div>
@@ -48,10 +44,9 @@
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                                 <label class="form-label" for="form3Example1c">Phone No</label>
-                                                <input type="text" id="form3Example1c" value="{{old('phone')}}"
-                                                    name="phone" class="form-control" />
+                                                <input type="text" id="form3Example1c" value="{{old('phone')}}" name="phone" class="form-control" />
                                                 @error('phone')
-                                                    <div style="color:red;">{{$message}}</div>
+                                                <div style="color:red;">{{$message}}</div>
                                                 @enderror
                                             </div>
                                         </div>
@@ -59,12 +54,10 @@
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                                 <label class="form-label" for="form3Example1c">Gender</label>
-                                                <input type="radio" id="form3Example1c" value="male"
-                                                    {{old('gender') == 'male' ? 'checked' : '' }} name="gender" />Male
-                                                <input type="radio" id="form3Example1c" value="female"
-                                                    {{old('gender') == 'female' ? 'checked' : '' }} name="gender" />Female
+                                                <input type="radio" id="form3Example1c" value="male" {{old('gender') == 'male' ? 'checked' : '' }} name="gender" />Male
+                                                <input type="radio" id="form3Example1c" value="female" {{old('gender') == 'female' ? 'checked' : '' }} name="gender" />Female
                                                 @error('gender')
-                                                    <div style="color:red;">{{$message}}</div>
+                                                <div style="color:red;">{{$message}}</div>
                                                 @enderror
                                             </div>
                                         </div>
@@ -72,17 +65,16 @@
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                                 <label class="form-label" for="form3Example1c">Country</label>
-                                                <select class="form-select" id="country"
-                                                    value="{{old('country')}}" name="country">
+                                                <select class="form-select" id="country" value="{{old('country')}}" name="country">
                                                     <option value="">Select</option>
                                                     @if (isset($contrylist))
-                                                        @foreach ($contrylist as $item)
-                                                            <option value={{$item['id']}} {{old('country') == $item['id'] ? 'selected' : ''}}>{{$item['name']}}</option>
-                                                        @endforeach
+                                                    @foreach ($contrylist as $item)
+                                                    <option value={{$item['id']}} {{old('country') == $item['id'] ? 'selected' : ''}}>{{$item['name']}}</option>
+                                                    @endforeach
                                                     @endif
                                                 </select>
                                                 @error('country')
-                                                    <div style="color:red;">{{$message}}</div>
+                                                <div style="color:red;">{{$message}}</div>
                                                 @enderror
                                             </div>
                                         </div>
@@ -90,11 +82,10 @@
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                                 <label class="form-label" for="state">State</label>
-                                                <select onchange="findcity()" class="form-select" id="state"
-                                                    value="{{old('state')}}" name="state">
+                                                <select onchange="findcity()" class="form-select" id="state" value="{{old('state')}}" name="state">
                                                 </select>
                                                 @error('state')
-                                                    <div style="color:red;">{{$message}}</div>
+                                                <div style="color:red;">{{$message}}</div>
                                                 @enderror
                                             </div>
                                         </div>
@@ -102,11 +93,10 @@
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                                 <label class="form-label" for="form3Example1c">City</label>
-                                                <select placeholder="Select" class="form-select" id="city"
-                                                    value="{{old('city')}}" name="city">
+                                                <select placeholder="Select" class="form-select" id="city" value="{{old('city')}}" name="city">
                                                 </select>
                                                 @error('city')
-                                                    <div style="color:red;">{{$message}}</div>
+                                                <div style="color:red;">{{$message}}</div>
                                                 @enderror
                                             </div>
                                         </div>
@@ -114,10 +104,9 @@
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                                 <label class="form-label" for="form3Example1c">Address</label>
-                                                <input type="text" id="form3Example1c" value="{{old('address')}}"
-                                                    name="address" class="form-control" />
+                                                <input type="text" id="form3Example1c" value="{{old('address')}}" name="address" class="form-control" />
                                                 @error('address')
-                                                    <div style="color:red;">{{$message}}</div>
+                                                <div style="color:red;">{{$message}}</div>
                                                 @enderror
                                             </div>
                                         </div>
@@ -125,10 +114,9 @@
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                                 <label class="form-label" for="form3Example1c">Pincode</label>
-                                                <input type="text" id="form3Example1c" value="{{old('pincode')}}"
-                                                    name="pincode" class="form-control" />
+                                                <input type="text" id="form3Example1c" value="{{old('pincode')}}" name="pincode" class="form-control" />
                                                 @error('pincode')
-                                                    <div style="color:red;">{{$message}}</div>
+                                                <div style="color:red;">{{$message}}</div>
                                                 @enderror
                                             </div>
                                         </div>
@@ -136,62 +124,48 @@
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                                 <label class="form-label" for="form3Example3c">Your Email</label>
-                                                <input type="text" id="form3Example3c" value="{{old('email')}}"
-                                                    name="email" class="form-control" />
+                                                <input type="text" id="form3Example3c" value="{{old('email')}}" name="email" class="form-control" />
                                                 @error('email')
-                                                    <div style="color:red;">{{$message}}</div>
+                                                <div style="color:red;">{{$message}}</div>
                                                 @enderror
                                             </div>
                                         </div>
 
                                         <div class="d-flex flex-row align-items-center mb-4">
-                                            <div data-mdb-input-init class="form-outline flex-fill mb-0"
-                                                style="position: relative;">
+                                            <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
                                                 <label class="form-label" for="form3Example4c">Password</label>
-                                                <input type="password" id="password" name="password"
-                                                    class="form-control" />
-                                                <i class="fa-solid fa-eye" id="passwordshow"
-                                                    style="position:absolute;top: 62%;right: 5%;"
-                                                    onclick="passwordshow()"></i>
-                                                <i class="fa-solid fa-eye-slash" hidden id="passwordhidden"
-                                                    style="position:absolute;top: 62%;right: 5%;"
-                                                    onclick="passwordhidden()"></i>
+                                                <input type="password" id="password" name="password" class="form-control" />
+                                                <i class="fa-solid fa-eye" id="passwordshow" style="position:absolute;top: 62%;right: 5%;" onclick="passwordshow()"></i>
+                                                <i class="fa-solid fa-eye-slash" hidden id="passwordhidden" style="position:absolute;top: 62%;right: 5%;" onclick="passwordhidden()"></i>
                                             </div>
                                         </div>
 
                                         @error('password')
-                                            <span style="color:red;">{{$message}}</span>
+                                        <span style="color:red;">{{$message}}</span>
                                         @enderror
 
                                         <div class="d-flex flex-row align-items-center mb-4">
-                                            <div data-mdb-input-init class="form-outline flex-fill mb-0"
-                                                style="position: relative;">
+                                            <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
                                                 <label class="form-label" for="form3Example4cd">Repeat your
                                                     password</label>
-                                                <input type="password" id="conpassword" name="conformpassword"
-                                                    class="form-control" />
-                                                <i class="fa-solid fa-eye" id="conformpasswordshow"
-                                                    style="position:absolute;top: 62%;right: 5%;"
-                                                    onclick="conformpasswordshow()"></i>
-                                                <i class="fa-solid fa-eye-slash" hidden id="conformpasswordhidden"
-                                                    style="position:absolute;top: 62%;right: 5%;"
-                                                    onclick="conformpasswordhidden()"></i>
+                                                <input type="password" id="conpassword" name="conformpassword" class="form-control" />
+                                                <i class="fa-solid fa-eye" id="conformpasswordshow" style="position:absolute;top: 62%;right: 5%;" onclick="conformpasswordshow()"></i>
+                                                <i class="fa-solid fa-eye-slash" hidden id="conformpasswordhidden" style="position:absolute;top: 62%;right: 5%;" onclick="conformpasswordhidden()"></i>
                                             </div>
                                         </div>
                                         @error('conformpassword')
-                                            <span style="color:red;">{{$message}}</span>
+                                        <span style="color:red;">{{$message}}</span>
                                         @enderror
 
                                         <div class="form-check d-flex justify-content-center mb-5">
 
                                             <label class="form-check-label" for="form2Example3">
-                                                You have an account <a href="/login">Login In</a>
+                                                You have an account <a href="/Login">Login In</a>
                                             </label>
                                         </div>
 
                                         <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                                            <button type="submit" data-mdb-button-init data-mdb-ripple-init
-                                                class="btn btn-primary btn-lg">Register</button>
+                                            <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-lg">Register</button>
                                         </div>
 
                                     </form>
@@ -199,8 +173,7 @@
                                 </div>
                                 <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
 
-                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
-                                        class="img-fluid" alt="Sample image">
+                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp" class="img-fluid" alt="Sample image">
                                 </div>
                             </div>
                         </div>
@@ -209,15 +182,11 @@
             </div>
         </div>
     </section>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
     <!-- jQuery (Select2 requires jQuery) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <!-- Select2 JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -225,7 +194,7 @@
         document.getElementById("roles").value = sessionStorage.getItem("role");
         document.getElementById("rolesname").textContent = document.getElementById("rolesname").textContent + sessionStorage.getItem("role");
 
-        $(document).ready(function () {
+        $(document).ready(function() {
 
             var oldcountry = "{{old('country')}}";
 
@@ -234,47 +203,47 @@
                 const selectElement = $('#state');
                 selectElement.empty();
                 $.ajax({
-                    type: "get",
-                    url: "/getstate",
-                    data: {
-                        data: $('#country').val(),
-                    },
-                    success: function (res) {
+                    type: "get"
+                    , url: "/getstate"
+                    , data: {
+                        data: $('#country').val()
+                    , }
+                    , success: function(res) {
                         $("#state").append(`<option value="">Select</option>`);
-                        $.each(res["statelist"], function (indexInArray, valueOfElement) {
+                        $.each(res["statelist"], function(indexInArray, valueOfElement) {
                             var selectstate = (oldstate == valueOfElement["id"]) ? "selected" : "";
                             $("#state").append(`<option value="${valueOfElement["id"]}" ${selectstate} >${valueOfElement["name"]}</option>`);
                         });
-                    },
-                    error: function (e) {
+                    }
+                    , error: function(e) {
                         console.log(e);
 
-                    },
-                })
+                    }
+                , })
                 if (oldstate) {
                     var oldcity = "{{old('city')}}";
                     const selectElement = $('#city');
                     selectElement.empty();
                     $.ajax({
-                        type: "get",
-                        url: "/getcity",
-                        data: {
-                            data: oldstate,
-                        },
-                        success: function (res) {
+                        type: "get"
+                        , url: "/getcity"
+                        , data: {
+                            data: oldstate
+                        , }
+                        , success: function(res) {
                             $("#city").append(`<option value="">Select</option>`);
-                            $.each(res["citylist"], function (indexInArray, valueOfElement) {
+                            $.each(res["citylist"], function(indexInArray, valueOfElement) {
                                 var selectcity = (oldcity == valueOfElement["id"]) ? "selected" : "";
                                 $("#city").append(`<option value="${valueOfElement["id"]}" ${selectcity}>${valueOfElement["name"]}</option>`);
 
                             });
 
-                        },
-                        error: function (e) {
+                        }
+                        , error: function(e) {
                             console.log(e);
 
-                        },
-                    })
+                        }
+                    , })
                 }
             }
             // var selectstate=(oldstate)
@@ -286,31 +255,31 @@
             $('#city').select2();
         });
 
-        $("#country").on("change", function () {
+        $("#country").on("change", function() {
             const selectElement = $('#state');
             selectElement.empty();
             $.ajax({
-                type: "get",
-                url: "/getstate",
-                data: {
-                    data: $('#country').val(),
-                },
-                success: function (res) {
+                type: "get"
+                , url: "/getstate"
+                , data: {
+                    data: $('#country').val()
+                , }
+                , success: function(res) {
                     var oldstate = "{{old('state')}}";
                     console.log(oldstate);
                     $("#state").append(`<option value="">Select</option>`);
-                    $.each(res["statelist"], function (indexInArray, valueOfElement) {
+                    $.each(res["statelist"], function(indexInArray, valueOfElement) {
                         var selectstate = (oldstate == valueOfElement["id"]) ? "selected" : "";
                         console.log(selectstate);
 
                         $("#state").append(`<option value="${valueOfElement["id"]}" ${selectstate} >${valueOfElement["name"]}</option>`);
                     });
-                },
-                error: function (e) {
+                }
+                , error: function(e) {
                     console.log(e);
 
-                },
-            })
+                }
+            , })
         });
 
         function findstate() {
@@ -320,28 +289,28 @@
         function findcity() {
 
         }
-        $("#state").on("change", function () {
+        $("#state").on("change", function() {
             const selectElement = $('#city');
             selectElement.empty();
             $.ajax({
-                type: "get",
-                url: "/getcity",
-                data: {
-                    data: $('#state').val(),
-                },
-                success: function (res) {
+                type: "get"
+                , url: "/getcity"
+                , data: {
+                    data: $('#state').val()
+                , }
+                , success: function(res) {
                     $("#city").append(`<option value="">Select</option>`);
-                    $.each(res["citylist"], function (indexInArray, valueOfElement) {
+                    $.each(res["citylist"], function(indexInArray, valueOfElement) {
                         $("#city").append(`<option value="${valueOfElement["id"]}">${valueOfElement["name"]}</option>`);
 
                     });
 
-                },
-                error: function (e) {
+                }
+                , error: function(e) {
                     console.log(e);
 
-                },
-            })
+                }
+            , })
         });
 
 
@@ -351,6 +320,7 @@
             $("#passwordshow").attr("hidden", true);
             document.getElementById('password').type = 'text';
         }
+
         function passwordhidden() {
             $("#passwordshow").removeAttr("hidden");
             $("#passwordhidden").attr('hidden', true);
@@ -369,6 +339,7 @@
             $("#conformpasswordhidden").attr('hidden', true);
             document.getElementById('conpassword').type = 'password';
         }
+
     </script>
 </body>
 

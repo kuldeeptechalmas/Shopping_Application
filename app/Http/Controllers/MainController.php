@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AddToCart;
+use App\Models\Admin;
 use App\Models\CategoryProduct;
 use App\Models\Coupen;
 use App\Models\CustomerAndShopkeeper;
@@ -14,13 +15,181 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Session;
 
 class MainController extends Controller
 {
-    public function index()
+
+    // Login
+    public function Login(Request $request)
     {
 
+        if ($request->isMethod("post")) {
+
+            $validator = $request->validate(
+                [
+                    "email" => "required",
+                    "password" => "required",
+                ],
+                [
+                    "email.required" => "Enter Email is Required.",
+                    "password.required" => "Enter Password is Required."
+                ]
+            );
+
+            $customer = CustomerAndShopkeeper::where("email", $request->email)->first();
+            $admin = Admin::where("email", $request->email)->first();
+
+            if ($admin) {
+                if ($request->password == $admin->password) {
+                    Session::put("adminname", $admin->name);
+                    return redirect()->route("admindashboard");
+                } else {
+                    return redirect()->back()->with("passworderror", "The password is Invalid password")->withInput();
+                }
+            }
+            if (empty($customer)) {
+                return redirect()->route("error");
+            }
+
+            if (!empty($customer->rols)) {
+                if (empty($customer)) {
+                    return redirect()->back()->with("notfound", $customer->rols . " not found")->withInput();
+                }
+            }
+            if ($request->password != Crypt::decryptString($customer->password)) {
+                return redirect()->back()->with("passworderror", "The password is Invalid password")->withInput();
+            }
+
+            if ($customer->rols == "Customer") {
+                Session::put("customerid", $customer->name);
+                Session::put("customeremail", $customer->email);
+                Session::forget("discountamount");
+                $cart = Session::get("cart");
+                if (!empty($cart)) {
+                    foreach ($cart as $key => $value) {
+                        $cart = new AddToCart();
+                        $cart->user_id = $customer->id;
+                        $cart->product_id = $key;
+                        $cart->quantity = 1;
+                        $cart->save();
+                    }
+                }
+                Session::forget("cart");
+                return redirect()->route("MainIndex");
+            } else {
+                Session::put("shopkeeperid", $customer->name);
+                Session::put("shopkeeperemail", $customer->email);
+                return redirect()->route("shopkeeperdashboard");
+            }
+        }
+        return view("Main.login");
+    }
+
+    // Registration
+    public function Registration(Request $request)
+    {
+
+        $content = File::get(public_path('countries.json'));
+        $contrylist = json_decode($content, true);
+
+        if ($request->isMethod("post")) {
+
+            $validator = $request->validate([
+                "name" => "required",
+                "conformpassword" => [
+                    "required",
+                    "same:password",
+                    Password::min(8)
+                        ->mixedCase()
+                        ->symbols()
+                        ->numbers()
+                ],
+                "password" => [
+                    "required",
+                    Password::min(8)
+                        ->mixedCase()
+                        ->symbols()
+                        ->numbers()
+                ],
+                "email" => "required|email|unique:CustomerAndShopkeeper,email",
+                "phone" => "required|numeric|digits:10|unique:CustomerAndShopkeeper,phone",
+                "address" => "required",
+                "city" => "required",
+                "state" => "required",
+                "country" => "required",
+                "pincode" => "required|numeric|digits:6",
+                "gender" => "required",
+            ]);
+
+            $customer = new CustomerAndShopkeeper();
+            $customer->name = $request->name;
+            $customer->address = $request->address;
+            $customer->password = Crypt::encryptString($request->password);
+            $customer->email = $request->email;
+            $customer->phone = $request->phone;
+            $customer->rols = $request->rols;
+            $customer->city = $request->city;
+            $customer->state = $request->state;
+            $customer->country = $request->country;
+            $customer->pincode = $request->pincode;
+            $customer->gender = $request->gender;
+            $customer->save();
+
+            return redirect()->route("login");
+        }
+        return view("Main.registration", ["contrylist" => $contrylist]);
+    }
+
+    // Forget Password
+    public function Forget_Password_Email_Find(Request $request)
+    {
+        if ($request->isMethod("post")) {
+
+            $request->validate([
+                "email" => "required|email"
+            ], [
+                "email.required" => "Enter Email is Required",
+                "email.email" => "Enter Only Email is Required"
+            ]);
+
+            $forgotuser = CustomerAndShopkeeper::where("email", $request->email)->first();
+            if ($forgotuser) {
+                Session::put("emailforgotpassword", $forgotuser->email);
+                // return view("Main.ForgetPassword.forgotpassword", ['data' => $forgotuser]);
+                // dd("boom");
+                return redirect()->route("forget.Password.Data");
+            } else {
+                return back()->withInput()->with(["emailerror" => "Enter Email is Not Exist !"]);
+            }
+        }
+        return view("Main.ForgetPassword.emailvarify");
+    }
+
+    public function Forget_Password(Request $request)
+    {
+        if ($request->isMethod("post")) {
+
+            $request->validate([
+                "newpassword" => "required",
+                "confpassword" => "required|same:newpassword",
+            ], [
+                "newpassword.required" => "Enter New Password are Required",
+                "confpassword.required" => "Enter Conform Password are Required",
+                "confpassword.same" => "Enter Password are Not Match to New Password",
+            ]);
+            $shopkeeperdata = CustomerAndShopkeeper::where("email", Session::get("emailforgotpassword"))->first();
+            $shopkeeperdata->password = Crypt::encryptString($request->confpassword);
+            $shopkeeperdata->save();
+
+            return redirect()->route("login");
+        }
+        return view("Main.ForgetPassword.forgotpassword", ["notshowemail" => "yes"]);
+    }
+
+    public function index()
+    {
         return view("IndexProductShow.productshow");
     }
 
@@ -66,7 +235,7 @@ class MainController extends Controller
 
             return redirect()->route("summryproductdetail");
         } else {
-            return redirect()->route("customerlogin");
+            return redirect()->route("login");
         }
         // return view("IndexProductShow.CheckOut.checkoutpage");
     }
@@ -223,7 +392,7 @@ class MainController extends Controller
             $favourite_product->save();
             return response()->json(["data" => "save"]);
         } else {
-            return response()->json(["url" => route("customerlogin")]);
+            return response()->json(["url" => route("login")]);
         }
     }
 

@@ -16,10 +16,9 @@ class CustomerCheck
     public function handle(Request $request, Closure $next): Response
     {
         if (empty(session('customerid'))) {
-            return redirect()->route('customerlogin');
+            return redirect()->route('login');
         }
-        
-        return $next($request);
 
+        return $next($request);
     }
 }

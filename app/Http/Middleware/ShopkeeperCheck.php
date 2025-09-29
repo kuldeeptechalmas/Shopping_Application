@@ -17,7 +17,7 @@ class ShopkeeperCheck
     {
 
         if (empty(session('shopkeeperid'))) {
-            return redirect()->route('customerlogin');
+            return redirect()->route('login');
         }
 
         return  $next($request);

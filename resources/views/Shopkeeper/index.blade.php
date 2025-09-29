@@ -2,11 +2,8 @@
 <html lang="en">
 
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
-        integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -14,9 +11,7 @@
     <title>Welcome</title>
     <link href="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.4.1/dist/css/coreui.min.css" rel="stylesheet">
     <script defer src="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.4.1/dist/js/coreui.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
 </head>
 <style>
@@ -103,12 +98,6 @@
     .btn:active:focus,
     .btn.active:focus {
         box-shadow: none !important;
-        /* color: var(--bs-btn-color);
-        background-color: var(--bs-btn-bg);
-        border-color: var(--bs-btn-bg);
-        color: var(--cui-btn-active-color);
-        background-color: var(--cui-btn-active-bg);
-        border-color: var(--cui-btn-active-border-color); */
     }
 
     .btn:first-child:active {
@@ -116,15 +105,14 @@
         background-color: var(--cui-btn-active-bg);
         border-color: var(--cui-btn-active-border-color);
     }
+
 </style>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-white bg-white fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="">Navbar</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -133,39 +121,32 @@
                 <div class="d-flex justify-content-end">
                     <div class="pe-5">
                         <form class="d-flex">
-                            <input class="form-control me-2" oninput="searchproduct()" id="searchproductid"
-                                type="search" placeholder="Search" aria-label="Search">
-                            <button class="btn btn-outline-success" onclick="searchproduct()"
-                                type="button">Search</button>
+                            <input class="form-control me-2" oninput="searchproduct()" id="searchproductid" type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-success" onclick="searchproduct()" type="button">Search</button>
                         </form>
-                    </div>
-                    <div class="d-flex align-items-center pe-3">
-                        <a href="/addtocartget" style="text-decoration: none ;color: #000;">
-                            <img style="height: 30px; width: 30px; object-fit: contain;"
-                                src="{{ asset('storage/UploadeFile/pic36.png') }}" alt="Image">
-                            <span class="ms-2">Cart</span>
-                        </a>
                     </div>
                 </div>
                 <form class="d-flex">
                     <div class="hover-trigger position-relative">
                         <h3><i class="fa-solid fa-circle-user" style="margin-left: 21%;"></i></h3>
                         {{session('shopkeeperid')}}
-                        <div class="show-on-hover position-absolute"
-                            style="right: 0px; width: 222px; background: white;border-radius: 15px;">
+                        <div class="show-on-hover position-absolute" style="right: 0px; width: 222px; background: white;border-radius: 15px;">
                             <div class="shadow p-3 bg-body rounded">
 
 
                                 <div style="padding: 10px; border-bottom: 1px solid #555;">
-                                    <a style="text-decoration: none;  color: #000;"
-                                        href="/shopkeeperprofile/{{session('shopkeeperemail')}}">
+                                    <a style="text-decoration: none;  color: #000;" href="/shopkeeperprofile/{{session('shopkeeperemail')}}">
                                         Profile
                                     </a>
                                 </div>
                                 <div style="padding: 10px; border-bottom: 1px solid #555;">
-                                    <a style="text-decoration: none;  color: #000;"
-                                        href="/shopkeeperchangepassword/{{session('shopkeeperemail')}}">
+                                    <a style="text-decoration: none;  color: #000;" href="/shopkeeperchangepassword/{{session('shopkeeperemail')}}">
                                         Change Password
+                                    </a>
+                                </div>
+                                <div style="padding: 10px; border-bottom: 1px solid #555;">
+                                    <a style="text-decoration: none;  color: #000;" href="/ShopkeeperOrderList">
+                                        Order History
                                     </a>
                                 </div>
 
@@ -187,8 +168,7 @@
             <div class="sidebar-header">
                 <div class="sidebar-brand">
                     <a href="/shopkeeperdashboard">
-                        <img style="width: 100%; height: 100%; object-fit: cover;"
-                            src="{{ asset('storage/UploadeFile/logo.png') }}" alt="Image">
+                        <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/logo.png') }}" alt="Image">
                     </a>
                 </div>
             </div>
@@ -202,12 +182,12 @@
                     </a>
                     <div id="product1" hidden>
                         @if (isset($catagory))
-                            @foreach ($catagory as $item)
-                                <a href="/productaddshop/{{$item->category_name}}" class="nav-link" style="margin-left: 40px;">
-                                    <i class="nav-icon cil-speedometer"></i>
-                                    {{$item->category_name}}
-                                </a>
-                            @endforeach
+                        @foreach ($catagory as $item)
+                        <a href="/productaddshop/{{$item->category_name}}" class="nav-link" style="margin-left: 40px;">
+                            <i class="nav-icon cil-speedometer"></i>
+                            {{$item->category_name}}
+                        </a>
+                        @endforeach
                         @endif
                     </div>
                 </li>
@@ -233,9 +213,9 @@
 
                     @yield('content')
                     @if (isset($showallrecord))
-                        <div id="producttable">
+                    <div id="producttable">
 
-                        </div>
+                    </div>
                     @endif
                 </div>
             </div>
@@ -280,7 +260,7 @@
                         @csrf
                         <input type="text" name="id" id="id" hidden>
                         @if (isset($catagoryid))
-                            <input type="text" name="catagoryid" value="{{$catagoryid}}" hidden>
+                        <input type="text" name="catagoryid" value="{{$catagoryid}}" hidden>
                         @endif
                         <div class="mb-3">
                             <label for="exampleInputEmail1" class="form-label">Name </label>
@@ -292,8 +272,7 @@
                             <label for="exampleInputPassword1" class="form-label">Description</label>
                             {{-- <textarea type="text" style="resize: none;" rows="5" class="form-control"
                                 id="vpdescription" name="description">{{$product_data->description}}</textarea> --}}
-                            <textarea type="text" class="form-control" id="pdescription" style="resize: none;" rows="5"
-                                name="description"></textarea>
+                            <textarea type="text" class="form-control" id="pdescription" style="resize: none;" rows="5" name="description"></textarea>
                         </div>
                         <div style="color:red;" id="epdescription" hidden></div>
 
@@ -303,9 +282,9 @@
                                 <select class="form-select" id="pcatagory" name="catagory">
                                     <option value="">Select</option>
                                     @if (isset($subcatagory))
-                                        @foreach ($subcatagory as $item)
-                                            <option value="{{$item->id}}">{{$item->name}}</option>
-                                        @endforeach
+                                    @foreach ($subcatagory as $item)
+                                    <option value="{{$item->id}}">{{$item->name}}</option>
+                                    @endforeach
                                     @endif
                                 </select>
                                 <div style="color:red;" hidden id="epcatagory"></div>
@@ -320,8 +299,7 @@
 
                         <div class="mb-3">
                             <label for="exampleInputPassword1" class="form-label">Stock</label>
-                            <input type="text" class="form-control" oninput="statuscheck_viewproduct()" id="pstock"
-                                name="stock">
+                            <input type="text" class="form-control" oninput="statuscheck_viewproduct()" id="pstock" name="stock">
                         </div>
                         <div style="color:red;" id="epstock" hidden></div>
 
@@ -378,8 +356,7 @@
     </div>
 
     <!--Product Delete Modal -->
-    <div class="modal fade" id="productdeletemodel" tabindex="-1" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="productdeletemodel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -399,19 +376,14 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
-        integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script>
-
         // pagination to prodcut
-        $(document).on('click', '.pagination a', function (e) {
+        $(document).on('click', '.pagination a', function(e) {
             e.preventDefault();
             var page = $(this).attr('href');
             const tables = page.split("?")[0];
@@ -419,52 +391,52 @@
             const search = document.getElementById("searchproductid").value;
 
             $.ajax({
-                url: page,
-                type: 'GET',
-                data: {
-                    searchText: search,
-                    catagoryid: "{{isset($catagoryid) ? $catagoryid : ''}}"
-                },
-                success: function (res) {
+                url: page
+                , type: 'GET'
+                , data: {
+                    searchText: search
+                    , catagoryid: "{{isset($catagoryid) ? $catagoryid : ''}}"
+                }
+                , success: function(res) {
                     $("#producttable").html(res);
-                },
-                error: function (e) {
+                }
+                , error: function(e) {
                     console.log(e);
-                },
-            });
+                }
+            , });
         });
 
         // searching
         function searchproduct() {
             const data = document.getElementById("searchproductid").value;
             $.ajax({
-                type: "get",
-                url: '/searchproduct',
-                data: {
-                    searchText: data,
-                    catagoryid: "{{isset($catagoryid) ? $catagoryid : ''}}",
+                type: "get"
+                , url: '/searchproduct'
+                , data: {
+                    searchText: data
+                    , catagoryid: "{{isset($catagoryid) ? $catagoryid : ''}}",
 
-                },
-                headers: {
+                }
+                , headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function (res) {
+                }
+                , success: function(res) {
 
                     $("#producttable").html(res);
-                },
-                error: function (e) {
+                }
+                , error: function(e) {
 
-                },
-            });
+                }
+            , });
         }
 
-        $("#showProductdiv").on("click", function () {
+        $("#showProductdiv").on("click", function() {
             $("#product1").removeAttr("hidden");
             $("#hideProduct").removeAttr("hidden");
             $("#showProduct").attr("hidden", true);
 
         })
-        $("#hideProduct").on("click", function () {
+        $("#hideProduct").on("click", function() {
             console.log("hide");
 
             // $("#product1").attr("hidden", true);
@@ -483,21 +455,20 @@
             console.log(did);
 
             $.ajax({
-                type: "delete",
-                url: '/deleteproduct',
-                data: {
-                    id: did,
-                },
-                headers: {
+                type: "delete"
+                , url: '/deleteproduct'
+                , data: {
+                    id: did
+                , }
+                , headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function (res) {
+                }
+                , success: function(res) {
                     $('#productdeletemodel').modal("hide");
                     showproduct();
-                },
-                error: function (e) {
-                },
-            });
+                }
+                , error: function(e) {}
+            , });
         }
 
 
@@ -505,19 +476,19 @@
         // done
         function viewproduct_productshow(productid) {
             $.ajax({
-                type: "get",
-                url: "/productview/" + productid,
-                success: function (res) {
+                type: "get"
+                , url: "/productview/" + productid
+                , success: function(res) {
                     $("#viewmodelform").html(res);
-                },
-                error: function (e) {
+                }
+                , error: function(e) {
                     console.log(e);
                 }
             })
 
         }
 
-        $('#viewproductmodel').on('hidden.bs.modal', function (e) {
+        $('#viewproductmodel').on('hidden.bs.modal', function(e) {
             $("#vepname").attr("hidden", true);
             $("#vepdescription").attr("hidden", true);
             $("#vepprice").attr("hidden", true);
@@ -527,7 +498,7 @@
             $("#vepcatagory").attr("hidden", true)
         });
 
-        $('#viewsave').on("click", function (e) {
+        $('#viewsave').on("click", function(e) {
             e.preventDefault();
             $("#vepname").attr("hidden", true);
             $("#vepdescription").attr("hidden", true);
@@ -539,19 +510,19 @@
             console.log(formData);
 
             $.ajax({
-                type: "post",
-                url: '/productadd',
-                processData: false,
-                contentType: false,
-                data: formData,
-                headers: {
+                type: "post"
+                , url: '/productadd'
+                , processData: false
+                , contentType: false
+                , data: formData
+                , headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function (res) {
+                }
+                , success: function(res) {
                     $('#viewproductmodel').modal("hide");
                     showproduct();
-                },
-                error: function (e) {
+                }
+                , error: function(e) {
 
                     const data = e["responseJSON"]["errors"];
                     console.log(data);
@@ -577,42 +548,42 @@
                     if (data['catagory']) {
                         $("#vepcountry").text(data['catagory'][0]).removeAttr("hidden");
                     }
-                },
-            });
+                }
+            , });
         });
 
         // upload function
 
-        $(document).ready(function () {
-            $("#file-input").on("change", function () {
+        $(document).ready(function() {
+            $("#file-input").on("change", function() {
                 var files = $(this)[0].files;
                 $("#preview-container").empty();
                 if (files.length > 0) {
                     for (var i = 0; i < files.length; i++) {
                         var reader = new FileReader();
-                        reader.onload = function (e) {
+                        reader.onload = function(e) {
                             $("<div class='preview'><img src='" + e.target.result + "'><button class='delete'>Delete</button></div>").appendTo("#preview-container");
                         };
                         reader.readAsDataURL(files[i]);
                     }
                 }
             });
-            $("#preview-container").on("click", ".delete", function () {
+            $("#preview-container").on("click", ".delete", function() {
                 $(this).parent(".preview").remove();
                 $("#file-input").val("");
             });
         });
 
-        (function () {
+        (function() {
 
             'use strict';
 
-            $('.input-file').each(function () {
-                var $input = $(this),
-                    $label = $input.next('.js-labelFile'),
-                    labelVal = $label.html();
+            $('.input-file').each(function() {
+                var $input = $(this)
+                    , $label = $input.next('.js-labelFile')
+                    , labelVal = $label.html();
 
-                $input.on('change', function (element) {
+                $input.on('change', function(element) {
                     var fileName = '';
                     if (element.target.value) fileName = element.target.value.split('\\').pop();
                     console.log(fileName);
@@ -623,31 +594,27 @@
 
         })();
 
-        $(document).ready(function () {
+        $(document).ready(function() {
             showproduct();
         });
 
         function statuscheck_viewproduct() {
             if (document.getElementById('pstock').value == "0") {
                 document.getElementById('pstatus').value = "out of stock";
-            }
-            else {
+            } else {
                 if (document.getElementById('pstock').value > 0) {
                     document.getElementById('pstatus').value = "in stock";
-                }
-                else {
+                } else {
                     document.getElementById('pstatus').value = "";
                 }
             }
 
             if (document.getElementById('vpstock').value == "0") {
                 document.getElementById('vpstatus').value = "out of stock";
-            }
-            else {
+            } else {
                 if (document.getElementById('vpstock').value > 0) {
                     document.getElementById('vpstatus').value = "in stock";
-                }
-                else {
+                } else {
                     document.getElementById('vpstatus').value = "";
                 }
             }
@@ -656,29 +623,29 @@
         function showproduct() {
 
             $.ajax({
-                type: "GET",
-                url: "/getproductshopkeeper",
-                data: {
+                type: "GET"
+                , url: "/getproductshopkeeper"
+                , data: {
                     catagoryid: "{{isset($catagoryid) ? $catagoryid : ''}}"
-                },
-                success: function (res) {
+                }
+                , success: function(res) {
                     $("#producttable").html(res);
-                },
-                error: function (e) {
+                }
+                , error: function(e) {
                     console.log(e);
-                },
-            })
+                }
+            , })
         }
 
-        $('#addproductmodel').on('hidden.bs.modal', function (e) {
+        $('#addproductmodel').on('hidden.bs.modal', function(e) {
 
-            document.getElementById('pname').value = "",
-                document.getElementById('pdescription').value = "",
-                document.getElementById('pprice').value = "",
-                document.getElementById('pstock').value = "",
-                document.getElementById('pimage').value = "",
-                document.getElementById('pstatus').value = "",
-                document.getElementById('pcatagory').value = "",
+            document.getElementById('pname').value = ""
+                , document.getElementById('pdescription').value = ""
+                , document.getElementById('pprice').value = ""
+                , document.getElementById('pstock').value = ""
+                , document.getElementById('pimage').value = ""
+                , document.getElementById('pstatus').value = ""
+                , document.getElementById('pcatagory').value = "",
 
                 $("#epname").attr("hidden", true);
             $("#epdescription").attr("hidden", true);
@@ -689,7 +656,7 @@
             $("#epcatagory").attr("hidden", true)
         });
 
-        $("#pstatus").on("change", function () {
+        $("#pstatus").on("change", function() {
             if (document.getElementById('pstatus').value == "out of stock") {
                 document.getElementById('pstock').value = 0;
             }
@@ -711,18 +678,18 @@
             const formData = new FormData(form);
 
             $.ajax({
-                url: '/productadd',
-                type: 'post',
-                processData: false,
-                contentType: false,
-                data: formData,
-                success: function (response) {
+                url: '/productadd'
+                , type: 'post'
+                , processData: false
+                , contentType: false
+                , data: formData
+                , success: function(response) {
                     console.log(response);
 
                     $('#addproductmodel').modal("hide");
                     showproduct();
-                },
-                error: function (e) {
+                }
+                , error: function(e) {
                     console.log(e['responseJSON']["errors"]);
 
                     const data = e['responseJSON']["errors"];
@@ -777,26 +744,26 @@
             });
 
             $.ajax({
-                type: 'post',
-                url: "/shopkeeperupdate",
-                data: {
-                    id: $('#id').val(),
-                    name: $('#name').val(),
-                    phone: $('#phone').val(),
-                    email: $('#email').val(),
-                    address: $('#address').val(),
-                    gender: $('input[name="gender"]:checked').val(),
-                    city: $('#city').val(),
-                    state: $('#state').val(),
-                    country: $('#country').val(),
-                    pincode: $('#pincode').val(),
-                    password: $('#password').val(),
-                    conformpassword: $('#conpassword').val()
-                },
-                success: function (res) {
+                type: 'post'
+                , url: "/shopkeeperupdate"
+                , data: {
+                    id: $('#id').val()
+                    , name: $('#name').val()
+                    , phone: $('#phone').val()
+                    , email: $('#email').val()
+                    , address: $('#address').val()
+                    , gender: $('input[name="gender"]:checked').val()
+                    , city: $('#city').val()
+                    , state: $('#state').val()
+                    , country: $('#country').val()
+                    , pincode: $('#pincode').val()
+                    , password: $('#password').val()
+                    , conformpassword: $('#conpassword').val()
+                }
+                , success: function(res) {
                     window.location.href = res.redirect_url;
-                },
-                error: function (e) {
+                }
+                , error: function(e) {
                     const data = e['responseJSON']['errors'];
                     console.log(data['name']);
                     console.log(data);
@@ -864,52 +831,53 @@
             document.getElementById('conpassword').type = 'password';
         }
 
-        $("#country").on("change", function () {
+        $("#country").on("change", function() {
             const selectElement = $('#state');
             selectElement.empty();
             $.ajax({
-                type: "get",
-                url: "/getstate",
-                data: {
-                    data: $('#country').val(),
-                },
-                success: function (res) {
+                type: "get"
+                , url: "/getstate"
+                , data: {
+                    data: $('#country').val()
+                , }
+                , success: function(res) {
                     var oldstate = "{{old('state')}}";
                     console.log(oldstate);
                     $("#state").append(`<option value="">Select</option>`);
-                    $.each(res["statelist"], function (indexInArray, valueOfElement) {
+                    $.each(res["statelist"], function(indexInArray, valueOfElement) {
                         var selectstate = (oldstate == valueOfElement["id"]) ? "selected" : "";
                         console.log(selectstate);
 
                         $("#state").append(`<option value="${valueOfElement["id"]}" ${selectstate} >${valueOfElement["name"]}</option>`);
                     });
-                },
-                error: function (e) {
+                }
+                , error: function(e) {
                     console.log(e);
-                },
-            })
+                }
+            , })
         });
 
-        $("#state").on("change", function () {
+        $("#state").on("change", function() {
             const selectElement = $('#city');
             selectElement.empty();
             $.ajax({
-                type: "get",
-                url: "/getcity",
-                data: {
-                    data: $('#state').val(),
-                },
-                success: function (res) {
+                type: "get"
+                , url: "/getcity"
+                , data: {
+                    data: $('#state').val()
+                , }
+                , success: function(res) {
                     $("#city").append(`<option value="">Select</option>`);
-                    $.each(res["citylist"], function (indexInArray, valueOfElement) {
+                    $.each(res["citylist"], function(indexInArray, valueOfElement) {
                         $("#city").append(`<option value="${valueOfElement["id"]}">${valueOfElement["name"]}</option>`);
                     });
-                },
-                error: function (e) {
+                }
+                , error: function(e) {
                     console.log(e);
-                },
-            })
+                }
+            , })
         });
+
     </script>
 </body>
 

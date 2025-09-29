@@ -5,9 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Forgot Password</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
         .background-radial-gradient {
             background-color: hsl(218, 41%, 15%);
@@ -48,6 +47,7 @@
             background-color: hsla(0, 0%, 100%, 0.9) !important;
             backdrop-filter: saturate(200%) blur(25px);
         }
+
     </style>
 </head>
 
@@ -72,38 +72,6 @@
 
                     <div class="card bg-glass">
                         <div class="card-body px-4 py-5 px-md-5">
-                            @if (!isset($notshowemail))
-                                <form method="post" action="/forgetpassword">
-                                    @csrf
-                                    <h1 style="color: hsl(217.5deg 40.82% 19.22%)">Forgot Password</h1>
-                                    <br>
-                                    <br>
-
-                                    <!-- Email input -->
-                                    <div data-mdb-input-init class="form-outline mb-4">
-                                        <label class="form-label" for="form3Example3">Email address</label>
-                                        <input type="text" name="email" value="{{old('email')}}" id="form3Example3"
-                                            class="form-control" />
-                                    </div>
-
-
-                                    @if (session("emailerror"))
-                                        <div style="color: red;">{{session("emailerror")}}</div><br>
-                                    @endif
-                                    @error('email')
-                                        <div style="color: red;">{{$message}}</div><br>
-                                    @enderror
-
-                                    <!-- Submit button -->
-                                    <div data-mdb-input-init class="form-outline mb-4" style="text-align: center;">
-                                        <button type="submit" data-mdb-button-init data-mdb-ripple-init
-                                            class="btn btn-primary btn-block mb-4">
-                                            Verify Email
-                                        </button>
-                                    </div>
-
-                                </form>
-                            @endif
                             @yield('content')
                         </div>
                     </div>
@@ -111,9 +79,7 @@
             </div>
         </div>
     </section>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 
 </html>
