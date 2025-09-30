@@ -26,13 +26,13 @@
 
                                     <p class="text-center h3 fw-bold mb-5 mx-1 mx-md-4 mt-4" id="rolesname">Sign up </p>
 
-                                    <form class="mx-1 mx-md-4" method="post" action="/registration">
+                                    <form class="mx-1 mx-md-4" method="post" action="{{ route('registration') }}">
                                         @csrf
 
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                                 <label class="form-label" for="form3Example1c">Your Name</label>
-                                                <input type="text" id="form3Example1c" value="{{old('name')}}" name='name' class="form-control" />
+                                                <input type="text" value="{{old('name')}}" name='name' class="form-control" />
                                                 @error('name')
                                                 <div style="color:red;">{{$message}}</div>
                                                 @enderror
@@ -44,7 +44,7 @@
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                                 <label class="form-label" for="form3Example1c">Phone No</label>
-                                                <input type="text" id="form3Example1c" value="{{old('phone')}}" name="phone" class="form-control" />
+                                                <input type="text" value="{{old('phone')}}" name="phone" class="form-control" />
                                                 @error('phone')
                                                 <div style="color:red;">{{$message}}</div>
                                                 @enderror
@@ -54,8 +54,8 @@
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                                 <label class="form-label" for="form3Example1c">Gender</label>
-                                                <input type="radio" id="form3Example1c" value="male" {{old('gender') == 'male' ? 'checked' : '' }} name="gender" />Male
-                                                <input type="radio" id="form3Example1c" value="female" {{old('gender') == 'female' ? 'checked' : '' }} name="gender" />Female
+                                                <input type="radio" value="male" {{old('gender') == 'male' ? 'checked' : '' }} name="gender" />Male
+                                                <input type="radio" value="female" {{old('gender') == 'female' ? 'checked' : '' }} name="gender" />Female
                                                 @error('gender')
                                                 <div style="color:red;">{{$message}}</div>
                                                 @enderror
@@ -104,7 +104,7 @@
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                                 <label class="form-label" for="form3Example1c">Address</label>
-                                                <input type="text" id="form3Example1c" value="{{old('address')}}" name="address" class="form-control" />
+                                                <input type="text" value="{{old('address')}}" name="address" class="form-control" />
                                                 @error('address')
                                                 <div style="color:red;">{{$message}}</div>
                                                 @enderror
@@ -114,7 +114,7 @@
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                                 <label class="form-label" for="form3Example1c">Pincode</label>
-                                                <input type="text" id="form3Example1c" value="{{old('pincode')}}" name="pincode" class="form-control" />
+                                                <input type="text" value="{{old('pincode')}}" name="pincode" class="form-control" />
                                                 @error('pincode')
                                                 <div style="color:red;">{{$message}}</div>
                                                 @enderror
@@ -256,6 +256,7 @@
         });
 
         $("#country").on("change", function() {
+
             const selectElement = $('#state');
             selectElement.empty();
             $.ajax({
@@ -266,11 +267,10 @@
                 , }
                 , success: function(res) {
                     var oldstate = "{{old('state')}}";
-                    console.log(oldstate);
                     $("#state").append(`<option value="">Select</option>`);
+
                     $.each(res["statelist"], function(indexInArray, valueOfElement) {
                         var selectstate = (oldstate == valueOfElement["id"]) ? "selected" : "";
-                        console.log(selectstate);
 
                         $("#state").append(`<option value="${valueOfElement["id"]}" ${selectstate} >${valueOfElement["name"]}</option>`);
                     });

@@ -60,10 +60,22 @@
         </tbody>
     </table>
 
-    {{-- <div class="paginationDiv" style="margin-right: 73%;">
+    <div class="paginationDiv" style="margin-right: 73%;">
         <p>
             Paginate Index : {{ $order_Data->links('pagination::bootstrap-4') }}
-    </p>
-</div> --}}
+        </p>
+    </div>
 
-@endsection
+    @endsection
+
+    @push("shopkeeper_script")
+    <script>
+        $(document).on('click', '.pagination a', function(e) {
+            e.preventDefault();
+            var page = $(this).attr('href');
+            console.log(page);
+            window.location.href = page;
+        });
+
+    </script>
+    @endpush

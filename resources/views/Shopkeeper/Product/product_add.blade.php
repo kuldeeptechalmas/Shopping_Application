@@ -1,13 +1,16 @@
 @extends('Shopkeeper.index')
 
 @section('content')
-<h1 style="text-align: center">Product Edit</h1>
+<h1 style="text-align: center">Product Add</h1>
 <form id="view-product-from" action="{{ route('product_add_update') }}" method="POST" enctype="multipart/form-data" style="padding: 20px 160px;">
     @csrf
-    <input type="text" name="id" value="{{$product_data->id}}" id="vpid" hidden>
+
+    @if (isset($catagoryid))
+    <input type="text" name="catagoryid" value="{{$catagoryid}}" hidden>
+    @endif
     <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Name </label>
-        <input type="text" class="form-control" value="{{ old('name', $product_data->name ?? '') }}" id="vpname" name="name" aria-describedby="emailHelp">
+        <input type="text" class="form-control" value="{{ old('name') }}" id="vpname" name="name" aria-describedby="emailHelp">
     </div>
     @error('name')
 
@@ -16,7 +19,7 @@
 
     <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Description</label>
-        <textarea type="text" style="resize: none;" rows="5" class="form-control" id="vpdescription" name="description">{{ old('description', $product_data->description ?? '') }}</textarea>
+        <textarea type="text" style="resize: none;" rows="5" class="form-control" id="vpdescription" name="description">{{ old('description') }}</textarea>
     </div>
     @error('description')
 
@@ -30,7 +33,7 @@
                 <option value="">Select</option>
                 @if (isset($subcatagory))
                 @foreach ($subcatagory as $item)
-                <option value="{{ $item->id }}" {{$product_data->sub_category_id == old('catagory', $item->id ?? '') ? 'selected' : ''}}>
+                <option {{ old('catagory') ? 'selected' : ''}} value="{{ $item->id }}">
                     {{$item->name}}
                 </option>
                 @endforeach
@@ -45,7 +48,7 @@
 
     <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Price</label>
-        <input type="text" class="form-control" value="{{ old('price', $product_data->price ?? '') }}" id="vpprice" name="price">
+        <input type="text" class="form-control" value="{{ old('price') }}" id="vpprice" name="price">
     </div>
     @error('price')
 
@@ -54,7 +57,7 @@
 
     <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Stock</label>
-        <input type="text" class="form-control" id="vpstock" value="{{ old('stock', $product_data->stock ?? '') }}" oninput="statuscheck_viewproduct()" name="stock">
+        <input type="text" class="form-control" id="vpstock" value="{{ old('stock') }}" oninput="statuscheck_viewproduct()" name="stock">
     </div>
     @error('stock')
 
@@ -63,22 +66,11 @@
     <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Image</label>
         <div class="form-group">
-            <input type="file" name="file[]" value="{{ old('file', $product_data->file ?? '') }}" multiple id="file" class="input-file">
+            <input type="file" name="file[]" value="{{ old('file') }}" multiple id="file" class="input-file">
             <label for="file" class="btn btn-tertiary js-labelFile" style="width:100%">
                 <i class="icon fa fa-check"></i>
                 <span class="js-fileName" id="vpimagename">Choose a file : </span>
             </label>
-        </div>
-
-        <div id="showimage" style="margin-top: 21px;">
-            <div class="row">
-                @foreach ($product_data->images as $item)
-                <div class="col-md-4">
-                    <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->image_name) }}" alt="Image">
-                </div>
-                @endforeach
-            </div>
-
         </div>
     </div>
     @error('image')
@@ -90,8 +82,8 @@
         <label for="exampleInputPassword1" class="form-label">Status</label>
         <select class="form-select" id="vpstatus" name="status">
             <option value="">Select</option>
-            <option value="in stock" {{old('status', $product_data->status ?? '') == 'in stock' ? 'selected' : ''}}>in stock</option>
-            <option value="out of stock" {{old('status', $product_data->status ?? '') == 'out of stock' ? 'selected' : ''}}>out of stock
+            <option value="in stock" {{old('status') == 'in stock' ? 'selected' : ''}}>in stock</option>
+            <option value="out of stock" {{old('status') == 'out of stock' ? 'selected' : ''}}>out of stock
             </option>
         </select>
     </div>
@@ -102,7 +94,7 @@
 
     <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Dicsount</label>
-        <input type="text" class="form-control" value="{{ old('discount', $product_data->discount ?? '') }}" id="discount" value="{{$product_data->discount}}" name="discount">
+        <input type="text" class="form-control" value="{{ old('discount') }}" id="discount" name="discount">
     </div>
     @error('discount')
 
@@ -118,6 +110,7 @@
     </div>
 </form>
 @endsection
+
 @push("shopkeeper_script")
 <script>
     function statuscheck_viewproduct() {

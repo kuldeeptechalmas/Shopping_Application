@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\Rules\Password as RulesPassword;
 
 class MainController extends Controller
 {
@@ -101,14 +102,14 @@ class MainController extends Controller
                 "conformpassword" => [
                     "required",
                     "same:password",
-                    Password::min(8)
+                    RulesPassword::min(8)
                         ->mixedCase()
                         ->symbols()
                         ->numbers()
                 ],
                 "password" => [
                     "required",
-                    Password::min(8)
+                    RulesPassword::min(8)
                         ->mixedCase()
                         ->symbols()
                         ->numbers()
@@ -166,7 +167,6 @@ class MainController extends Controller
         }
         return view("Main.ForgetPassword.emailvarify");
     }
-
     public function Forget_Password(Request $request)
     {
         if ($request->isMethod("post")) {
@@ -188,24 +188,20 @@ class MainController extends Controller
         return view("Main.ForgetPassword.forgotpassword", ["notshowemail" => "yes"]);
     }
 
-    public function index()
-    {
-        return view("IndexProductShow.productshow");
-    }
-
-    public function main_product_get_all()
+    // Main page
+    public function Index()
     {
         $data = CategoryProduct::with('productsdata')->get();
         if (Session::get("customeremail") != null) {
             $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
             $wishlist = FavouriceProduct::where("user_id", $user_data->id)->get();
-            return view("IndexProductShow.product", ["data" => $data, "wishlist" => $wishlist]);
+            return view("IndexProductShow.productshow", ["data" => $data, "wishlist" => $wishlist]);
         } else {
-            return view("IndexProductShow.product", ["data" => $data]);
+            return view("IndexProductShow.productshow", ["data" => $data]);
         }
     }
 
-    public function product_details($productid)
+    public function Product_id_Detail($productid)
     {
         $data = Product::where("id", $productid)->first();
         $couper = Coupen::all();
@@ -224,25 +220,26 @@ class MainController extends Controller
         return view("IndexProductShow.productdetail", ["productdatails" => $data, "coupen" => $couper]);
     }
 
-    public function checkout_page()
+    // Checkout Processes
+    public function Summry_Product_Detail()
     {
-        $cart = Session::get("cart");
-        // dd($cart);
-        if (Session::get("shopkeeperid")) {
+        if (Session::get("customerid")) {
+            $data1 = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+            $addtocart = AddToCart::where("user_id", $data1->id)->get();
 
-            return redirect()->route("");
-        } elseif (Session::get("customerid")) {
+            if ($addtocart->isEmpty()) {
+                return redirect()->route("addtocart_get_all");
+            }
 
-            return redirect()->route("summryproductdetail");
+            $coupon = UserCoupunData::where("user_id", $data1->id)->get();
+            return view("IndexProductShow.CheckOut.summryproductdetail", ["cart" => $addtocart, "couponuserdata" => $coupon]);
         } else {
             return redirect()->route("login");
         }
-        // return view("IndexProductShow.CheckOut.checkoutpage");
     }
-
-    public function checkout_product()
+    public function Checkout_Product()
     {
-        // category data
+        // countries data
         $contentcountry = File::get(public_path('countries.json'));
         $contrylist = json_decode($contentcountry, true);
 
@@ -260,19 +257,6 @@ class MainController extends Controller
         return view("IndexProductShow.CheckOut.checkoutpage", ["customerdata" => $data, "couponuserdata" => $coupon, "cart" => $addtocart, "contrylist" => $contrylist]);
     }
 
-    public function summry_product_detail()
-    {
-        $data1 = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
-        $addtocart = AddToCart::where("user_id", $data1->id)->get();
-
-        if ($addtocart->isEmpty()) {
-            return redirect()->route("addtocart_get_all");
-        }
-
-        $coupon = UserCoupunData::where("user_id", $data1->id)->get();
-        return view("IndexProductShow.CheckOut.summryproductdetail", ["cart" => $addtocart, "couponuserdata" => $coupon]);
-    }
-
     public function delete_cart_summry($cartid)
     {
         $addtocart = AddToCart::find($cartid);
@@ -284,8 +268,8 @@ class MainController extends Controller
     {
         $data1 = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
         $coupon = UserCoupunData::where("user_id", $data1->id)->get();
+        
         if ($request->isMethod("post")) {
-
 
 
             $addtocart = AddToCart::where("user_id", $data1->id)->get();
@@ -336,12 +320,9 @@ class MainController extends Controller
         return redirect()->back();
     }
 
+    // Main page Search Bar
     public function search_product_name(Request $request)
     {
-        // use json then implimented
-        // $product = Product::where("name", "like", "%" . $request->search_data . "%")->get();
-        // return response()->json(["product_data" => $product]);
-
         $data_of_input = $request->search_data;
         if ($data_of_input == '') {
             return redirect()->route("MainIndex");
@@ -384,6 +365,7 @@ class MainController extends Controller
     public function add_to_favourite($productid)
     {
         if (Session::get("customeremail") != null) {
+
             $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
 
             $favourite_product = new FavouriceProduct();

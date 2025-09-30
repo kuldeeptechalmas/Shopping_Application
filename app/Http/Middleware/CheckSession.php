@@ -16,8 +16,8 @@ class CheckSession
     public function handle(Request $request, Closure $next): Response
     {
         if (session('customerid')) {
-            
-            return redirect()->route('customerdashboard');
+
+            return redirect()->back();
         }
         return $next($request);
     }

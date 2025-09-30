@@ -22,7 +22,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-4" style="width: 255px;">
-                            <a href="/productdetailsunkown/{{$item->product->id}}">
+                            <a href="/ProductDetails/{{$item->product->id}}">
                                 <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->product->image) }}" alt="Image">
                             </a>
                         </div>
@@ -97,7 +97,7 @@
             @endforeach
             <div class="card" style="margin-left: 25px;text-align: end;">
                 <div style="margin-right: 68px;height: 55px;">
-                    <a href="/summryproductdetail">
+                    <a href="/SummryOfProduct">
                         <button class="btn " style="color:white;background:#fb641b;margin-top: 10px;">PLEASE
                             ORDER</button>
                     </a>
@@ -181,7 +181,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-4" style="width: 255px;;">
-                            <a href="/productdetailsunkown/{{$item1['product_data']->id}}">
+                            <a href="/ProductDetails/{{$item1['product_data']->id}}">
                                 <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item1['product_data']->image) }}" alt="Image">
                             </a>
                         </div>
@@ -249,7 +249,7 @@
             @endforeach
             <div class="card" style="margin-left: 25px;text-align: end;">
                 <div style="margin-right: 68px;height: 55px;">
-                    <a href="/checkouttoconform">
+                    <a href="/SummryOfProduct">
                         <button class="btn " style="color:white;background:#fb641b;margin-top: 10px;">PLEASE
                             ORDER</button>
                     </a>

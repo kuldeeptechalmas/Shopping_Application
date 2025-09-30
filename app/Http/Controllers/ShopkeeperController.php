@@ -18,7 +18,6 @@ class ShopkeeperController extends Controller
     public function dashboard()
     {
         $catagory = CategoryProduct::all();
-        // return view("Admin.index",["catagory"=> $catagory]);
         return view("Shopkeeper.index", ["catagory" => $catagory, "showallrecord" => "yes"]);
     }
     public function profileuser(Request $request)
@@ -55,7 +54,6 @@ class ShopkeeperController extends Controller
         $customer->update([
             "name" => $request->name,
             "address" => $request->address,
-            "password" => Crypt::encryptString($request->password),
             "email" => $request->email,
             "phone" => $request->phone,
             "city" => $request->city,
@@ -122,51 +120,8 @@ class ShopkeeperController extends Controller
         return view("Shopkeeper.Profile.changepassword", ["catagory" => $catagory, "shopkeeper_data" => $shopkeeper_profile]);
     }
 
-    // public function shopkeeper_forget_password(Request $request)
-    // {
-    //     if ($request->isMethod("post")) {
-
-    //         $request->validate([
-    //             "newpassword" => "required",
-    //             "confpassword" => "required|same:newpassword",
-    //         ], [
-    //             "newpassword.required" => "Enter New Password are Required",
-    //             "confpassword.required" => "Enter Conform Password are Required",
-    //             "confpassword.same" => "Enter Password are Not Match to New Password",
-    //         ]);
-    //         $shopkeeperdata = CustomerAndShopkeeper::where("email", Session::get("emailforgotpassword"))->first();
-    //         $shopkeeperdata->password = Crypt::encryptString($request->confpassword);
-    //         $shopkeeperdata->save();
-
-    //         return redirect()->route("login");
-    //     }
-    //     return view("Main.ForgetPassword.forgotpassword", ["notshowemail" => "yes"]);
-    // }
-
-    // public function forget_password(Request $request)
-    // {
-    //     if ($request->isMethod("post")) {
-    //         $request->validate([
-    //             "email" => "required|email"
-    //         ], [
-    //             "email.required" => "Enter Email is Required",
-    //             "email.email" => "Enter Only Email is Required"
-    //         ]);
-
-    //         $shopkeeperdata = CustomerAndShopkeeper::where("email", $request->email)->first();
-    //         if ($shopkeeperdata) {
-    //             Session::put("emailforgotpassword", $shopkeeperdata->email);
-    //             return redirect()->route("forgetpassword");
-    //         } else {
-    //             return back()->withInput()->with(["emailerror" => "Enter Email is Not Exist !"]);
-    //         }
-    //     }
-    //     return view("ForgetPassword.emailvarify");
-    // }
-
     public function view_profile($email)
     {
-
         // contry data
         $content = File::get(public_path('countries.json'));
         $contrylist = json_decode($content, true);
@@ -207,14 +162,14 @@ class ShopkeeperController extends Controller
                 }
             }
         }
-        $order_Data = CustomerOrder::all();
         $shopkeeper_Data = CustomerAndShopkeeper::where("email", Session::get('shopkeeperemail'))->first();
         $sid = $shopkeeper_Data->id;
-        $filtered = $order_Data->filter(function ($item) use ($sid) {
-            if ($item->product->user_id == $sid) {
-                return $item;
-            }
-        });
-        return view("Shopkeeper.Order.orderlist", ['order_Data' => $filtered]);
+
+        $paginatedata = CustomerOrder::whereHas('product', function ($query) use ($sid) {
+            $query->where('user_id', $sid);
+        })->paginate(10);
+
+        // $order = $filtered::paginate()
+        return view("Shopkeeper.Order.orderlist", ['order_Data' => $paginatedata]);
     }
 }

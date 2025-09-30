@@ -12,13 +12,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class Product_Controller extends Controller
 {
     public function product_add_and_update(Request $request)
     {
 
-        $validator = $request->validate(
+        $validator = Validator::make(
+            $request->all(),
             [
                 "name" => "required",
                 "description" => "required",
@@ -47,6 +49,12 @@ class Product_Controller extends Controller
                 "discount.required" => "Enter Discount Are Required.",
             ]
         );
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
 
         $product = Product::find($request->id);
         if ($product) {
@@ -90,10 +98,10 @@ class Product_Controller extends Controller
             $product->status = $request->status;
             $product->discount = $request->discount;
             $product->admin_id = 0;
-            $product->image = $request->file("image")[0]->getClientOriginalName();
+            $product->image = $request->file("file")[0]->getClientOriginalName();
             $product->save();
 
-            if ($files = $request->file("image")) {
+            if ($files = $request->file("file")) {
                 foreach ($files as $file) {
                     $file->storeAs("public/UploadeFile", $file->getClientOriginalName());
                     $image = new Images();
@@ -102,14 +110,10 @@ class Product_Controller extends Controller
                     $image->save();
                 }
             }
+            return redirect()->route('shopkeeperdashboard');
         }
 
         return redirect()->back();
-    }
-
-    public function Admin_product_get_all(Request $request)
-    {
-        return view("Admin.Table.productshow");
     }
 
     public function product_get_all(Request $request)
@@ -125,6 +129,7 @@ class Product_Controller extends Controller
 
     public function admin_product_remove(Request $request)
     {
+        dd($request->all());
         $db = Product::find($request->deleteid)->first();
         if ($db) {
             $db->delete();
@@ -202,9 +207,8 @@ class Product_Controller extends Controller
         }
     }
 
-    public function product_view($productid)
+    public function product_view($productid, Request $request)
     {
-
         $data = CategoryProduct::where("category_name", Session::get("categoryname"))->first();
 
         $subcatagorydata = SubCatagory::where("catagroy_id", $data->id)->get();
@@ -215,11 +219,30 @@ class Product_Controller extends Controller
         ]);
     }
 
-    public function product_view_admin($productid)
+    public function Add_Product_Page($catagoryid)
     {
-        $productdata = Product::where("id", $productid)->first();
-        return view("Admin.ViewPage.productview", [
-            "product_data" => $productdata
-        ]);
+
+        $catagorydata = CategoryProduct::all();
+        Session::put("categoryname", $catagoryid);
+        $data = CategoryProduct::where("id", $catagoryid)->first();
+        $subcatagorydata = SubCatagory::where("catagroy_id", $data->id)->get();
+
+        return view(
+            "Shopkeeper.Product.product_add",
+            [
+                "subcatagory" => $subcatagorydata,
+                "catagory" => $catagorydata,
+                "catagoryid" => $data->id
+            ]
+        );
+    }
+
+    public function Product_Delete(Request $request)
+    {
+        $prodcut_delete = Product::find($request->id);
+        if ($prodcut_delete) {
+            $prodcut_delete->delete();
+            return redirect()->back();
+        }
     }
 }

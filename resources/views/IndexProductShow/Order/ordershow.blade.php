@@ -12,7 +12,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-4" style="width: 160px;">
-                        <a href="/productdetailsunkown/{{$item->product->id}}">
+                        <a href="/ProductDetails/{{$item->product->id}}">
                             <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->product->image) }}" alt="Image">
                         </a>
                     </div>

@@ -31,8 +31,7 @@
                 <th scope="col">
                     <a href="/productdetails/{{$item->product->id}}">
                         <div style="height: 100px; width: 100%;">
-                            <img style="width: 100%; height: 100%; object-fit: cover;"
-                                src="{{asset("storage/UploadeFile/" . $item->product->image)}}" alt="">
+                            <img style="width: 100%; height: 100%; object-fit: cover;" src="{{asset("storage/UploadeFile/" . $item->product->image)}}" alt="">
                         </div>
                     </a>
                 </th>
@@ -50,8 +49,7 @@
                     <span class="text-success">{{$item->status}}</span>
                     @endif
                 </th>
-                <th scope="col"><button type="button" class="btn btn-primary"
-                        onclick="vieworderspcific('{{$item->id}}')" data-bs-toggle="modal" data-bs-target="#orderview">
+                <th scope="col"><button type="button" class="btn btn-primary" onclick="vieworderspcific('{{$item->id}}')" data-bs-toggle="modal" data-bs-target="#orderview">
                         View
                     </button></th>
             </tr>
@@ -83,8 +81,9 @@
     </div>
 
     @endsection
+    @push("script_content")
 
-    @section('script_content')
+
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
@@ -100,17 +99,18 @@
             console.log(orderid);
 
             $.ajax({
-                url: "/vieworder/" + orderid,
-                type: "get",
-                success: function(res) {
+                url: "/vieworder/" + orderid
+                , type: "get"
+                , success: function(res) {
                     $("#vieworderdetail").html(res);
-                },
-                error: function(e) {
+                }
+                , error: function(e) {
                     console.log(e);
 
                 }
             })
 
         }
+
     </script>
-    @endsection
+    @endpush

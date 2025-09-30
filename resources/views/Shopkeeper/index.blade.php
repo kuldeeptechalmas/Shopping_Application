@@ -212,6 +212,7 @@
                 <div class="container-lg" id="producttablediv" style="margin-top: 136px;">
 
                     @yield('content')
+
                     @if (isset($showallrecord))
                     <div id="producttable">
 
@@ -221,31 +222,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Update User Modal -->
-    {{-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content" style="margin-left: 57%;margin-top: 14%;">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">User detail</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-
-                </div>
-                <div class="modal-footer">
-                    <form action="/logout" method="get">
-                        @csrf
-                        <button type="submit" class="btn btn-danger">Logout</button>
-                    </form>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" onclick="update()">Save Change</button>
-
-
-                </div>
-            </div>
-        </div>
-    </div> --}}
 
     <!--Add Product Modal -->
     <div class="modal fade" id="addproductmodel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -336,25 +312,6 @@
         </div>
     </div>
 
-    <!--View Product Modal -->
-    <div class="modal fade" id="viewproductmodel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">View Product</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" style="margin-right: 10%;margin-left: 9%;" id="viewmodelform">
-                    {{-- body other page "viewproduct.blade.php" --}}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" id="viewsave" class="btn btn-primary">save change</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!--Product Delete Modal -->
     <div class="modal fade" id="productdeletemodel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -375,6 +332,8 @@
             </div>
         </div>
     </div>
+
+    @stack('shopkeeper_script')
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
@@ -455,7 +414,7 @@
             console.log(did);
 
             $.ajax({
-                type: "delete"
+                type: "get"
                 , url: '/deleteproduct'
                 , data: {
                     id: did
@@ -471,89 +430,32 @@
             , });
         }
 
-
-        // view product 
-        // done
-        function viewproduct_productshow(productid) {
-            $.ajax({
-                type: "get"
-                , url: "/productview/" + productid
-                , success: function(res) {
-                    $("#viewmodelform").html(res);
-                }
-                , error: function(e) {
-                    console.log(e);
-                }
-            })
-
+        // password 
+        function passwordshow() {
+            $("#passwordhidden").removeAttr("hidden");
+            $("#passwordshow").attr("hidden", true);
+            document.getElementById('password').type = 'text';
         }
 
-        $('#viewproductmodel').on('hidden.bs.modal', function(e) {
-            $("#vepname").attr("hidden", true);
-            $("#vepdescription").attr("hidden", true);
-            $("#vepprice").attr("hidden", true);
-            $("#vepstock").attr("hidden", true);
-            $("#vepimage").attr("hidden", true);
-            $("#vepstatus").attr("hidden", true)
-            $("#vepcatagory").attr("hidden", true)
-        });
+        function passwordhidden() {
+            $("#passwordshow").removeAttr("hidden");
+            $("#passwordhidden").attr('hidden', true);
+            document.getElementById('password').type = 'password';
+        }
 
-        $('#viewsave').on("click", function(e) {
-            e.preventDefault();
-            $("#vepname").attr("hidden", true);
-            $("#vepdescription").attr("hidden", true);
-            $("#vepprice").attr("hidden", true);
-            $("#vepstock").attr("hidden", true);
-            $("#vepimage").attr("hidden", true);
-            $("#vepstatus").attr("hidden", true)
-            var formData = new FormData(document.getElementById("view-product-from"));
-            console.log(formData);
+        // config password
+        function conformpasswordshow() {
+            $("#conformpasswordhidden").removeAttr("hidden");
+            $("#conformpasswordshow").attr("hidden", true);
+            document.getElementById('conpassword').type = 'text';
+        }
 
-            $.ajax({
-                type: "post"
-                , url: '/productadd'
-                , processData: false
-                , contentType: false
-                , data: formData
-                , headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-                , success: function(res) {
-                    $('#viewproductmodel').modal("hide");
-                    showproduct();
-                }
-                , error: function(e) {
+        function conformpasswordhidden() {
+            $("#conformpasswordshow").removeAttr("hidden");
+            $("#conformpasswordhidden").attr('hidden', true);
+            document.getElementById('conpassword').type = 'password';
 
-                    const data = e["responseJSON"]["errors"];
-                    console.log(data);
-
-                    if (data['name']) {
-                        $("#vepname").text(data['name'][0]).removeAttr("hidden");
-                    }
-                    if (data['description']) {
-                        $("#vepdescription").text(data['description'][0]).removeAttr("hidden");
-                    }
-                    if (data['image']) {
-                        $("#vepimage").text(data['image'][0]).removeAttr("hidden");
-                    }
-                    if (data['price']) {
-                        $("#vepprice").text(data['price'][0]).removeAttr("hidden");
-                    }
-                    if (data['status']) {
-                        $("#vepstatus").text(data['status'][0]).removeAttr("hidden");
-                    }
-                    if (data['stock']) {
-                        $("#vepstock").text(data['stock'][0]).removeAttr("hidden");
-                    }
-                    if (data['catagory']) {
-                        $("#vepcountry").text(data['catagory'][0]).removeAttr("hidden");
-                    }
-                }
-            , });
-        });
-
-        // upload function
-
+        }
         $(document).ready(function() {
             $("#file-input").on("change", function() {
                 var files = $(this)[0].files;
@@ -598,28 +500,6 @@
             showproduct();
         });
 
-        function statuscheck_viewproduct() {
-            if (document.getElementById('pstock').value == "0") {
-                document.getElementById('pstatus').value = "out of stock";
-            } else {
-                if (document.getElementById('pstock').value > 0) {
-                    document.getElementById('pstatus').value = "in stock";
-                } else {
-                    document.getElementById('pstatus').value = "";
-                }
-            }
-
-            if (document.getElementById('vpstock').value == "0") {
-                document.getElementById('vpstatus').value = "out of stock";
-            } else {
-                if (document.getElementById('vpstock').value > 0) {
-                    document.getElementById('vpstatus').value = "in stock";
-                } else {
-                    document.getElementById('vpstatus').value = "";
-                }
-            }
-        }
-
         function showproduct() {
 
             $.ajax({
@@ -636,247 +516,6 @@
                 }
             , })
         }
-
-        $('#addproductmodel').on('hidden.bs.modal', function(e) {
-
-            document.getElementById('pname').value = ""
-                , document.getElementById('pdescription').value = ""
-                , document.getElementById('pprice').value = ""
-                , document.getElementById('pstock').value = ""
-                , document.getElementById('pimage').value = ""
-                , document.getElementById('pstatus').value = ""
-                , document.getElementById('pcatagory').value = "",
-
-                $("#epname").attr("hidden", true);
-            $("#epdescription").attr("hidden", true);
-            $("#epprice").attr("hidden", true);
-            $("#epstock").attr("hidden", true);
-            $("#epimage").attr("hidden", true);
-            $("#epstatus").attr("hidden", true)
-            $("#epcatagory").attr("hidden", true)
-        });
-
-        $("#pstatus").on("change", function() {
-            if (document.getElementById('pstatus').value == "out of stock") {
-                document.getElementById('pstock').value = 0;
-            }
-        })
-
-        function addproduct() {
-
-            $("#epname").attr("hidden", true);
-            $("#epdescription").attr("hidden", true);
-            $("#epprice").attr("hidden", true);
-            $("#epstock").attr("hidden", true);
-            $("#epimage").attr("hidden", true);
-            $("#epstatus").attr("hidden", true)
-            $("#epstatus").attr("hidden", true)
-            $("#epcatagory").attr("hidden", true)
-            $("#epdiscount").attr("hidden", true)
-
-            const form = document.getElementById("product-from");
-            const formData = new FormData(form);
-
-            $.ajax({
-                url: '/productadd'
-                , type: 'post'
-                , processData: false
-                , contentType: false
-                , data: formData
-                , success: function(response) {
-                    console.log(response);
-
-                    $('#addproductmodel').modal("hide");
-                    showproduct();
-                }
-                , error: function(e) {
-                    console.log(e['responseJSON']["errors"]);
-
-                    const data = e['responseJSON']["errors"];
-                    console.log(e);
-
-                    if (data['name']) {
-                        $("#epname").text(data['name'][0]).removeAttr("hidden");
-                    }
-                    if (data['description']) {
-                        $("#epdescription").text(data['description'][0]).removeAttr("hidden");
-                    }
-                    if (data['image']) {
-                        $("#epimage").text(data['image'][0]).removeAttr("hidden");
-                    }
-                    if (data['price']) {
-                        $("#epprice").text(data['price'][0]).removeAttr("hidden");
-                    }
-                    if (data['status']) {
-                        $("#epstatus").text(data['status'][0]).removeAttr("hidden");
-                    }
-                    if (data['stock']) {
-                        $("#epstock").text(data['stock'][0]).removeAttr("hidden");
-                    }
-                    if (data['catagory']) {
-                        $("#epcatagory").text(data['catagory'][0]).removeAttr("hidden");
-                    }
-                    if (data['discount']) {
-                        $("#epdiscount").text(data['discount'][0]).removeAttr("hidden");
-                    }
-                }
-            });
-        }
-
-        // user update profile
-        function update() {
-            $("#ename").attr("hidden", true);
-            $("#estate").attr("hidden", true);
-            $("#epincode").attr("hidden", true);
-            $("#ephone").attr("hidden", true);
-            $("#epassword").attr("hidden", true);
-            $("#eemail").attr("hidden", true);
-            $("#ecountry").attr("hidden", true);
-            $("#econpassword").attr("hidden", true);
-            $("#ecity").attr("hidden", true);
-            $("#egender").attr("hidden", true);
-            $("#eaddress").attr("hidden", true);
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            $.ajax({
-                type: 'post'
-                , url: "/shopkeeperupdate"
-                , data: {
-                    id: $('#id').val()
-                    , name: $('#name').val()
-                    , phone: $('#phone').val()
-                    , email: $('#email').val()
-                    , address: $('#address').val()
-                    , gender: $('input[name="gender"]:checked').val()
-                    , city: $('#city').val()
-                    , state: $('#state').val()
-                    , country: $('#country').val()
-                    , pincode: $('#pincode').val()
-                    , password: $('#password').val()
-                    , conformpassword: $('#conpassword').val()
-                }
-                , success: function(res) {
-                    window.location.href = res.redirect_url;
-                }
-                , error: function(e) {
-                    const data = e['responseJSON']['errors'];
-                    console.log(data['name']);
-                    console.log(data);
-
-                    if (data['name']) {
-                        $("#ename").text(data['name'][0]).removeAttr("hidden");
-                    }
-                    if (data['gender']) {
-                        $("#egender").text(data['gender'][0]).removeAttr("hidden");
-                    }
-                    if (data['address']) {
-                        $("#eaddress").text(data['address'][0]).removeAttr("hidden");
-                    }
-                    if (data['city']) {
-                        $("#ecity").text(data['city'][0]).removeAttr("hidden");
-                    }
-                    if (data['conformpassword']) {
-                        $("#econpassword").text(data['conformpassword'][0]).removeAttr("hidden");
-                    }
-                    if (data['country']) {
-                        $("#ecountry").text(data['country'][0]).removeAttr("hidden");
-                    }
-                    if (data['email']) {
-                        $("#eemail").text(data['email'][0]).removeAttr("hidden");
-                    }
-                    if (data['password']) {
-                        $("#epassword").text(data['password'][0]).removeAttr("hidden");
-                    }
-                    if (data['phone']) {
-                        $("#ephone").text(data['phone'][0]).removeAttr("hidden");
-                    }
-                    if (data['pincode']) {
-                        $("#epincode").text(data['pincode'][0]).removeAttr("hidden");
-                    }
-                    if (data['state']) {
-                        $("#estate").text(data['state'][0]).removeAttr("hidden");
-                    }
-                }
-            });
-        }
-
-        // password 
-        function passwordshow() {
-            $("#passwordhidden").removeAttr("hidden");
-            $("#passwordshow").attr("hidden", true);
-            document.getElementById('password').type = 'text';
-        }
-
-        function passwordhidden() {
-            $("#passwordshow").removeAttr("hidden");
-            $("#passwordhidden").attr('hidden', true);
-            document.getElementById('password').type = 'password';
-        }
-
-        // config password
-        function conformpasswordshow() {
-            $("#conformpasswordhidden").removeAttr("hidden");
-            $("#conformpasswordshow").attr("hidden", true);
-            document.getElementById('conpassword').type = 'text';
-        }
-
-        function conformpasswordhidden() {
-            $("#conformpasswordshow").removeAttr("hidden");
-            $("#conformpasswordhidden").attr('hidden', true);
-            document.getElementById('conpassword').type = 'password';
-        }
-
-        $("#country").on("change", function() {
-            const selectElement = $('#state');
-            selectElement.empty();
-            $.ajax({
-                type: "get"
-                , url: "/getstate"
-                , data: {
-                    data: $('#country').val()
-                , }
-                , success: function(res) {
-                    var oldstate = "{{old('state')}}";
-                    console.log(oldstate);
-                    $("#state").append(`<option value="">Select</option>`);
-                    $.each(res["statelist"], function(indexInArray, valueOfElement) {
-                        var selectstate = (oldstate == valueOfElement["id"]) ? "selected" : "";
-                        console.log(selectstate);
-
-                        $("#state").append(`<option value="${valueOfElement["id"]}" ${selectstate} >${valueOfElement["name"]}</option>`);
-                    });
-                }
-                , error: function(e) {
-                    console.log(e);
-                }
-            , })
-        });
-
-        $("#state").on("change", function() {
-            const selectElement = $('#city');
-            selectElement.empty();
-            $.ajax({
-                type: "get"
-                , url: "/getcity"
-                , data: {
-                    data: $('#state').val()
-                , }
-                , success: function(res) {
-                    $("#city").append(`<option value="">Select</option>`);
-                    $.each(res["citylist"], function(indexInArray, valueOfElement) {
-                        $("#city").append(`<option value="${valueOfElement["id"]}">${valueOfElement["name"]}</option>`);
-                    });
-                }
-                , error: function(e) {
-                    console.log(e);
-                }
-            , })
-        });
 
     </script>
 </body>

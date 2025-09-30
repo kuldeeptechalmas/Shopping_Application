@@ -66,25 +66,7 @@
     </table>
 
     <div class="paginationDiv" style="margin-right: 73%;">
-        <p>
-            Paginate Index : {{ $order->links('pagination::bootstrap-4') }}
-        </p>
-    </div>
-
-
-    <!-- View Order Modal -->
-    <div class="modal fade" id="orderview" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">View Order</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="vieworderdetail">
-
-                </div>
-            </div>
-        </div>
+        <p> {{ $order->links('pagination::bootstrap-5') }}</p>
     </div>
 
     @endsection
