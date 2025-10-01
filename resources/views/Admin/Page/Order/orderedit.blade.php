@@ -3,7 +3,7 @@
 @section('content')
 <div class="d-flex justify-content-center" style="height: 62px;text-align: center;margin-top: 16px;">
     <h3 style="width: 225px;border: solid;border-radius: 27px;align-items: center;display: flex;justify-content: center;">
-        Edit Order</h3>
+        View Order</h3>
 </div>
 <form action="{{ route('order.Manage') }}" method="post" style="padding: 10px 169px;">
 
@@ -39,7 +39,7 @@
     </div>
     <div class="mb-3">
         <label class="form-label">Status</label>
-        <select class="form-select" name="status" aria-label="Default select example">
+        <select class="form-select" name="status" aria-label="Default select example" disabled>
             <option value="">Select</option>
             <option value="Pending" {{$orderData->status == "Pending" ? 'selected' : ''}}>Pending</option>
             <option value="Processing" {{$orderData->status == "Processing" ? 'selected' : ''}}>Processing</option>
@@ -60,7 +60,6 @@
         </a>
 
         <input type="text" name="action" value="editOrderData" hidden>
-        <button type="submit" class="btn btn-primary">Save changes</button>
     </div>
 </form>
 @endsection

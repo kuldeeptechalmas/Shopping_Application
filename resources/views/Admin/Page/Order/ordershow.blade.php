@@ -6,6 +6,7 @@
 
 @section('content')
 
+@if ($order->isNotEmpty())
 <div id="dataOutput" class="mt-3">
     <h1>Show Order</h1>
     <table class="table table-striped">
@@ -24,7 +25,6 @@
         </thead>
         <tbody>
 
-            @if (isset($order))
             @foreach ($order as $item)
             <tr>
                 <th scope="col">{{$item->product->name}}</th>
@@ -61,9 +61,11 @@
                 </th>
             </tr>
             @endforeach
-            @endif
         </tbody>
     </table>
+    @else
+    <h1 style="color: red;display: flex;justify-content: center;align-items: center;margin-top: 172px;">Not Found Order</h1>
+    @endif
 
     <div class="paginationDiv" style="margin-right: 73%;">
         <p> {{ $order->links('pagination::bootstrap-5') }}</p>
@@ -100,4 +102,5 @@
         }
 
     </script>
+
     @endpush

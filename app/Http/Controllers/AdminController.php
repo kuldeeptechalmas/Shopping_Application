@@ -11,6 +11,8 @@ use App\Models\CustomerOrder;
 use App\Models\Images;
 use App\Models\Product;
 use FFI\Exception;
+use GuzzleHttp\Psr7\Response;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
@@ -27,6 +29,12 @@ class AdminController extends Controller
     public function CustomerAndShopkeeper_Manage(Request $request)
     {
         if ($request->isMethod("post")) {
+
+            // Search Data
+            if ($request->action == "searchDataAdmin") {
+                $customerandshopkeeper = CustomerAndShopkeeper::where("name", "like", "%" . $request->searchData . "%")->paginate(15);
+                return view("Admin.Page.User.usershow", ["data" => $customerandshopkeeper]);
+            }
 
             // Edit customer and shopkeeper data get
             if ($request->action == "editGet") {
@@ -109,7 +117,7 @@ class AdminController extends Controller
                 ]);
             }
         }
-        $customerandshopkeeper = CustomerAndShopkeeper::paginate(9);
+        $customerandshopkeeper = CustomerAndShopkeeper::paginate(15);
         return view("Admin.Page.User.usershow", ["data" => $customerandshopkeeper]);
     }
 
@@ -117,6 +125,12 @@ class AdminController extends Controller
     public function Product_Manage(Request $request)
     {
         if ($request->isMethod("post")) {
+
+            // Search Data
+            if ($request->action == "searchDataAdmin") {
+                $productData = Product::where("name", "like", "%" . $request->searchData . "%")->paginate(15);
+                return view("Admin.Page.Product.productshow", ["data" => $productData]);
+            }
 
             // Remove porduct
             if ($request->action == "remove") {
@@ -179,8 +193,7 @@ class AdminController extends Controller
                 }
 
                 $product = Product::find($request->id);
-
-                $admin = Admin::where("name", $request->adminid)->first();
+                $admin = Admin::where("name",  Session::get("adminname"))->first();
 
                 $product->update([
                     "name" => $request->name,
@@ -196,6 +209,7 @@ class AdminController extends Controller
                     $product->admin_id = $admin->id;
                     $product->save();
                 }
+
                 if ($files = $request->file("file")) {
                     foreach ($files as $file) {
                         $file->storeAs("public/UploadeFile", $file->getClientOriginalName());
@@ -208,7 +222,7 @@ class AdminController extends Controller
             }
         }
 
-        $product = Product::paginate(9);
+        $product = Product::paginate(15);
         return view("Admin.Page.Product.productshow", ["data" => $product]);
     }
 
@@ -216,6 +230,17 @@ class AdminController extends Controller
     public function Order_Manage(Request $request)
     {
         if ($request->isMethod("post")) {
+
+            // Search Data
+            if ($request->action == "searchDataAdmin") {
+                $search = $request->searchData;
+                $orderData = CustomerOrder::whereHas('product', function ($query) use ($search) {
+                    $query->where('name', "like", "%" . $search . "%");
+                })->orWhere("name", "like", "%" . $request->searchData . "%")->paginate(15);
+
+                return view("Admin.Page.Order.ordershow", ["order" => $orderData]);
+            }
+
             // Display order detail
             if ($request->action == "view") {
 
@@ -247,7 +272,7 @@ class AdminController extends Controller
                 }
             }
         }
-        $order = CustomerOrder::paginate(10);
+        $order = CustomerOrder::paginate(15);
         return view("Admin.Page.Order.ordershow", ["order" => $order]);
     }
 
@@ -309,6 +334,15 @@ class AdminController extends Controller
     {
         Session::forget('adminname');
         return redirect()->route('login');
+    }
+
+    // Search Data Product User Order
+    public function Search_Data_Product_User_Order($searchData, $tableName)
+    {
+        if ($tableName == "User") {
+            $userData = CustomerAndShopkeeper::where("name", "like", "%" . $searchData . "%")->get();
+            return Response()->json([$userData]);
+        }
     }
 
     // public function dashboard()

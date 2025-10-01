@@ -11,6 +11,33 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
+        /* cart css */
+        .cart-icon-container {
+            position: relative;
+            /* Allows absolute positioning of the badge */
+            display: inline-block;
+            /* Ensures the container wraps its content */
+        }
+
+        .badge {
+            position: absolute;
+            top: -8px;
+            /* Adjust as needed for vertical positioning */
+            right: -8px;
+            /* Adjust as needed for horizontal positioning */
+            background-color: blue;
+            /* Example background color */
+            color: white;
+            border-radius: 50%;
+            /* Makes it circular */
+            padding: 3px 6px;
+            /* Adjust padding for size */
+            font-size: 12px;
+            line-height: 1;
+            /* Ensures text is vertically centered */
+            text-align: center;
+        }
+
         /* favourite heart css */
         .likes {
             position: absolute;
@@ -102,8 +129,16 @@
                     @endif
 
                     <a href="/addtocartget" style="text-decoration: none ;color: #000;">
-                        <img style="height: 30px; width: 30px; object-fit: contain;" src="{{ asset('storage/UploadeFile/pic36.png') }}" alt="Image">
+                        <div class="cart-icon-container">
+                            <i class="fa fa-shopping-cart" style="font-size:24px"></i>
+                            <span class="badge" id="cart-item-count"></span>
+                        </div>
+                        {{-- <img style="height: 30px; width: 30px; object-fit: contain;" src="{{ asset('storage/UploadeFile/pic36.png') }}" alt="Image"> --}}
+
                         <span class="ms-2">Cart</span>
+
+                        {{-- demo --}}
+
                     </a>
                     @if (Session::get("customerid"))
 
@@ -203,6 +238,21 @@
                 })
             }
         }
+
+        function cartcount() {
+            $.ajax({
+                url: "/CartCount"
+                , type: "get"
+                , success: function(res) {
+                    $(".badge").text(res['cartcount']);
+                }
+                , error: function(e) {
+                    console.log(e);
+                }
+            })
+        }
+
+        cartcount();
 
     </script>
 </body>

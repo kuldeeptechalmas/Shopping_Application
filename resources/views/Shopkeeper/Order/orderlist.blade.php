@@ -62,13 +62,14 @@
 
     <div class="paginationDiv" style="margin-right: 73%;">
         <p>
-            Paginate Index : {{ $order_Data->links('pagination::bootstrap-4') }}
+            {{ $order_Data->links('pagination::bootstrap-5') }}
         </p>
     </div>
 
     @endsection
 
     @push("shopkeeper_script")
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         $(document).on('click', '.pagination a', function(e) {
             e.preventDefault();

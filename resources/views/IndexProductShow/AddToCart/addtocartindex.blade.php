@@ -59,7 +59,9 @@
                                 <input type="text" hidden value="{{$item->product->id}}">
                             </div>
 
-
+                            @if ($item->quantity==$item->product->stock)
+                            <div style="color: red;margin-top: 17px;">Out Of Stock</div>
+                            @endif
 
                             <div class="d-flex justify-content-end">
                                 <div style="border-radius: 8px;text-align: center;margin-right: 11px;text-decoration: none;font-weight: bold;">
@@ -124,6 +126,7 @@
                     $discount = 0;
                     $amount = 0;
                     $discountofvalues = 0;?>
+                        {{-- {{ $datacart }} --}}
                         @foreach ($datacart as $item)
 
                         @foreach ($usercoupondata as $cd)
@@ -132,7 +135,7 @@
                         @endif
                         @endforeach
 
-                        <?php            $count++;
+                        <?php            $count+=$item->quantity;
                                         $amount = $amount + (round($item->product->price - ($item->product->price * $item->product->discount / 100)) * $item->quantity);
                                         $discount = $discount + (round($item->product->price * $item->product->discount / 100));
                                                                                                                                                                                                                                                                         ?>

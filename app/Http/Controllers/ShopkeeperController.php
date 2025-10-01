@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CategoryProduct;
 use App\Models\CustomerAndShopkeeper;
 use App\Models\CustomerOrder;
+use App\Models\Images;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
@@ -167,9 +168,16 @@ class ShopkeeperController extends Controller
 
         $paginatedata = CustomerOrder::whereHas('product', function ($query) use ($sid) {
             $query->where('user_id', $sid);
-        })->paginate(10);
-
-        // $order = $filtered::paginate()
+        })->paginate(15);
         return view("Shopkeeper.Order.orderlist", ['order_Data' => $paginatedata]);
+    }
+
+    public function Remove_Image_Product($imageid)
+    {
+        $imageData = Images::find($imageid);
+        if ($imageData) {
+            $imageData->delete();
+            return redirect()->back();
+        }
     }
 }

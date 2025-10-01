@@ -94,47 +94,42 @@
 
                 </ul>
                 <div style="margin-right: 62px;">
-                    <form class="d-flex">
-                        <input class="form-control me-2" oninput="searchproduct()" id="searchproductid" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" onclick="searchproduct()" type="button">Search</button>
+                    <form class="d-flex" method="post">
+                        @csrf
+                        <input type="text" name="action" hidden value="searchDataAdmin" id="">
+                        <input class="form-control me-2" name="searchData" value="{{ old('searchData') }}" id="searchproductid" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
                 </div>
                 <form class="d-flex">
 
-                    {{-- <div>
-                        <h1><i class="fa-solid fa-circle-user" onclick="getadminprofile()" data-bs-toggle="modal"
-                                data-bs-target="#adminmodel"></i>
-                        </h1>
-                        {{session('adminname')}}
-            </div> --}}
-
-            <div>
-                <div class="hover-trigger position-relative">
-                    <h1><i class="fa-solid fa-circle-user" style="margin-left: 11px;"></i></h1>
-                    {{session('adminname')}}
-                    <div class="show-on-hover position-absolute" style="right: 0px; width: 222px; background: white;border-radius: 15px;">
-                        <div class="shadow p-3 bg-body rounded">
+                    <div>
+                        <div class="hover-trigger position-relative">
+                            <h1><i class="fa-solid fa-circle-user" style="margin-left: 11px;"></i></h1>
+                            {{session('adminname')}}
+                            <div class="show-on-hover position-absolute" style="right: 0px; width: 222px; background: white;border-radius: 15px;">
+                                <div class="shadow p-3 bg-body rounded">
 
 
-                            <div style="padding: 10px; border-bottom: 1px solid #555;">
-                                <a style="text-decoration: none;  color: #000;" href="/AdminProfile">
-                                    Profile
-                                </a>
-                            </div>
+                                    <div style="padding: 10px; border-bottom: 1px solid #555;">
+                                        <a style="text-decoration: none;  color: #000;" href="/AdminProfile">
+                                            Profile
+                                        </a>
+                                    </div>
 
 
-                            <a style="text-decoration: none;  color: #000;" href="{{ route('admin.Logout') }}">
-                                <div style="padding: 10px;color:red;">
-                                    Logout
+                                    <a style="text-decoration: none;  color: #000;" href="{{ route('admin.Logout') }}">
+                                        <div style="padding: 10px;color:red;">
+                                            Logout
+                                        </div>
+                                    </a>
                                 </div>
-                            </a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            </form>
-        </div>
+                </form>
+            </div>
         </div>
     </nav>
 
@@ -160,6 +155,11 @@
                         <i class="nav-icon cil-speedometer"></i> Order
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/catagorypage">
+                        <i class="nav-icon cil-speedometer"></i> Category Add
+                    </a>
+                </li>
 
             </ul>
             <div class="sidebar-footer">
@@ -178,7 +178,6 @@
     </div>
 
     </div>
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

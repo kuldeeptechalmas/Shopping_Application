@@ -20,8 +20,20 @@ Route::middleware("adminCheck")->group(function () {
     Route::match(["get", "post"], '/AdminInOrder', [AdminController::class, 'Order_Manage'])->name('order.Manage');
     Route::match(["get", "post"], '/AdminProfile', [AdminController::class, 'Admin_Profile_Manage'])->name('admin.Profile.Manage');
 
+    Route::get('/SearchData/{SearchData}/{TableName}', [AdminController::class, 'Search_Data_Product_User_Order']);
     Route::get('/AdminProductDetail/{productid}', [AdminController::class, 'Admin_Product_Detail']);
     Route::get('/Logout', [AdminController::class, 'Admin_Logout'])->name("admin.Logout");
+
+    // Catagory
+    Route::get('/catagorypage', [CatagoryController::class, 'index']);
+    Route::get('/catagoryget', [CatagoryController::class, 'catagory_show']);
+    Route::post('/catagoryadd', [CatagoryController::class, 'catagory_add']);
+    Route::get('/catagoryupdate', [CatagoryController::class, 'catagory_update']);
+    Route::delete('/catagorydelete', [CatagoryController::class, 'catagory_delete']);
+
+    // Sub-Catagory
+    Route::post('/subcatagoryadd', [SubCatagoryController::class, 'sub_catagory_add']);
+    Route::delete('/subcatagorydelete', [SubCatagoryController::class, 'sub_catagory_delete']);
 });
 
 // Customer New Router - done
@@ -58,6 +70,7 @@ Route::get('/getcategroywiseproduct/{categoryname}', [MainController::class, 'ge
 Route::get('/discountcoupun/{couponid}/{productid}', [MainController::class, 'discount_coupun']);
 Route::get('/removediscount/{productid}', [MainController::class, 'remove_discount_coupun']);
 Route::get('/favourite/{productid}', [MainController::class, 'add_to_favourite']);
+Route::get('/CartCount', [MainController::class, 'Cart_Count']);
 
 // State & City Data get
 Route::get('/getstate', [CustomerController::class, "getstate"]);
@@ -77,6 +90,8 @@ Route::middleware("shopkeeperCheck")->group(function () {
     Route::match(["post", "get"], '/shopkeeperchangepassword/{shopkeeperid}', [ShopkeeperController::class, "shopkeeper_change_password"]);
     Route::get('/viewprofile/{email}', [ShopkeeperController::class, "view_profile"]);
     Route::match(['get', 'post'], '/ShopkeeperOrderList', [ShopkeeperController::class, "Shopkeeper_Order_List"])->name("shopkeeper.Order.List");
+
+    Route::get('/RemoveImage/{ImageId}', [ShopkeeperController::class, "Remove_Image_Product"]);
 });
 Route::post('/shopkeeperupdate', [ShopkeeperController::class, "updateuser"]);
 Route::get('/shopkeeperprofile/{shopkeeperid}', [ShopkeeperController::class, "shopkeeper_profile"]);
@@ -93,7 +108,7 @@ Route::post('/productadd', [Product_Controller::class, 'product_add_and_update']
 Route::get('/getproductall', [Product_Controller::class, 'product_get_all']);
 Route::post('/editproduct', [Product_Controller::class, 'product_edit']);
 Route::post('/deleteproductadmin', [Product_Controller::class, 'admin_product_remove'])->name("delete_product_admin");
-Route::post('/deleteproduct', [Product_Controller::class, 'Product_Delete']);
+Route::get('/deleteproduct', [Product_Controller::class, 'Product_Delete']);
 Route::get('/searchproduct', [Product_Controller::class, 'product_search']);
 Route::get('/getproductshopkeeper', [Product_Controller::class, 'product_list_get_shopkeeper']);
 Route::get('/productaddshop/{category_name}', [Product_Controller::class, 'product_add_show']);
@@ -102,16 +117,7 @@ Route::match(['get', 'post'], '/productview/{productid}', [Product_Controller::c
 Route::match(['get', 'post'], '/AddProductPage/{catagoryid}', [Product_Controller::class, 'Add_Product_Page']);
 
 
-// Catagory
-Route::get('/catagorypage', [CatagoryController::class, 'index']);
-Route::get('/catagoryget', [CatagoryController::class, 'catagory_show']);
-Route::post('/catagoryadd', [CatagoryController::class, 'catagory_add']);
-Route::get('/catagoryupdate', [CatagoryController::class, 'catagory_update']);
-Route::delete('/catagorydelete', [CatagoryController::class, 'catagory_delete']);
 
-// Sub-Catagory
-Route::post('/subcatagoryadd', [SubCatagoryController::class, 'sub_catagory_add']);
-Route::delete('/subcatagorydelete', [SubCatagoryController::class, 'sub_catagory_delete']);
 
 // Add To Cart Functionality
 Route::get('/addtocart_desbord/{product_id}', [AddToCartController::class, 'index']);

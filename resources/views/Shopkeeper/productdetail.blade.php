@@ -52,12 +52,16 @@
         @else
         <div class="text-danger">Out of Stock</div>
         @endif
-        <div>{{$productdatails->stock}}</div>
+
+        <div>Stock : {{$productdatails->stock}}</div>
+
+        <div>Discount : {{$productdatails->discount}} % </div>
         @php
         $dataString = $productdatails->description;
         $items = explode('-', $dataString);
         @endphp
-        <div style="margin-top: 7%;">
+
+        <div style="margin-top: 3%;">
             <div class="row">
                 <div class="col">
                     Highlights:

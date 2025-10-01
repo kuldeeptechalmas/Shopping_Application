@@ -1,7 +1,7 @@
 @extends('Admin.index')
 
 @section('content')
-@if (isset($data))
+@if ($data->isNotEmpty())
 <h1>Show Product</h1>
 <div class="row">
     @foreach ($data as $item)
@@ -42,6 +42,8 @@
 <div class="paginationDiv" style="margin-right: 73%;">
     {{ $data->links('pagination::bootstrap-5') }}
 </div>
+@else
+<h1 style="color: red;display: flex;justify-content: center;align-items: center;margin-top: 172px;">Not Found Product</h1>
 @endif
 @endsection
 

@@ -121,7 +121,7 @@
                 <div class="d-flex justify-content-end">
                     <div class="pe-5">
                         <form class="d-flex">
-                            <input class="form-control me-2" oninput="searchproduct()" id="searchproductid" type="search" placeholder="Search" aria-label="Search">
+                            <input class="form-control me-2" id="searchproductid" type="search" placeholder="Search" aria-label="Search">
                             <button class="btn btn-outline-success" onclick="searchproduct()" type="button">Search</button>
                         </form>
                     </div>
@@ -191,11 +191,6 @@
                         @endif
                     </div>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/catagorypage">
-                        <i class="nav-icon cil-speedometer"></i> Catagory Add
-                    </a>
-                </li>
             </ul>
             <div class="sidebar-footer">
                 <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
@@ -210,7 +205,6 @@
 
                 </div>
                 <div class="container-lg" id="producttablediv" style="margin-top: 136px;">
-
                     @yield('content')
 
                     @if (isset($showallrecord))

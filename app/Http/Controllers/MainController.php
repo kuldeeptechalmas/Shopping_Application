@@ -192,10 +192,18 @@ class MainController extends Controller
     public function Index()
     {
         $data = CategoryProduct::with('productsdata')->get();
+
         if (Session::get("customeremail") != null) {
+
+            // cart count
+            $data1 = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+            $addtocart = AddToCart::where("user_id", $data1->id)->get();
+
+            // Favourite Product
             $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
             $wishlist = FavouriceProduct::where("user_id", $user_data->id)->get();
-            return view("IndexProductShow.productshow", ["data" => $data, "wishlist" => $wishlist]);
+
+            return view("IndexProductShow.productshow", ["cartcount" => $addtocart->count(), "data" => $data, "wishlist" => $wishlist]);
         } else {
             return view("IndexProductShow.productshow", ["data" => $data]);
         }
@@ -237,6 +245,30 @@ class MainController extends Controller
             return redirect()->route("login");
         }
     }
+
+    // Cart Count - Use Ajax
+    public function Cart_Count()
+    {
+        $cartcount = 0;
+        if (Session::get("customeremail")) {
+
+            $data1 = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+            $addtocart = AddToCart::where("user_id", $data1->id)->get();
+
+            foreach ($addtocart as $key) {
+                $cartcount += $key->quantity;
+            }
+            return response()->json(['cartcount' => $cartcount]);
+        } else {
+
+            $cart = session()->get('cart');
+            foreach ($cart as $key) {
+                $cartcount += $key['quantity'];
+            }
+
+            return response()->json(['cartcount' => $cartcount]);
+        }
+    }
     public function Checkout_Product()
     {
         // countries data
@@ -268,7 +300,7 @@ class MainController extends Controller
     {
         $data1 = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
         $coupon = UserCoupunData::where("user_id", $data1->id)->get();
-        
+
         if ($request->isMethod("post")) {
 
 

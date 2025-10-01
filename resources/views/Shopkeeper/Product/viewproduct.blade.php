@@ -1,6 +1,13 @@
 @extends('Shopkeeper.index')
 
 @section('content')
+@toastifyCss
+@if ($product_data->admin_id != 0)
+{{ toastify() -> warning('Admin Update Product Details !') }}
+@endif
+@toastifyJs
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <h1 style="text-align: center">Product Edit</h1>
 <form id="view-product-from" action="{{ route('product_add_update') }}" method="POST" enctype="multipart/form-data" style="padding: 20px 160px;">
     @csrf
@@ -73,13 +80,16 @@
         <div id="showimage" style="margin-top: 21px;">
             <div class="row">
                 @foreach ($product_data->images as $item)
-                <div class="col-md-4">
-                    <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->image_name) }}" alt="Image">
+                <div class="col-md-3" style="margin: 17px;">
+                    <img style="width: 100%; height: 100%; object-fit: cover;position: relative;" src="{{ asset('storage/UploadeFile/' . $item->image_name) }}" alt="Image">
+                    <a href="/RemoveImage/{{ $item->id }}" style="color: red;">
+                        <i class="fa-solid fa-circle-xmark" style="position: absolute"></i>
+                    </a>
                 </div>
                 @endforeach
             </div>
-
         </div>
+
     </div>
     @error('image')
 
@@ -114,11 +124,12 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
             </a>
         </div>
-        <button type="submit" class="btn btn-primary">Edit</button>
+        <button type="submit" class="btn btn-primary">Save</button>
     </div>
 </form>
 @endsection
 @push("shopkeeper_script")
+
 <script>
     function statuscheck_viewproduct() {
         if (document.getElementById('pstock').value == "0") {

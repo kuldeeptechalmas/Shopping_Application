@@ -118,7 +118,7 @@ class Product_Controller extends Controller
 
     public function product_get_all(Request $request)
     {
-        $data = Product::paginate(9);
+        $data = Product::paginate(15);
 
         if ($request->ajax()) {
             return view("Admin.Table.producttable", ["data" => $data, "table" => "product"]);
@@ -146,7 +146,7 @@ class Product_Controller extends Controller
 
         if (isset($request->catagoryid)) {
 
-            $data1 = Product::where("user_id", $user->id)->where("category_id", $request->catagoryid)->where("name", "like", "%" . $request->searchText . "%")->paginate(9);
+            $data1 = Product::where("user_id", $user->id)->where("category_id", $request->catagoryid)->where("name", "like", "%" . $request->searchText . "%")->paginate(15);
             if ($data1->count() == 0) {
                 return view("Shopkeeper.Product.notfoundproduct");
             } else {
@@ -154,7 +154,7 @@ class Product_Controller extends Controller
             }
         } else {
 
-            $data = Product::where("name", "like", "%" . $request->searchText . "%")->paginate(9);
+            $data = Product::where("name", "like", "%" . $request->searchText . "%")->paginate(15);
             if ($data->count() == 0) {
                 return view("Shopkeeper.Product.notfoundproduct");
             } else {
@@ -168,11 +168,11 @@ class Product_Controller extends Controller
         $user = CustomerAndShopkeeper::where("email", Session::get("shopkeeperemail"))->first();
         if (isset($request->catagoryid)) {
 
-            $data1 = Product::where("user_id", $user->id)->where("category_id", $request->catagoryid)->paginate(9);
+            $data1 = Product::where("user_id", $user->id)->where("category_id", $request->catagoryid)->paginate(15);
             return view("Shopkeeper.Product.productshow", ["data" => $data1]);
         } else {
 
-            $data = Product::where("user_id", $user->id)->paginate(9);
+            $data = Product::where("user_id", $user->id)->paginate(15);
             if ($request->ajax()) {
                 return view("Shopkeeper.Product.productshow", ["data" => $data]);
             }
@@ -198,11 +198,13 @@ class Product_Controller extends Controller
 
     public function product_details($productid)
     {
+
         $catagorydata = CategoryProduct::all();
         $data = Product::where("id", $productid)->first();
         if (!empty(Session::get("adminname"))) {
             return view("Admin.Page.Product.productdetail", ["productdatails" => $data, "catagory" => $catagorydata,]);
         } else {
+
             return view("Shopkeeper.productdetail", ["productdatails" => $data, "catagory" => $catagorydata,]);
         }
     }
@@ -213,6 +215,7 @@ class Product_Controller extends Controller
 
         $subcatagorydata = SubCatagory::where("catagroy_id", $data->id)->get();
         $productdata = Product::where("id", $productid)->first();
+
         return view("Shopkeeper.Product.viewproduct", [
             "product_data" => $productdata,
             "subcatagory" => $subcatagorydata
