@@ -7,6 +7,9 @@
 </div>
 <form id="view-product-from" style="padding: 10px 169px;" action="{{route('product.manage')}}" enctype="multipart/form-data" method="post">
     @csrf
+    @if (isset($oldProductData))
+    {{ $oldProductData }}
+    @endif
     <input type="text" name="id" value="{{$productData->id}}" id="vpid" hidden>
     <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Name </label>
@@ -70,7 +73,6 @@
     <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Image</label>
         <div class="form-group">
-            {{-- <input type="file" id="file-input" multiple> --}}
             <input type="file" name="file[]" multiple id="file" class="input-file">
             <label for="file" class="btn btn-tertiary js-labelFile" style="width:100%">
                 <i class="icon fa fa-check"></i>
@@ -82,9 +84,11 @@
 
                     @foreach ($productData->images as $item)
 
-                    <div class="col-3">
-
-                        <img class="h-100 w-100" style="object-fit: contain;" src="{{ asset('storage/UploadeFile/' . $item->image_name) }}" class="d-block w-100" alt="...">
+                    <div class="col-md-3" style="margin: 17px;">
+                        <img style="width: 100%; height: 100%; object-fit: cover;position: relative;" src="{{ asset('storage/UploadeFile/' . $item->image_name) }}" alt="Image">
+                        <a href="/RemoveImage/{{ $item->id }}" style="color: red;">
+                            <i class="fa-solid fa-circle-xmark" style="position: absolute"></i>
+                        </a>
                     </div>
                     @endforeach
                 </div>
@@ -93,6 +97,20 @@
         </div>
         <div id="showimage" style="margin-top: 21px;"></div>
     </div>
+
+    {{-- <div id="showimage" style="margin-top: 21px;">
+        <div class="row">
+            @foreach ($product_data->images as $item)
+            <div class="col-md-3" style="margin: 17px;">
+                <img style="width: 100%; height: 100%; object-fit: cover;position: relative;" src="{{ asset('storage/UploadeFile/' . $item->image_name) }}" alt="Image">
+    <a href="/RemoveImage/{{ $item->id }}" style="color: red;">
+        <i class="fa-solid fa-circle-xmark" style="position: absolute"></i>
+    </a>
+    </div>
+    @endforeach
+    </div>
+    </div> --}}
+
     @if (isset($validator))
     @if (isset($validator->errors()->messages()['file'][0]))
     <div class="alert alert-danger">{{ $validator->errors()->messages()['file'][0] }}</div>

@@ -2,12 +2,12 @@
 
 @section('content')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<div>
+{{-- <div>
     Add : <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addcatagory" aria-current="page">Catagory</button>
 </div>
-<br>
+<br> --}}
 <div>
-    Add : <button type="button" class="btn btn-success" onclick="cleansubcatagory()" data-bs-toggle="modal" data-bs-target="#addsubcatagory" aria-current="page">Sub Catagory</button>
+    <button type="button" class="btn btn-primary" style="margin: 19px 10px 12px 83%;" onclick="cleansubcatagory()" data-bs-toggle="modal" data-bs-target="#addsubcatagory" aria-current="page">Add Catagory</button>
 </div>
 
 <div id="catagorytabledata">
@@ -15,7 +15,7 @@
 </div>
 
 <!--Add Catagory Modal -->
-<div class="modal fade" id="addcatagory" aria-hidden="true">
+{{-- <div class="modal fade" id="addcatagory" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -39,7 +39,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
 <!--Add Sub Catagory Modal -->
 <div class="modal fade" id="addsubcatagory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -53,14 +53,20 @@
                 <form enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Name </label>
+                        <label for="exampleInputEmail1" class="form-label">New Category Name </label>
+                        <input type="text" class="form-control" id="Maincategoryname" name="cname" aria-describedby="emailHelp">
+                    </div>
+                    <div style="color:red;" id="ecname" hidden></div>
+
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Sub Category Name </label>
                         <input type="text" class="form-control" id="scname" name="name" aria-describedby="emailHelp">
                     </div>
                     <div style="color:red;" id="escname" hidden></div>
 
                     <div class="d-flex flex-row align-items-center mb-4">
                         <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                            <label class="form-label" for="form3Example1c">Catagory</label>
+                            <label class="form-label" for="form3Example1c">Existing Catagory</label>
                             <select class="form-select" id="sccatagory" name="catagory">
                                 <option value="">Select</option>
                                 @if (isset($catagory))
@@ -77,34 +83,6 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary closemodel" onclick="addsubcatagory()">save</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--View Catagory Modal -->
-<div class="modal fade" id="viewcatagory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">View Catagory</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" style="margin-right: 10%;margin-left: 9%;">
-                <form enctype="multipart/form-data">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Name </label>
-                        <input type="text" class="form-control" id="vcname" name="name" aria-describedby="emailHelp">
-                        <input type="text" class="form-control" hidden id="vcid">
-                    </div>
-                    <div style="color:red;" id="evcname" hidden></div>
-
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary closemodel" onclick="viewcatagorydata()">save</button>
             </div>
         </div>
     </div>
@@ -239,6 +217,7 @@
 
     // add sub catagory
     function addsubcatagory() {
+
         $.ajax({
             type: "post"
             , url: "/subcatagoryadd"
@@ -247,9 +226,12 @@
             }
             , data: {
                 name: document.getElementById("scname").value
+                , maincategory: document.getElementById("Maincategoryname").value
                 , catagory: document.getElementById("sccatagory").value
             , }
             , success: function(res) {
+                console.log(res['url']);
+                window.location.href = res['url'];
                 $(".closemodel").prev().trigger('click');
                 show_catagory();
             }
@@ -277,29 +259,29 @@
         $("#esccatagory").attr("hidden", true);
     }
 
-    // add catagory
-    function addcatagory() {
+    // // add catagory
+    // function addcatagory() {
 
-        $.ajax({
-            type: "post"
-            , url: "/catagoryadd"
-            , headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-            , data: {
-                name: document.getElementById("cname").value
-            }
-            , success: function(res) {
-                $(".closemodel").prev().trigger('click');
-                show_catagory();
-            }
-            , error: function(e) {
-                if (e["responseJSON"]["errors"]["name"]["0"]) {
-                    $("#ecname").text(e["responseJSON"]["errors"]["name"]["0"]).removeAttr("hidden");
-                }
-            }
-        })
-    }
+    //     $.ajax({
+    //         type: "post"
+    //         , url: "/catagoryadd"
+    //         , headers: {
+    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //         }
+    //         , data: {
+    //             name: document.getElementById("cname").value
+    //         }
+    //         , success: function(res) {
+    //             $(".closemodel").prev().trigger('click');
+    //             show_catagory();
+    //         }
+    //         , error: function(e) {
+    //             if (e["responseJSON"]["errors"]["name"]["0"]) {
+    //                 $("#ecname").text(e["responseJSON"]["errors"]["name"]["0"]).removeAttr("hidden");
+    //             }
+    //         }
+    //     })
+    // }
 
     $("#addcatagory").on("click", function() {
         document.getElementById("cname").value = "";

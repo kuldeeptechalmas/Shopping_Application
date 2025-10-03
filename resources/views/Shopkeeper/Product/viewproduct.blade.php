@@ -1,6 +1,7 @@
 @extends('Shopkeeper.index')
 
 @section('content')
+
 @toastifyCss
 @if ($product_data->admin_id != 0)
 {{ toastify() -> warning('Admin Update Product Details !') }}
@@ -32,7 +33,7 @@
 
     <div class="d-flex flex-row align-items-center mb-4">
         <div data-mdb-input-init class="form-outline flex-fill mb-0">
-            <label class="form-label" for="form3Example1c">Sub-Catagory</label>
+            <label class="form-label" for="form3Example1c">Sub-Catagory ({{ $product_data->category->category_name }})</label>
             <select class="form-select" id="vpcatagory" name="catagory">
                 <option value="">Select</option>
                 @if (isset($subcatagory))
@@ -114,17 +115,14 @@
         <label for="exampleInputPassword1" class="form-label">Dicsount</label>
         <input type="text" class="form-control" value="{{ old('discount', $product_data->discount ?? '') }}" id="discount" value="{{$product_data->discount}}" name="discount">
     </div>
-    @error('discount')
 
-    <div style="color:red;">{{$message}}</div>
-    @enderror
     <div class="modal-footer">
         <div style="padding-right: 20px">
             <a href="/shopkeeperdashboard">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
             </a>
         </div>
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-primary">Save Change</button>
     </div>
 </form>
 @endsection
@@ -151,6 +149,21 @@
                 document.getElementById('vpstatus').value = "";
             }
         }
+    }
+
+    // status change 
+    // done
+    function statuscheck_viewproduct() {
+        if (document.getElementById('vpstock').value == "0") {
+            document.getElementById('vpstatus').value = "out of stock";
+        } else {
+            if (document.getElementById('vpstock').value > 0) {
+                document.getElementById('vpstatus').value = "in stock";
+            } else {
+                document.getElementById('vpstatus').value = "";
+            }
+        }
+
     }
 
 </script>

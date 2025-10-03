@@ -8,9 +8,12 @@
     <div class="d-flex flex-row align-items-center mb-4">
         <div data-mdb-input-init class="form-outline flex-fill mb-0">
             <label class="form-label" for="form3Example1c">Your Name</label>
-            <input type="text" value="{{$admin_profile->name}}" name='name' class="form-control" />
+            <input type="text" value="{{old('name',$admin_profile->name)}}" name='name' class="form-control" />
 
-            <div style="color:red;" hidden id="ename"></div>
+            @error('name')
+
+            <div style="color:red;" id="ename">{{ $message }}</div>
+            @enderror
 
         </div>
     </div>
@@ -20,33 +23,42 @@
     <div class="d-flex flex-row align-items-center mb-4">
         <div data-mdb-input-init class="form-outline flex-fill mb-0">
             <label class="form-label" for="form3Example3c">Your Email</label>
-            <input type="text" readonly value="{{$admin_profile->email}}" name="email" class="form-control" />
-            <div style="color:red;" hidden id="eemail"></div>
+            <input type="text" value="{{old('email',$admin_profile->email)}}" name="email" class="form-control" />
+            @error('email')
+
+            <div style="color:red;" id="ename">{{ $message }}</div>
+            @enderror
         </div>
     </div>
 
     <div class="d-flex flex-row align-items-center mb-4">
         <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
             <label class="form-label" for="form3Example4c">Password</label>
-            <input type="password" name="password" id="password" value="{{$admin_profile->password}}" class="form-control" />
+            <input type="password" name="password" id="password" value="{{old('password',$admin_profile->password)}}" class="form-control" />
             <i class="fa-solid fa-eye" id="passwordshow" style="position:absolute;top: 62%;right: 5%;" onclick="passwordshow()"></i>
             <i class="fa-solid fa-eye-slash" hidden id="passwordhidden" style="position:absolute;top: 62%;right: 5%;" onclick="passwordhidden()"></i>
         </div>
     </div>
 
-    <div style="color:red;" hidden id="epassword"></div>
+    @error('password')
+
+    <div style="color:red;" id="ename">{{ $message }}</div>
+    @enderror
 
     <div class="d-flex flex-row align-items-center mb-4">
         <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
             <label class="form-label" for="form3Example4cd">Repeat your
                 password</label>
-            <input type="password" name="conformpassword" id="conpassword" value="{{$admin_profile->password}}" class="form-control" />
+            <input type="password" name="conformpassword" id="conpassword" value="{{old('conformpassword',$admin_profile->password)}}" class="form-control" />
             <i class="fa-solid fa-eye" id="conformpasswordshow" style="position:absolute;top: 62%;right: 5%;" onclick="conformpasswordshow()"></i>
             <i class="fa-solid fa-eye-slash" hidden id="conformpasswordhidden" style="position:absolute;top: 62%;right: 5%;" onclick="conformpasswordhidden()"></i>
         </div>
     </div>
 
-    <div style="color:red;" hidden id="econfpassword"></div>
+    @error('conformpassword')
+
+    <div style="color:red;" id="ename">{{ $message }}</div>
+    @enderror
 
     <div class="modal-footer" style="padding: 10px 20px 29px;">
         <a href="{{ route('admindashboard') }}">

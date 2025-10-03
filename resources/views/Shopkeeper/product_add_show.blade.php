@@ -19,9 +19,48 @@
 
 
 <a href="/AddProductPage/{{ $catagoryid }}" type="button" class="btn btn-primary" style="margin-left: 86%;">Add Product</a>
-<div id="producttable">
 
+@if (isset($dataProduct))
+<div class="row">
+    @foreach ($dataProduct as $item)
+    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 card" style="width: 18rem; margin: 10px;">
+        <a href="/productdetails/{{$item->id}}">
+            <div style="height: 300px; width: 100%;">
+                <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->image) }}" alt="Image">
+            </div>
+        </a>
+        <div class="card-body">
+            <p class="card-text">{{$item->name}}</p>
+            <p class="card-text" style="width: 100%;text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
+                {{$item->description}}
+            </p>
+        </div>
+
+        <div class="d-flex justify-content-between ps-3 pe-3" style="margin-bottom: 15px;">
+            <a href="/productview/{{ $item->id }}">
+                <button type="button" class="btn btn-primary">
+                    Edit
+                </button>
+            </a>
+
+            <button type="button" class="btn btn-danger text-white" style="" onclick="deleteproductdata('{{$item->id}}','{{$item->name}}')" data-bs-toggle="modal" data-bs-target="#productdeletemodel">
+                Delete
+            </button>
+        </div>
+    </div>
+    @endforeach
 </div>
+<div class="paginationDiv" style="margin-right: 73%;">
+    {{ $dataProduct->links('pagination::bootstrap-5') }}
+</div>
+
+@else
+<h1 style="display: flex;justify-content: center;margin-top: 57px;color:red">NOT FOUND PRODUCT</h1>
+@endif
+
+{{-- @if (!isset($dataProduct))
+<h1>NOT FOUND PRODUCT</h1>
+@endif --}}
 
 @endsection
 

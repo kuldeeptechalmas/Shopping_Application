@@ -33,7 +33,7 @@ class AdminController extends Controller
             // Search Data
             if ($request->action == "searchDataAdmin") {
                 $customerandshopkeeper = CustomerAndShopkeeper::where("name", "like", "%" . $request->searchData . "%")->paginate(15);
-                return view("Admin.Page.User.usershow", ["data" => $customerandshopkeeper]);
+                return view("Admin.Page.User.usershow", ["data" => $customerandshopkeeper, "searchData" => $request->searchData]);
             }
 
             // Edit customer and shopkeeper data get
@@ -99,7 +99,7 @@ class AdminController extends Controller
                         $content = File::get(public_path('countries.json'));
                         $contryList = json_decode($content, true);
 
-                        return view("Admin.Page.User.useredit", ["usereditdata" => $userEdit, "country" => $contryList, "validator" => $validator]);
+                        return view("Admin.Page.User.useredit", ["usereditdata" => $userEdit, "country" => $contryList, "validator" => $validator, "oldUserData" => $request->all()]);
                     }
                 }
 
@@ -129,7 +129,7 @@ class AdminController extends Controller
             // Search Data
             if ($request->action == "searchDataAdmin") {
                 $productData = Product::where("name", "like", "%" . $request->searchData . "%")->paginate(15);
-                return view("Admin.Page.Product.productshow", ["data" => $productData]);
+                return view("Admin.Page.Product.productshow", ["data" => $productData, "searchData" => $request->searchData]);
             }
 
             // Remove porduct
@@ -238,7 +238,7 @@ class AdminController extends Controller
                     $query->where('name', "like", "%" . $search . "%");
                 })->orWhere("name", "like", "%" . $request->searchData . "%")->paginate(15);
 
-                return view("Admin.Page.Order.ordershow", ["order" => $orderData]);
+                return view("Admin.Page.Order.ordershow", ["order" => $orderData, "searchData" => $request->searchData]);
             }
 
             // Display order detail
@@ -289,7 +289,7 @@ class AdminController extends Controller
         if ($request->isMethod("post")) {
             if ($request->action == "editOrderData") {
 
-                $request->validate([
+                $validator = Validator::make($request->all(), [
                     "name" => "required",
                     "conformpassword" => [
                         "required",
@@ -305,7 +305,23 @@ class AdminController extends Controller
                         'email',
                         Rule::unique('CustomerAndShopkeeper', 'email')->ignore($request->id),
                     ]
+                ], [
+                    "name.required" => "Enter Admin Name is Required.",
+                    "conformpassword.required" => "Enter ConfPassword is Required.",
+                    "conformpassword.min" => "Enter Min 8 Charecter is Required.",
+                    "conformpassword.symbols" => "Enter Symbols is Required.",
+                    "conformpassword.numbers" => "Enter Numbers is Required.",
+                    "password.required" => "Enter Password is Required.",
+                    "password.min" => "Enter Min 8 Charecter is Required.",
+                    "password.symbols" => "Enter Symbols is Required.",
+                    "password.numbers" => "Enter Numbers is Required.",
+                    "email.required" => "Enter Admin Email is Required.",
+                    "email.email" => "Enter Only Email is Required.",
                 ]);
+
+                if ($validator->fails()) {
+                    return redirect()->back()->withErrors($validator)->withInput();
+                }
 
                 $Admin = Admin::find($request->id);
 

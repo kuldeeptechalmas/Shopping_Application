@@ -120,9 +120,11 @@
                 </ul>
                 <div class="d-flex justify-content-end">
                     <div class="pe-5">
-                        <form class="d-flex">
-                            <input class="form-control me-2" id="searchproductid" type="search" placeholder="Search" aria-label="Search">
-                            <button class="btn btn-outline-success" onclick="searchproduct()" type="button">Search</button>
+                        <form class="d-flex" method="POST">
+                            @csrf
+                            <input class="form-control me-2" name="searchText" id="searchproductid" value="{{ isset($searchText)?$searchText:'' }}" type="search" placeholder="Search" aria-label="Search">
+                            <input type="text" name="catagoryid" value="{{isset($catagoryid) ? $catagoryid : ''}}" hidden id="">
+                            <button class="btn btn-outline-success" type="submit">Search</button>
                         </form>
                     </div>
                 </div>
@@ -135,7 +137,7 @@
 
 
                                 <div style="padding: 10px; border-bottom: 1px solid #555;">
-                                    <a style="text-decoration: none;  color: #000;" href="/shopkeeperprofile/{{session('shopkeeperemail')}}">
+                                    <a style="text-decoration: none;  color: #000;" href="/shopkeeperprofile">
                                         Profile
                                     </a>
                                 </div>
@@ -176,13 +178,15 @@
                 <li class="nav-item">
 
                     <a class="nav-link" id="showProductdiv">
-                        <i class="nav-icon cil-speedometer"></i> Products
+                        <i class="nav-icon cil-speedometer"></i>
+                        <p>Products</p>
                         <i class="fa-solid fa-chevron-down" id="showProduct" style="margin-left: 41%;"></i>
                         <i class="fa-solid fa-chevron-up" id="hideProduct" style="margin-left: 41%;" hidden></i>
                     </a>
                     <div id="product1" hidden>
                         @if (isset($catagory))
                         @foreach ($catagory as $item)
+
                         <a href="/productaddshop/{{$item->category_name}}" class="nav-link" style="margin-left: 40px;">
                             <i class="nav-icon cil-speedometer"></i>
                             {{$item->category_name}}
@@ -208,99 +212,45 @@
                     @yield('content')
 
                     @if (isset($showallrecord))
-                    <div id="producttable">
 
-                    </div>
-                    @endif
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!--Add Product Modal -->
-    <div class="modal fade" id="addproductmodel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add Product</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" style="margin-right: 10%;margin-left: 9%;">
-                    <form id="product-from" enctype="multipart/form-data">
-                        @csrf
-                        <input type="text" name="id" id="id" hidden>
-                        @if (isset($catagoryid))
-                        <input type="text" name="catagoryid" value="{{$catagoryid}}" hidden>
-                        @endif
-                        <div class="mb-3">
-                            <label for="exampleInputEmail1" class="form-label">Name </label>
-                            <input type="text" class="form-control" id="pname" name="name" aria-describedby="emailHelp">
-                        </div>
-                        <div style="color:red;" id="epname" hidden></div>
+                    @if (isset($data))
+                    <div class="row">
+                        @foreach ($data as $item)
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 card" style="width: 18rem; margin: 10px;">
+                            <a href="/productdetails/{{$item->id}}">
+                                <div style="height: 300px; width: 100%;">
+                                    <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->image) }}" alt="Image">
+                                </div>
+                            </a>
+                            <div class="card-body">
+                                <p class="card-text">{{$item->name}}</p>
+                                <p class="card-text" style="width: 100%;text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
+                                    {{$item->description}}
+                                </p>
+                            </div>
 
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Description</label>
-                            {{-- <textarea type="text" style="resize: none;" rows="5" class="form-control"
-                                id="vpdescription" name="description">{{$product_data->description}}</textarea> --}}
-                            <textarea type="text" class="form-control" id="pdescription" style="resize: none;" rows="5" name="description"></textarea>
-                        </div>
-                        <div style="color:red;" id="epdescription" hidden></div>
+                            <div class="d-flex justify-content-between ps-3 pe-3" style="margin-bottom: 15px;">
+                                <a href="/productview/{{ $item->id }}">
+                                    <button type="button" class="btn btn-primary">
+                                        Edit
+                                    </button>
+                                </a>
 
-                        <div class="d-flex flex-row align-items-center mb-4">
-                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                <label class="form-label" for="form3Example1c">Sub-Catagory</label>
-                                <select class="form-select" id="pcatagory" name="catagory">
-                                    <option value="">Select</option>
-                                    @if (isset($subcatagory))
-                                    @foreach ($subcatagory as $item)
-                                    <option value="{{$item->id}}">{{$item->name}}</option>
-                                    @endforeach
-                                    @endif
-                                </select>
-                                <div style="color:red;" hidden id="epcatagory"></div>
+                                <button type="button" class="btn btn-danger text-white" style="" onclick="deleteproductdata('{{$item->id}}','{{$item->name}}')" data-bs-toggle="modal" data-bs-target="#productdeletemodel">
+                                    Delete
+                                </button>
                             </div>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Price</label>
-                            <input type="text" class="form-control" id="pprice" name="price">
-                        </div>
-                        <div style="color:red;" id="epprice" hidden></div>
-
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Stock</label>
-                            <input type="text" class="form-control" oninput="statuscheck_viewproduct()" id="pstock" name="stock">
-                        </div>
-                        <div style="color:red;" id="epstock" hidden></div>
-
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Image</label>
-                            <input type="file" class="form-control" multiple id="pimage" name="image[]">
-                        </div>
-                        <div style="color:red;" id="epimage" hidden></div>
-
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Status</label>
-                            <select class="form-select" id="pstatus" name="status">
-                                <option value="">Select</option>
-                                <option value="in stock">in stock</option>
-                                <option value="out of stock">out of stock</option>
-                            </select>
-                            {{-- <input type="text" class="form-control" id="status" name="status"> --}}
-                        </div>
-                        <div style="color:red;" id="epstatus" hidden></div>
-
-                        <div class="mb-3">
-                            <label for="exampleInputPassword1" class="form-label">Dicsount</label>
-                            <input type="text" class="form-control" id="discount" name="discount">
-                        </div>
-                        <div style="color:red;" id="epdiscount" hidden></div>
-
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="addproduct()">save</button>
+                        @endforeach
+                    </div>
+                    <div class="paginationDiv" style="margin-right: 73%;">
+                        {{ $data->links('pagination::bootstrap-5') }}
+                    </div>
+                    @else
+                    <h1 style="color:red;display: flex;justify-content: center;margin-top: 267px;">NOT FOUND PRODUCT</h1>
+                    @endif
+                    @endif
                 </div>
             </div>
         </div>
@@ -339,65 +289,13 @@
         $(document).on('click', '.pagination a', function(e) {
             e.preventDefault();
             var page = $(this).attr('href');
-            const tables = page.split("?")[0];
-            const tablename = tables.split('/')[3];
-            const search = document.getElementById("searchproductid").value;
+            console.log(page);
+            window.location.href = page;
 
-            $.ajax({
-                url: page
-                , type: 'GET'
-                , data: {
-                    searchText: search
-                    , catagoryid: "{{isset($catagoryid) ? $catagoryid : ''}}"
-                }
-                , success: function(res) {
-                    $("#producttable").html(res);
-                }
-                , error: function(e) {
-                    console.log(e);
-                }
-            , });
         });
 
-        // searching
-        function searchproduct() {
-            const data = document.getElementById("searchproductid").value;
-            $.ajax({
-                type: "get"
-                , url: '/searchproduct'
-                , data: {
-                    searchText: data
-                    , catagoryid: "{{isset($catagoryid) ? $catagoryid : ''}}",
-
-                }
-                , headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-                , success: function(res) {
-
-                    $("#producttable").html(res);
-                }
-                , error: function(e) {
-
-                }
-            , });
-        }
-
-        $("#showProductdiv").on("click", function() {
-            $("#product1").removeAttr("hidden");
-            $("#hideProduct").removeAttr("hidden");
-            $("#showProduct").attr("hidden", true);
-
-        })
-        $("#hideProduct").on("click", function() {
-            console.log("hide");
-
-            // $("#product1").attr("hidden", true);
-            $("#showProduct").removeAttr("hidden");
-            $("#hideProduct").attr("hidden", true);
-        })
-
         // delete product
+        // done
         function deleteproductdata(id, name) {
             document.getElementById("deletenameproduct").textContent = name;
             document.getElementById("deleteid").textContent = id;
@@ -450,7 +348,37 @@
             document.getElementById('conpassword').type = 'password';
 
         }
+
+        $("#showProductdiv").on("click", function() {
+            if (localStorage.getItem('categoryShowStore') == 'Show') {
+                localStorage.clear();
+
+                $("#product1").attr("hidden", true);
+                $("#hideProduct").attr("hidden", true);
+                $("#showProduct").removeAttr("hidden");
+            } else {
+
+                localStorage.setItem('categoryShowStore', 'Show');
+
+                $("#product1").removeAttr("hidden");
+                $("#hideProduct").removeAttr("hidden");
+                $("#showProduct").attr("hidden", true);
+            }
+
+        })
+
         $(document).ready(function() {
+
+            // show categoryShowStore
+            if (localStorage.getItem('categoryShowStore') == 'Show') {
+
+                console.log(localStorage.getItem('categoryShowStore'));
+                $("#product1").removeAttr("hidden");
+                $("#hideProduct").removeAttr("hidden");
+                $("#showProduct").attr("hidden", true);
+            }
+
+
             $("#file-input").on("change", function() {
                 var files = $(this)[0].files;
                 $("#preview-container").empty();
@@ -489,27 +417,6 @@
             });
 
         })();
-
-        $(document).ready(function() {
-            showproduct();
-        });
-
-        function showproduct() {
-
-            $.ajax({
-                type: "GET"
-                , url: "/getproductshopkeeper"
-                , data: {
-                    catagoryid: "{{isset($catagoryid) ? $catagoryid : ''}}"
-                }
-                , success: function(res) {
-                    $("#producttable").html(res);
-                }
-                , error: function(e) {
-                    console.log(e);
-                }
-            , })
-        }
 
     </script>
 </body>

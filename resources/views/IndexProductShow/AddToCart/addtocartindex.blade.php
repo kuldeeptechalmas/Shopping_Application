@@ -60,7 +60,7 @@
                             </div>
 
                             @if ($item->quantity==$item->product->stock)
-                            <div style="color: red;margin-top: 17px;">Out Of Stock</div>
+                            <div style="color: red;margin-top: 17px;">Now Limited Stock <br>Other Stock Come Then Notify</div>
                             @endif
 
                             <div class="d-flex justify-content-end">
@@ -133,12 +133,13 @@
                         @if ($cd->product_id == $item->product->id)
                         <?php                    $discountofvalues = $discountofvalues + $cd->coupon->value; ?>
                         @endif
+
                         @endforeach
 
                         <?php            $count+=$item->quantity;
                                         $amount = $amount + (round($item->product->price - ($item->product->price * $item->product->discount / 100)) * $item->quantity);
                                         $discount = $discount + (round($item->product->price * $item->product->discount / 100));
-                                                                                                                                                                                                                                                                        ?>
+                                         $discount*= $item->quantity;                                                                                                                                                                                                                          ?>
                         @endforeach
 
                         <div class="col-8">

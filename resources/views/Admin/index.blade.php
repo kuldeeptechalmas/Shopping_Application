@@ -97,7 +97,7 @@
                     <form class="d-flex" method="post">
                         @csrf
                         <input type="text" name="action" hidden value="searchDataAdmin" id="">
-                        <input class="form-control me-2" name="searchData" value="{{ old('searchData') }}" id="searchproductid" type="search" placeholder="Search" aria-label="Search">
+                        <input class="form-control me-2" name="searchData" value="{{ isset($searchData)?$searchData:'' }}" id="searchproductid" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
                 </div>

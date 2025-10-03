@@ -5,8 +5,8 @@
 <form id="view-product-from" action="{{ route('product_add_update') }}" method="POST" enctype="multipart/form-data" style="padding: 20px 160px;">
     @csrf
 
-    @if (isset($catagoryid))
-    <input type="text" name="catagoryid" value="{{$catagoryid}}" hidden>
+    @if (isset($catagoryiddata))
+    <input type="text" name="catagoryid" value="{{$catagoryiddata->id}}" hidden>
     @endif
     <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Name </label>
@@ -28,7 +28,7 @@
 
     <div class="d-flex flex-row align-items-center mb-4">
         <div data-mdb-input-init class="form-outline flex-fill mb-0">
-            <label class="form-label" for="form3Example1c">Sub-Catagory</label>
+            <label class="form-label" for="form3Example1c">Sub-Catagory ({{ $catagoryiddata->category_name }})</label>
             <select class="form-select" id="vpcatagory" name="catagory">
                 <option value="">Select</option>
                 @if (isset($subcatagory))
@@ -73,7 +73,11 @@
             </label>
         </div>
     </div>
-    @error('image')
+    @error('file.0')
+
+    <div style="color:red;">{{$message}}</div>
+    @enderror
+    @error('file')
 
     <div style="color:red;">{{$message}}</div>
     @enderror
@@ -106,24 +110,17 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
             </a>
         </div>
-        <button type="submit" class="btn btn-primary">Edit</button>
+        <button type="submit" class="btn btn-primary">Save</button>
     </div>
 </form>
 @endsection
 
 @push("shopkeeper_script")
-<script>
-    function statuscheck_viewproduct() {
-        if (document.getElementById('pstock').value == "0") {
-            document.getElementById('pstatus').value = "out of stock";
-        } else {
-            if (document.getElementById('pstock').value > 0) {
-                document.getElementById('pstatus').value = "in stock";
-            } else {
-                document.getElementById('pstatus').value = "";
-            }
-        }
 
+<script>
+    // status change 
+    // done
+    function statuscheck_viewproduct() {
         if (document.getElementById('vpstock').value == "0") {
             document.getElementById('vpstatus').value = "out of stock";
         } else {
@@ -133,7 +130,13 @@
                 document.getElementById('vpstatus').value = "";
             }
         }
+
     }
+    $("#pstatus").on("change", function() {
+        if (document.getElementById('pstatus').value == "out of stock") {
+            document.getElementById('pstock').value = 0;
+        }
+    });
 
 </script>
 @endpush

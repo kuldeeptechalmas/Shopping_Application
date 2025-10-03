@@ -19,6 +19,8 @@ class Product_Controller extends Controller
     public function product_add_and_update(Request $request)
     {
 
+        // dd($request->all());
+
         $validator = Validator::make(
             $request->all(),
             [
@@ -27,9 +29,9 @@ class Product_Controller extends Controller
                 "price" => "required|numeric|gt:0",
                 "stock" => "required|numeric|gt:-1",
                 "status" => "required",
-                "image.*" => "required|image|mimes:png,jpg|max:2048",
+                "file" => "required",
+                "file.*" => "image|mimes:png,jpg|max:2048",
                 "catagory" => "required",
-                "discount" => "required",
             ],
             [
                 "name.required" => "Enter Name Are Required.",
@@ -41,14 +43,30 @@ class Product_Controller extends Controller
                 "stock.numeric" => "Enter Stock Is Numeric Required.",
                 "stock.gt" => "Enter Stock Is Greater Then -1 Required.",
                 "status.required" => "Enter Status Are Required.",
-                "image.required" => "Enter Image Are Required.",
-                "image.image" => "Enter Only Image Are Required.",
-                "image.mimes" => "Enter PNG Or JPG Image Are Required.",
-                "image.max" => "Enter Less then 2 Mb Image Are Required.",
+                'file.required' => 'Please upload an image.',
+                'file.*.image' => 'The uploaded file must be an image.',
+                'file.*.mimes' => 'Only JPEG, PNG, JPG images are allowed.',
+                'file.*.max' => 'Each image must not exceed 2MB in size.',
                 "catagory.required" => "Enter Catagory Are Required.",
-                "discount.required" => "Enter Discount Are Required.",
             ]
         );
+
+        if ($request->discount) {
+            $validator02 = Validator::make(
+                $request->all(),
+                [
+                    "discount" => "numeric",
+                ],
+                [
+                    "discount.numeric" => "Enter Discount Is Numeric Required."
+                ]
+            );
+            if ($validator02->fails()) {
+                return redirect()->back()
+                    ->withErrors($validator02)
+                    ->withInput();
+            }
+        }
 
         if ($validator->fails()) {
             return redirect()->back()
@@ -61,6 +79,11 @@ class Product_Controller extends Controller
 
             $admin = Admin::where("name", $request->adminid)->first();
 
+            $discountVar = 0;
+            if (!$request->discount == '') {
+                $discountVar = $request->discount;
+            }
+
             $product->update([
                 "name" => $request->name,
                 "description" => $request->description,
@@ -68,7 +91,7 @@ class Product_Controller extends Controller
                 "stock" => $request->stock,
                 "status" => $request->status,
                 "sub_category_id" => $request->catagory,
-                "discount" => $request->discount,
+                "discount" => $discountVar,
             ]);
 
             if ($admin) {
@@ -85,6 +108,11 @@ class Product_Controller extends Controller
                 }
             }
         } else {
+            $discountVar = 0;
+            if (!$request->discount == '') {
+                $discountVar = $request->discount;
+            }
+
             $user = CustomerAndShopkeeper::where("email", Session::get("shopkeeperemail"))->first();
 
             $product = new Product();
@@ -96,7 +124,7 @@ class Product_Controller extends Controller
             $product->price = $request->price;
             $product->stock = $request->stock;
             $product->status = $request->status;
-            $product->discount = $request->discount;
+            $product->discount = $discountVar;
             $product->admin_id = 0;
             $product->image = $request->file("file")[0]->getClientOriginalName();
             $product->save();
@@ -129,13 +157,14 @@ class Product_Controller extends Controller
 
     public function admin_product_remove(Request $request)
     {
-        dd($request->all());
+
         $db = Product::find($request->deleteid)->first();
         if ($db) {
             $db->delete();
         } else {
             return response()->withCookie(["erroradmin" => "Not Found Data"]);
         }
+
         return redirect()->back();
     }
 
@@ -183,15 +212,40 @@ class Product_Controller extends Controller
     public function product_add_show(Request $request, $catagory)
     {
         $catagorydata = CategoryProduct::all();
-        Session::put("categoryname", $catagory);
+        if ($request->isMethod("post")) {
+            // Search Product
+            $user = CustomerAndShopkeeper::where("email", Session::get("shopkeeperemail"))->first();
+
+            if (isset($request->catagoryid)) {
+
+                $data1 = Product::where("user_id", $user->id)->where("category_id", $request->catagoryid)->where("name", "like", "%" . $request->searchText . "%")->paginate(15);
+                // dd($data1);
+                if ($data1->count() == 0) {
+                    return view("Shopkeeper.product_add_show", ["catagory" => $catagorydata, "searchText" => $request->searchText, "catagoryid" => $request->catagoryid]);
+                } else {
+                    return view("Shopkeeper.product_add_show", ["catagory" => $catagorydata, "searchText" => $request->searchText, "catagoryid" => $request->catagoryid, "dataProduct" => $data1, "showallrecord" => "yes"]);
+                }
+            } else {
+
+
+                $data = Product::where("name", "like", "%" . $request->searchText . "%")->paginate(15);
+                if ($data->count() == 0) {
+                    return view("Shopkeeper.index", ["catagory" => $catagorydata, "searchText" => $request->searchText]);
+                } else {
+                    return view("Shopkeeper.index", ["catagory" => $catagorydata, "searchText" => $request->searchText, "dataProduct" => $data, "showallrecord" => "yes"]);
+                }
+            }
+        }
+
         $data = CategoryProduct::where("category_name", $catagory)->first();
-        $subcatagorydata = SubCatagory::where("catagroy_id", $data->id)->get();
+        $user = CustomerAndShopkeeper::where("email", Session::get("shopkeeperemail"))->first();
+        $data1 = Product::where("user_id", $user->id)->where('category_id', $data->id)->paginate(15);
         return view(
             "Shopkeeper.product_add_show",
             [
-                "subcatagory" => $subcatagorydata,
                 "catagory" => $catagorydata,
-                "catagoryid" => $data->id
+                "catagoryid" => $data->id,
+                "dataProduct" => $data1
             ]
         );
     }
@@ -211,10 +265,16 @@ class Product_Controller extends Controller
 
     public function product_view($productid, Request $request)
     {
-        $data = CategoryProduct::where("category_name", Session::get("categoryname"))->first();
-
-        $subcatagorydata = SubCatagory::where("catagroy_id", $data->id)->get();
+        $catagoryid = 0;
         $productdata = Product::where("id", $productid)->first();
+        $data = CategoryProduct::where("category_name", $productdata->category->category_name)->first();
+
+        if (!$data) {
+            $catagoryid = 1;
+        } else {
+            $catagoryid = $data->id;
+        }
+        $subcatagorydata = SubCatagory::where("catagroy_id", $catagoryid)->get();
 
         return view("Shopkeeper.Product.viewproduct", [
             "product_data" => $productdata,
@@ -235,7 +295,7 @@ class Product_Controller extends Controller
             [
                 "subcatagory" => $subcatagorydata,
                 "catagory" => $catagorydata,
-                "catagoryid" => $data->id
+                "catagoryiddata" => $data
             ]
         );
     }

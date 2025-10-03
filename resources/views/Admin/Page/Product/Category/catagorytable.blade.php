@@ -21,9 +21,7 @@
                 @endif
                 @endforeach
             </th>
-            <th scope="col"><button type="button" onclick="viewcatagory('{{$item->category_name}}','{{$item->id}}')" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewcatagory">
-                    View
-                </button>
+            <th scope="col">
                 <button type="button" class="btn btn-danger" onclick="deletecatagory('{{$item->id}}','{{$item->category_name}}')" data-bs-toggle="modal" data-bs-target="#deletecatagory">
                     Delete
                 </button>

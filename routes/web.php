@@ -25,7 +25,7 @@ Route::middleware("adminCheck")->group(function () {
     Route::get('/Logout', [AdminController::class, 'Admin_Logout'])->name("admin.Logout");
 
     // Catagory
-    Route::get('/catagorypage', [CatagoryController::class, 'index']);
+    Route::get('/catagorypage', [CatagoryController::class, 'index'])->name("Category.Page");
     Route::get('/catagoryget', [CatagoryController::class, 'catagory_show']);
     Route::post('/catagoryadd', [CatagoryController::class, 'catagory_add']);
     Route::get('/catagoryupdate', [CatagoryController::class, 'catagory_update']);
@@ -85,7 +85,7 @@ Route::get("/welcome", function () {
 // Shopkeeper New Route
 Route::middleware("shopkeeperCheck")->group(function () {
 
-    Route::get('/shopkeeperdashboard', [ShopkeeperController::class, 'dashboard'])->name('shopkeeperdashboard');
+    Route::match(['get', 'post'], '/shopkeeperdashboard', [ShopkeeperController::class, 'dashboard'])->name('shopkeeperdashboard');
     Route::get('/shopkeeperuser', [ShopkeeperController::class, "profileuser"]);
     Route::match(["post", "get"], '/shopkeeperchangepassword/{shopkeeperid}', [ShopkeeperController::class, "shopkeeper_change_password"]);
     Route::get('/viewprofile/{email}', [ShopkeeperController::class, "view_profile"]);
@@ -94,7 +94,7 @@ Route::middleware("shopkeeperCheck")->group(function () {
     Route::get('/RemoveImage/{ImageId}', [ShopkeeperController::class, "Remove_Image_Product"]);
 });
 Route::post('/shopkeeperupdate', [ShopkeeperController::class, "updateuser"]);
-Route::get('/shopkeeperprofile/{shopkeeperid}', [ShopkeeperController::class, "shopkeeper_profile"]);
+Route::get('/shopkeeperprofile', [ShopkeeperController::class, "shopkeeper_profile"])->name("Shopkeeper.Profile");
 
 
 // Error
@@ -111,7 +111,7 @@ Route::post('/deleteproductadmin', [Product_Controller::class, 'admin_product_re
 Route::get('/deleteproduct', [Product_Controller::class, 'Product_Delete']);
 Route::get('/searchproduct', [Product_Controller::class, 'product_search']);
 Route::get('/getproductshopkeeper', [Product_Controller::class, 'product_list_get_shopkeeper']);
-Route::get('/productaddshop/{category_name}', [Product_Controller::class, 'product_add_show']);
+Route::match(['get', 'post'], '/productaddshop/{category_name}', [Product_Controller::class, 'product_add_show']);
 Route::get('/productdetails/{productid}', [Product_Controller::class, 'product_details']);
 Route::match(['get', 'post'], '/productview/{productid}', [Product_Controller::class, 'product_view']);
 Route::match(['get', 'post'], '/AddProductPage/{catagoryid}', [Product_Controller::class, 'Add_Product_Page']);

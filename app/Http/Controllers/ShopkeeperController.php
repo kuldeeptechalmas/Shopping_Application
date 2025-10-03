@@ -6,6 +6,7 @@ use App\Models\CategoryProduct;
 use App\Models\CustomerAndShopkeeper;
 use App\Models\CustomerOrder;
 use App\Models\Images;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
@@ -16,10 +17,45 @@ use Illuminate\Validation\Rules\Password;
 
 class ShopkeeperController extends Controller
 {
-    public function dashboard()
+    public function dashboard(Request $request)
     {
+
         $catagory = CategoryProduct::all();
-        return view("Shopkeeper.index", ["catagory" => $catagory, "showallrecord" => "yes"]);
+        if ($request->isMethod("post")) {
+
+            // Search Product
+            $user = CustomerAndShopkeeper::where("email", Session::get("shopkeeperemail"))->first();
+
+            if (isset($request->catagoryid)) {
+                $data1 = Product::where("user_id", $user->id)->where("category_id", $request->catagoryid)->where("name", "like", "%" . $request->searchText . "%")->paginate(15);
+                if ($data1->count() == 0) {
+                    return view("Shopkeeper.product_add_show", ["catagory" => $catagory, "searchText" => $request->searchText]);
+                } else {
+                    return view("Shopkeeper.product_add_show", ["catagory" => $catagory, "searchText" => $request->searchText, "catagoryid" => $request->catagoryid, "data" => $data1, "showallrecord" => "yes"]);
+                }
+            } else {
+
+                $data = Product::where("name", "like", "%" . $request->searchText . "%")->paginate(15);
+                if ($data->count() == 0) {
+                    return view("Shopkeeper.index", ["catagory" => $catagory, "showallrecord" => "yes", "searchText" => $request->searchText]);
+                } else {
+                    return view("Shopkeeper.index", ["catagory" => $catagory, "data" => $data, "showallrecord" => "yes", "searchText" => $request->searchText]);
+                }
+            }
+        }
+
+        // Product Detail
+        $user = CustomerAndShopkeeper::where("email", Session::get("shopkeeperemail"))->first();
+        if (isset($request->catagoryid)) {
+
+            $data1 = Product::where("user_id", $user->id)->where("category_id", $request->catagoryid)->paginate(15);
+            return view("Shopkeeper.index", ["data" => $data1]);
+        } else {
+
+            $data = Product::where("user_id", $user->id)->paginate(15);
+            return view("Shopkeeper.index", ["data" => $data, "catagory" => $catagory, "showallrecord" => "yes"]);
+        }
+        // return view("Shopkeeper.index", ["catagory" => $catagory, ]);
     }
     public function profileuser(Request $request)
     {
@@ -31,11 +67,6 @@ class ShopkeeperController extends Controller
     {
         $request->validate([
             "name" => "required",
-            'email' => [
-                'required',
-                'email',
-                Rule::unique('CustomerAndShopkeeper', 'email')->ignore($request->id),
-            ],
             "phone" => [
                 'required',
                 'numeric',
@@ -50,12 +81,11 @@ class ShopkeeperController extends Controller
             "gender" => "required",
         ]);
 
-        $customer = CustomerAndShopkeeper::where("email", $request->email)->first();
+        $customer = CustomerAndShopkeeper::where("email", Session::get("shopkeeperemail"))->first();
 
         $customer->update([
             "name" => $request->name,
             "address" => $request->address,
-            "email" => $request->email,
             "phone" => $request->phone,
             "city" => $request->city,
             "state" => $request->state,
@@ -68,18 +98,18 @@ class ShopkeeperController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'redirect_url' => route('shopkeeperdashboard')
+            'redirect_url' => route('Shopkeeper.Profile')
         ]);
     }
 
-    public function shopkeeper_profile($shopkeeper_email)
+    public function shopkeeper_profile()
     {
         // contry data
         $content = File::get(public_path('countries.json'));
         $contrylist = json_decode($content, true);
 
         // profile user
-        $shopkeeper_profile = CustomerAndShopkeeper::where("email", $shopkeeper_email)->first();
+        $shopkeeper_profile = CustomerAndShopkeeper::where("email", Session::get('shopkeeperemail'))->first();
         $shopkeeper_profile->password = Crypt::decryptString($shopkeeper_profile->password);
 
         // all catagory
