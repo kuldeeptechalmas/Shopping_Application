@@ -66,7 +66,7 @@
         </a>
 
         <input type="text" name="action" value="editOrderData" hidden>
-        <button type="submit" class="btn btn-primary">Save changes</button>
+        <button type="submit" class="btn btn-primary">Save chang</button>
     </div>
 </form>
 @endsection

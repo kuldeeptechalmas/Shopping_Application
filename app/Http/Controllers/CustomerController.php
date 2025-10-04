@@ -55,14 +55,14 @@ class CustomerController extends Controller
         return response()->json(["citylist" => $filtercity]);
     }
 
-    public function customer_profile($customer_email)
+    public function customer_profile()
     {
         // contry data
         $content = File::get(public_path('countries.json'));
         $contrylist = json_decode($content, true);
 
         // profile user
-        $customer_profile = CustomerAndShopkeeper::where("email", $customer_email)->first();
+        $customer_profile = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
         $customer_profile->password = Crypt::decryptString($customer_profile->password);
 
         return view("Customer.customerprofile", ["contrylist" => $contrylist, "customer_profile" => $customer_profile]);
@@ -118,5 +118,42 @@ class CustomerController extends Controller
 
         $data = CustomerAndShopkeeper::where("email", $email)->first();
         return view("Shopkeeper.Profile.viewuserprofile", ["data" => $data, "contrylist" => $contrylist]);
+    }
+
+    public function Customer_Update(Request $request)
+    {
+        $request->validate([
+            "name" => "required",
+            "phone" => [
+                'required',
+                'numeric',
+                "digits:10",
+                Rule::unique('CustomerAndShopkeeper', 'phone')->ignore($request->id),
+            ],
+            "address" => "required",
+            "city" => "required",
+            "state" => "required",
+            "country" => "required",
+            "pincode" => "required|numeric|digits:6",
+            "gender" => "required",
+        ]);
+
+        $customer = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+
+        $customer->update([
+            "name" => $request->name,
+            "address" => $request->address,
+            "phone" => $request->phone,
+            "city" => $request->city,
+            "state" => $request->state,
+            "country" => $request->country,
+            "pincode" => $request->pincode,
+            "gender" => $request->gender,
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'redirect_url' => route('Customer.Profile')
+        ]);
     }
 }

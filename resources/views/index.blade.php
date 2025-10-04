@@ -151,7 +151,7 @@
 
 
                                     <div style="padding: 10px; border-bottom: 1px solid #555;">
-                                        <a style="text-decoration: none;  color: #000;" href="/customerprofile/{{session('customeremail')}}">
+                                        <a style="text-decoration: none;  color: #000;" href="/CustomerProfile">
                                             Profile
                                         </a>
                                     </div>

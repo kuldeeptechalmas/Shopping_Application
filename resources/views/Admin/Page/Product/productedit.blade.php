@@ -5,32 +5,27 @@
     <h3 style="width: 225px;border: solid;border-radius: 27px;align-items: center;display: flex;justify-content: center;">
         Edit Product</h3>
 </div>
-<form id="view-product-from" style="padding: 10px 169px;" action="{{route('product.manage')}}" enctype="multipart/form-data" method="post">
+<form id="view-product-from" style="padding: 10px 169px;" action="/AdminInProductUpdate/{{ $productData->id }}" enctype="multipart/form-data" method="post">
     @csrf
-    @if (isset($oldProductData))
-    {{ $oldProductData }}
-    @endif
     <input type="text" name="id" value="{{$productData->id}}" id="vpid" hidden>
     <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Name </label>
-        <input type="text" class="form-control" value="{{ old('name', $productData->name ?? '') }}" id="vpname" name="name" aria-describedby="emailHelp">
+        <input type="text" class="form-control" value="{{ old('name', $productData->name) }}" id="vpname" name="name" aria-describedby="emailHelp">
     </div>
-    @if (isset($validator))
-    @if (isset($validator->errors()->messages()['name'][0]))
-    <div class="alert alert-danger">{{ $validator->errors()->messages()['name'][0] }}</div>
-    @endif
-    @endif
+
+    @error('name')
+
+    <div class="alert alert-danger">{{$message}}</div>
+    @enderror
 
     <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Description</label>
-        <textarea type="text" style="resize: none;" rows="5" class="form-control" id="vpdescription" name="description">{{$productData->description}}</textarea>
+        <textarea type="text" style="resize: none;" rows="5" class="form-control" id="vpdescription" name="description">{{old("description",$productData->description)}}</textarea>
     </div>
-    @if (isset($validator))
-    @if (isset($validator->errors()->messages()['description'][0]))
-    <div class="alert alert-danger">{{ $validator->errors()->messages()['description'][0] }}</div>
+    @error('description')
 
-    @endif
-    @endif
+    <div class="alert alert-danger">{{$message}}</div>
+    @enderror
 
     <div class="d-flex flex-row align-items-center mb-4">
         <div data-mdb-input-init class="form-outline flex-fill mb-0">
@@ -39,36 +34,30 @@
                 <option value="">Select</option>
                 <option value="{{$productData->sub_category_id}}" selected>{{$productData->sub_category_id}}</option>
             </select>
-            @if (isset($validator))
-            @if (isset($validator->errors()->messages()['catagory'][0]))
-            <div class="alert alert-danger">{{ $validator->errors()->messages()['catagory'][0] }}</div>
+            @error('catagory')
 
-            @endif
-            @endif
+            <div class="alert alert-danger">{{$message}}</div>
+            @enderror
         </div>
     </div>
 
     <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Price</label>
-        <input type="text" class="form-control" id="vpprice" value="{{$productData->price}}" name="price">
+        <input type="text" class="form-control" id="vpprice" value="{{old("price",$productData->price)}}" name="price">
     </div>
-    @if (isset($validator))
-    @if (isset($validator->errors()->messages()['price'][0]))
-    <div class="alert alert-danger">{{ $validator->errors()->messages()['price'][0] }}</div>
+    @error('price')
 
-    @endif
-    @endif
+    <div class="alert alert-danger">{{$message}}</div>
+    @enderror
 
     <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Stock</label>
-        <input type="text" class="form-control" id="vpstock" value="{{$productData->stock}}" oninput="statuscheck_viewproduct()" name="stock">
+        <input type="text" class="form-control" id="vpstock" value="{{old("stock",$productData->stock)}}" oninput="statuscheck_viewproduct()" name="stock">
     </div>
-    @if (isset($validator))
-    @if (isset($validator->errors()->messages()['stock'][0]))
-    <div class="alert alert-danger">{{ $validator->errors()->messages()['stock'][0] }}</div>
+    @error('stock')
 
-    @endif
-    @endif
+    <div class="alert alert-danger">{{$message}}</div>
+    @enderror
 
     <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Image</label>
@@ -86,7 +75,7 @@
 
                     <div class="col-md-3" style="margin: 17px;">
                         <img style="width: 100%; height: 100%; object-fit: cover;position: relative;" src="{{ asset('storage/UploadeFile/' . $item->image_name) }}" alt="Image">
-                        <a href="/RemoveImage/{{ $item->id }}" style="color: red;">
+                        <a href="/RemoveImage/{{ $item->id }}/{{ $productData->id }}" style="color: red;">
                             <i class="fa-solid fa-circle-xmark" style="position: absolute"></i>
                         </a>
                     </div>
@@ -98,52 +87,33 @@
         <div id="showimage" style="margin-top: 21px;"></div>
     </div>
 
-    {{-- <div id="showimage" style="margin-top: 21px;">
-        <div class="row">
-            @foreach ($product_data->images as $item)
-            <div class="col-md-3" style="margin: 17px;">
-                <img style="width: 100%; height: 100%; object-fit: cover;position: relative;" src="{{ asset('storage/UploadeFile/' . $item->image_name) }}" alt="Image">
-    <a href="/RemoveImage/{{ $item->id }}" style="color: red;">
-        <i class="fa-solid fa-circle-xmark" style="position: absolute"></i>
-    </a>
-    </div>
-    @endforeach
-    </div>
-    </div> --}}
+    @error('file.*')
 
-    @if (isset($validator))
-    @if (isset($validator->errors()->messages()['file'][0]))
-    <div class="alert alert-danger">{{ $validator->errors()->messages()['file'][0] }}</div>
-
-    @endif
-    @endif
+    <div class="alert alert-danger">{{$message}}</div>
+    @enderror
 
     <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Status</label>
         <select class="form-select" id="vpstatus" name="status">
             <option value="">Select</option>
-            <option value="in stock" {{$productData->status == 'in stock' ? 'selected' : ''}}>in stock</option>
-            <option value="out of stock" {{$productData->status == 'out of stock' ? 'selected' : ''}}>out of stock
+            <option value="in stock" {{old("status",$productData->status) == 'in stock' ? 'selected' : ''}}>in stock</option>
+            <option value="out of stock" {{old("status",$productData->status) == 'out of stock' ? 'selected' : ''}}>out of stock
             </option>
         </select>
     </div>
-    @if (isset($validator))
-    @if (isset($validator->errors()->messages()['status'][0]))
-    <div class="alert alert-danger">{{ $validator->errors()->messages()['status'][0] }}</div>
+    @error('status')
 
-    @endif
-    @endif
+    <div class="alert alert-danger">{{$message}}</div>
+    @enderror
 
     <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Discount</label>
-        <input type="text" class="form-control" id="vpstock" value="{{$productData->discount}}" name="discount">
+        <input type="text" class="form-control" id="vpstock" value="{{old("discount",$productData->discount)}}" name="discount">
     </div>
-    @if (isset($validator))
-    @if (isset($validator->errors()->messages()['stock'][0]))
-    <div class="alert alert-danger">{{ $validator->errors()->messages()['stock'][0] }}</div>
+    @error('discount')
 
-    @endif
-    @endif
+    <div class="alert alert-danger">{{$message}}</div>
+    @enderror
 
     <div class="modal-footer" style="padding: 10px 20px 29px;">
         <a href="{{ route("product.manage") }}">
@@ -152,7 +122,7 @@
 
         @csrf
         <input type="text" name="action" hidden value="edit">
-        <button type="submit" class="btn btn-primary">save change</button>
+        <button type="submit" class="btn btn-primary">save chang</button>
     </div>
 </form>
 @endsection

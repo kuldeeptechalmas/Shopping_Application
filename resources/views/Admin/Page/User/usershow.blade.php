@@ -29,24 +29,27 @@
                 <th scope="col">
                     <div class="row">
                         <div class="col-4">
-                            <form action="{{route('admindashboard')}}" method="post">
-                                @csrf
-                                <input type="text" name="action" hidden value="editGet">
-                                <input type="text" name="id" hidden value="{{$item->id}}">
-                                <button type="submit" class="btn btn-primary">
+                            <a href="/AdminInUserUpdate/{{ $item->id }}">
+                                <button type="button" class="btn btn-primary">
                                     Edit
                                 </button>
-                            </form>
+                            </a>
                         </div>
                         <div class="col-8">
-                            <form action="{{route('admindashboard')}}" method="post">
-                                @csrf
-                                <input type="text" name="action" hidden value="remove">
-                                <input type="text" name="id" hidden value="{{$item->id}}">
-                                <button type="submit" class="btn btn-danger">
-                                    Delete
-                                </button>
-                            </form>
+                            {{-- <button type="button" class="btn btn-danger text-white" style="" onclick="deleteproductdata('{{$item->id}}','{{$item->name}}')" data-bs-toggle="modal" data-bs-target="#productdeletemodel">
+                            Delete
+                            </button> --}}
+                            <button type="button" class="btn btn-danger" onclick="deleteuserdata('{{$item->id}}','{{$item->name}}')" data-bs-toggle="modal" data-bs-target="#AdminUserDeleteModal">
+                                Delete
+                            </button>
+                            {{-- <form action="{{route('admindashboard')}}" method="post">
+                            @csrf
+                            <input type="text" name="action" hidden value="remove">
+                            <input type="text" name="id" hidden value="{{$item->id}}">
+                            <button type="submit" class="btn btn-danger">
+                                Delete
+                            </button>
+                            </form> --}}
                         </div>
                     </div>
                 </th>
@@ -62,6 +65,32 @@
     <h1 style="color: red;display: flex;justify-content: center;align-items: center;margin-top: 172px;">Not Found User</h1>
     @endif
 
+    <!--User Delete Modal -->
+    <div class="modal fade" id="AdminUserDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Product Delete Modal</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{route('admindashboard')}}" method="post">
+                    @csrf
+                    <div class="modal-body">
+                        Are You Sore This Record Delete
+                        <label id="deletenameuser" style="font-weight: bold"></label>
+                        <input id="deleteuserid" name="id" name="id" hidden>
+                        <input type="text" name="action" hidden value="remove">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
     @endsection
 
     @push("script_content")
@@ -70,6 +99,11 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <script>
+        function deleteuserdata(id, name) {
+            document.getElementById("deletenameuser").textContent = name;
+            document.getElementById("deleteuserid").value = id;
+        }
+
         // Search data-bs-target
         function searchproduct() {
             console.log($("#searchproductid").val());

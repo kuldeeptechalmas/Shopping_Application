@@ -61,7 +61,7 @@
         </a>
 
         <input type="text" name="action" value="editOrder" hidden>
-        <button type="submit" class="btn btn-primary">Save changes</button>
+        <button type="submit" class="btn btn-primary">Save chang</button>
     </div>
 
     @if (isset($your_field))

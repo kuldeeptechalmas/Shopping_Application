@@ -129,14 +129,39 @@ class ShopkeeperController extends Controller
 
         if ($request->isMethod("post")) {
             $request->validate([
+
+                "newpassword" => [
+                    "required",
+                    Password::min(8)
+                        ->mixedCase()
+                        ->symbols()
+                        ->numbers()
+                ],
+                "confpassword" => [
+                    "required",
+                    "same:newpassword",
+                    Password::min(8)
+                        ->mixedCase()
+                        ->symbols()
+                        ->numbers()
+                ],
                 "oldpassword" => "required",
-                "newpassword" => "required",
-                "confpassword" => "required|same:newpassword",
+                // "newpassword" => "required",
+                // "confpassword" => "required|same:newpassword",
             ], [
-                "oldpassword.required" => "Enter Old Password are Required",
-                "newpassword.required" => "Enter New Password are Required",
-                "confpassword.required" => "Enter Conform Password are Required",
-                "confpassword.same" => "Enter Password are Not Match to New Password",
+                "oldpassword.required" => "The old password is required.",
+
+                "newpassword.required" => "The new password is required.",
+                "newpassword.min" => "The new password must be at least 8 characters.",
+                "newpassword.symbols" => "The new password must contain at least one symbol.",
+                "newpassword.numbers" => "The new password must contain at least one number.",
+                "newpassword.mixedCase" => "The new password must contain at least one uppercase and one lowercase letter.",
+
+                "confpassword.required" => "The conform password is required.",
+                "confpassword.min" => "The conform password must be at least 8 characters.",
+                "confpassword.symbols" => "The conform password must contain at least one symbol.",
+                "confpassword.numbers" => "The conform password must contain at least one number.",
+                "confpassword.mixedCase" => "The conform password must contain at least one uppercase and one lowercase letter.",
             ]);
 
             $shopkeeperdata = CustomerAndShopkeeper::where("email", $shopkeeper_email)->first();
@@ -202,12 +227,31 @@ class ShopkeeperController extends Controller
         return view("Shopkeeper.Order.orderlist", ['order_Data' => $paginatedata]);
     }
 
-    public function Remove_Image_Product($imageid)
+    public function Remove_Image_Product($imageid, $productId)
     {
         $imageData = Images::find($imageid);
+        $productData = Product::find($productId);
+
+        // dd($productData->image);
+        // dd($imageData->image_name == $productData->image);
+        $imageDataall = Images::find($productId);
+        // dd($item);
+        // foreach ($imageDataall as $item) {
+        //     if ($item->image_name == $productData->image) {
+        //         dd($item);
+        //     }
+        // }
+
         if ($imageData) {
             $imageData->delete();
-            return redirect()->back();
         }
+
+        if ($productData->images->count() == 0) {
+            $image = new Images();
+            $image->image_name = "default_image.png";
+            $image->product_id = $productData->id;
+            $image->save();
+        }
+        return redirect()->back();
     }
 }

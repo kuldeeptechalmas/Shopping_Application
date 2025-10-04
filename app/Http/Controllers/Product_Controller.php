@@ -18,64 +18,63 @@ class Product_Controller extends Controller
 {
     public function product_add_and_update(Request $request)
     {
-
-        // dd($request->all());
-
-        $validator = Validator::make(
-            $request->all(),
-            [
-                "name" => "required",
-                "description" => "required",
-                "price" => "required|numeric|gt:0",
-                "stock" => "required|numeric|gt:-1",
-                "status" => "required",
-                "file" => "required",
-                "file.*" => "image|mimes:png,jpg|max:2048",
-                "catagory" => "required",
-            ],
-            [
-                "name.required" => "Enter Name Are Required.",
-                "description.required" => "Enter Description Are Required.",
-                "price.required" => "Enter Price Are Required.",
-                "price.numeric" => "Enter Price Is Numeric Required.",
-                "price.gt" => "Enter Price Is Greater Then 0 Required.",
-                "stock.required" => "Enter Stock Are Required.",
-                "stock.numeric" => "Enter Stock Is Numeric Required.",
-                "stock.gt" => "Enter Stock Is Greater Then -1 Required.",
-                "status.required" => "Enter Status Are Required.",
-                'file.required' => 'Please upload an image.',
-                'file.*.image' => 'The uploaded file must be an image.',
-                'file.*.mimes' => 'Only JPEG, PNG, JPG images are allowed.',
-                'file.*.max' => 'Each image must not exceed 2MB in size.',
-                "catagory.required" => "Enter Catagory Are Required.",
-            ]
-        );
-
-        if ($request->discount) {
-            $validator02 = Validator::make(
-                $request->all(),
-                [
-                    "discount" => "numeric",
-                ],
-                [
-                    "discount.numeric" => "Enter Discount Is Numeric Required."
-                ]
-            );
-            if ($validator02->fails()) {
-                return redirect()->back()
-                    ->withErrors($validator02)
-                    ->withInput();
-            }
-        }
-
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
         $product = Product::find($request->id);
         if ($product) {
+
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    "name" =>  [
+                        'required',
+                        'regex:/^[a-zA-Z0-9\s]+$/',
+                        'not_regex:/^\d+$/',
+                    ],
+                    "description" => "required",
+                    "price" => "required|numeric|gt:0",
+                    "stock" => "required|numeric|gt:-1",
+                    "status" => "required",
+                    "file.*" => "image|mimes:png,jpg|max:2048",
+                    "catagory" => "required",
+                ],
+                [
+                    "name.required" => "Enter Name Are Required.",
+                    "description.required" => "Enter Description Are Required.",
+                    "price.required" => "Enter Price Are Required.",
+                    "price.numeric" => "Enter Price Is Numeric Required.",
+                    "price.gt" => "Enter Price Is Greater Then 0 Required.",
+                    "stock.required" => "Enter Stock Are Required.",
+                    "stock.numeric" => "Enter Stock Is Numeric Required.",
+                    "stock.gt" => "Enter Stock Is Greater Then -1 Required.",
+                    "status.required" => "Enter Status Are Required.",
+                    'file.*.image' => 'The uploaded file must be an image.',
+                    'file.*.mimes' => 'Only JPEG, PNG, JPG images are allowed.',
+                    'file.*.max' => 'Each image must not exceed 2MB in size.',
+                    "catagory.required" => "Enter Catagory Are Required.",
+                ]
+            );
+
+            if ($request->discount) {
+                $validator02 = Validator::make(
+                    $request->all(),
+                    [
+                        "discount" => "numeric",
+                    ],
+                    [
+                        "discount.numeric" => "Enter Discount Is Numeric Required."
+                    ]
+                );
+                if ($validator02->fails()) {
+                    return redirect()->back()
+                        ->withErrors($validator02)
+                        ->withInput();
+                }
+            }
+
+            if ($validator->fails()) {
+                return redirect()->back()
+                    ->withErrors($validator)
+                    ->withInput();
+            }
 
             $admin = Admin::where("name", $request->adminid)->first();
 
@@ -107,7 +106,66 @@ class Product_Controller extends Controller
                     $image->save();
                 }
             }
+            return redirect()->back();
         } else {
+
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    "name" =>  [
+                        'required',
+                        'regex:/^[a-zA-Z0-9\s]+$/',
+                        'not_regex:/^\d+$/',
+                    ],
+                    "description" => "required",
+                    "price" => "required|numeric|gt:0",
+                    "stock" => "required|numeric|gt:-1",
+                    "status" => "required",
+                    "file.*" => "image|mimes:png,jpg|max:2048",
+                    "catagory" => "required",
+                    "file" => "required",
+                ],
+                [
+                    "name.required" => "Enter Name Are Required.",
+                    "description.required" => "Enter Description Are Required.",
+                    "price.required" => "Enter Price Are Required.",
+                    "price.numeric" => "Enter Price Is Numeric Required.",
+                    "price.gt" => "Enter Price Is Greater Then 0 Required.",
+                    "stock.required" => "Enter Stock Are Required.",
+                    "stock.numeric" => "Enter Stock Is Numeric Required.",
+                    "stock.gt" => "Enter Stock Is Greater Then -1 Required.",
+                    "status.required" => "Enter Status Are Required.",
+                    'file.required' => 'Please upload an image.',
+                    'file.*.image' => 'The uploaded file must be an image.',
+                    'file.*.mimes' => 'Only JPEG, PNG, JPG images are allowed.',
+                    'file.*.max' => 'Each image must not exceed 2MB in size.',
+                    "catagory.required" => "Enter Catagory Are Required.",
+                ]
+            );
+
+            if ($request->discount) {
+                $validator02 = Validator::make(
+                    $request->all(),
+                    [
+                        "discount" => "numeric",
+                    ],
+                    [
+                        "discount.numeric" => "Enter Discount Is Numeric Required."
+                    ]
+                );
+                if ($validator02->fails()) {
+                    return redirect()->back()
+                        ->withErrors($validator02)
+                        ->withInput();
+                }
+            }
+
+            if ($validator->fails()) {
+                return redirect()->back()
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+
             $discountVar = 0;
             if (!$request->discount == '') {
                 $discountVar = $request->discount;
@@ -140,8 +198,6 @@ class Product_Controller extends Controller
             }
             return redirect()->route('shopkeeperdashboard');
         }
-
-        return redirect()->back();
     }
 
     public function product_get_all(Request $request)
@@ -306,6 +362,8 @@ class Product_Controller extends Controller
         if ($prodcut_delete) {
             $prodcut_delete->delete();
             return redirect()->back();
+        } else {
+            return redirect()->back()->withErrors("not found data");
         }
     }
 }

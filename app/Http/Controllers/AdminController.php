@@ -36,19 +36,6 @@ class AdminController extends Controller
                 return view("Admin.Page.User.usershow", ["data" => $customerandshopkeeper, "searchData" => $request->searchData]);
             }
 
-            // Edit customer and shopkeeper data get
-            if ($request->action == "editGet") {
-                $userEdit = CustomerAndShopkeeper::where("id", $request->id)->first();
-                if ($userEdit) {
-
-                    // contry data
-                    $content = File::get(public_path('countries.json'));
-                    $contryList = json_decode($content, true);
-
-                    return view("Admin.Page.User.useredit", ["usereditdata" => $userEdit, "country" => $contryList]);
-                }
-            }
-
             // Remove customer and shopkeeper
             elseif ($request->action == "remove") {
                 $userRemove = CustomerAndShopkeeper::where("id", $request->id)->first();
@@ -57,68 +44,77 @@ class AdminController extends Controller
                     return redirect()->back();
                 }
             }
-
-            //Edit customer ans shopkeeper
-            elseif ($request->action == "editUserData") {
-
-                $validator = Validator::make($request->all(), [
-                    "name" => "required",
-                    'email' => [
-                        'required',
-                        'email',
-                        Rule::unique('CustomerAndShopkeeper', 'email')->ignore($request->id),
-                    ],
-                    "phone" => [
-                        'required',
-                        'numeric',
-                        "digits:10",
-                        Rule::unique('CustomerAndShopkeeper', 'phone')->ignore($request->id),
-                    ],
-                    "address" => "required",
-                    "city" => "required",
-                    "state" => "required",
-                    "country" => "required",
-                    "pincode" => "required|numeric|digits:6",
-                    "gender" => "required",
-                ], [
-                    "name.required" => "Enter Name is Required.",
-                    "email.required" => "Enter email is Required.",
-                    "phone.required" => "Enter phone is Required.",
-                    "address.required" => "Enter address is Required.",
-                    "city.required" => "Enter city is Required.",
-                    "country.required" => "Enter country is Required.",
-                    "pincode.required" => "Enter pincode is Required.",
-                    "gender.required" => "Enter gender is Required.",
-                ]);
-
-                if ($validator->fails()) {
-                    $userEdit = CustomerAndShopkeeper::where("id", $request->id)->first();
-                    if ($userEdit) {
-
-                        // contry data
-                        $content = File::get(public_path('countries.json'));
-                        $contryList = json_decode($content, true);
-
-                        return view("Admin.Page.User.useredit", ["usereditdata" => $userEdit, "country" => $contryList, "validator" => $validator, "oldUserData" => $request->all()]);
-                    }
-                }
-
-                $customer = CustomerAndShopkeeper::where("email", $request->email)->first();
-                $customer->update([
-                    "name" => $request->name,
-                    "address" => $request->address,
-                    "email" => $request->email,
-                    "phone" => $request->phone,
-                    "city" => $request->city,
-                    "state" => $request->state,
-                    "country" => $request->country,
-                    "pincode" => $request->pincode,
-                    "gender" => $request->gender,
-                ]);
-            }
         }
+
         $customerandshopkeeper = CustomerAndShopkeeper::paginate(15);
         return view("Admin.Page.User.usershow", ["data" => $customerandshopkeeper]);
+    }
+
+    // Customer and shopkeeper Edit
+    public function CustomerAndShopkeeper_Update(Request $request, $userId)
+    {
+        if ($request->isMethod("post")) {
+            //Edit customer ans shopkeeper
+
+            $validator = Validator::make($request->all(), [
+                "name" => "required",
+                'email' => [
+                    'required',
+                    'email',
+                    Rule::unique('CustomerAndShopkeeper', 'email')->ignore($request->id),
+                ],
+                "phone" => [
+                    'required',
+                    'numeric',
+                    "digits:10",
+                    Rule::unique('CustomerAndShopkeeper', 'phone')->ignore($request->id),
+                ],
+                "address" => "required",
+                "city" => "required",
+                "state" => "required",
+                "country" => "required",
+                "pincode" => "required|numeric|digits:6",
+                "gender" => "required",
+            ], [
+                "name.required" => "Enter Name is Required.",
+                "email.required" => "Enter email is Required.",
+                "phone.required" => "Enter phone is Required.",
+                "address.required" => "Enter address is Required.",
+                "city.required" => "Enter city is Required.",
+                "country.required" => "Enter country is Required.",
+                "pincode.required" => "Enter pincode is Required.",
+                "gender.required" => "Enter gender is Required.",
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+
+            $customer = CustomerAndShopkeeper::where("email", $request->email)->first();
+            $customer->update([
+                "name" => $request->name,
+                "address" => $request->address,
+                "email" => $request->email,
+                "phone" => $request->phone,
+                "city" => $request->city,
+                "state" => $request->state,
+                "country" => $request->country,
+                "pincode" => $request->pincode,
+                "gender" => $request->gender,
+            ]);
+            return redirect()->back();
+        }
+
+        // Edit customer and shopkeeper data get
+        $userEdit = CustomerAndShopkeeper::where("id", $userId)->first();
+        if ($userEdit) {
+
+            // contry data
+            $content = File::get(public_path('countries.json'));
+            $contryList = json_decode($content, true);
+
+            return view("Admin.Page.User.useredit", ["usereditdata" => $userEdit, "country" => $contryList]);
+        }
     }
 
     // Product Manage
@@ -141,89 +137,92 @@ class AdminController extends Controller
                 }
                 return redirect()->back();
             }
-
-            // Edit product data get
-            if ($request->action == "editProductData") {
-                $productData = Product::where("id", $request->id)->first();
-                if ($productData) {
-                    return view("Admin.Page.Product.productedit", ["productData" => $productData]);
-                }
-            }
-
-            // Edit product info
-            if ($request->action == "edit") {
-
-                $validator = Validator::make(
-                    $request->all(),
-                    [
-                        "name" => "required",
-                        "description" => "required",
-                        "price" => "required|numeric|gt:0",
-                        "stock" => "required|numeric|gt:-1",
-                        "status" => "required",
-                        "image.*" => "required|image|mimes:png,jpg|max:2048",
-                        "catagory" => "required",
-                        "discount" => "required",
-                    ],
-                    [
-                        "name.required" => "Enter Name Are Required.",
-                        "description.required" => "Enter Description Are Required.",
-                        "price.required" => "Enter Price Are Required.",
-                        "price.numeric" => "Enter Price Is Numeric Required.",
-                        "price.gt" => "Enter Price Is Greater Then 0 Required.",
-                        "stock.required" => "Enter Stock Are Required.",
-                        "stock.numeric" => "Enter Stock Is Numeric Required.",
-                        "stock.gt" => "Enter Stock Is Greater Then -1 Required.",
-                        "status.required" => "Enter Status Are Required.",
-                        "image.required" => "Enter Image Are Required.",
-                        "image.image" => "Enter Only Image Are Required.",
-                        "image.mimes" => "Enter PNG Or JPG Image Are Required.",
-                        "image.max" => "Enter Less then 2 Mb Image Are Required.",
-                        "catagory.required" => "Enter Catagory Are Required.",
-                        "discount.required" => "Enter Discount Are Required.",
-                    ]
-                );
-
-                if ($validator->fails()) {
-                    $productData = Product::where("id", $request->id)->first();
-                    if ($productData) {
-                        return view("Admin.Page.Product.productedit", ["validator" => $validator, "productData" => $productData,]);
-                    }
-                    // return redirect()->back();
-                }
-
-                $product = Product::find($request->id);
-                $admin = Admin::where("name",  Session::get("adminname"))->first();
-
-                $product->update([
-                    "name" => $request->name,
-                    "description" => $request->description,
-                    "price" => $request->price,
-                    "stock" => $request->stock,
-                    "status" => $request->status,
-                    "sub_category_id" => $request->catagory,
-                    "discount" => $request->discount,
-                ]);
-
-                if ($admin) {
-                    $product->admin_id = $admin->id;
-                    $product->save();
-                }
-
-                if ($files = $request->file("file")) {
-                    foreach ($files as $file) {
-                        $file->storeAs("public/UploadeFile", $file->getClientOriginalName());
-                        $image = new Images();
-                        $image->image_name = $file->getClientOriginalName();
-                        $image->product_id = $product->id;
-                        $image->save();
-                    }
-                }
-            }
         }
 
         $product = Product::paginate(15);
         return view("Admin.Page.Product.productshow", ["data" => $product]);
+    }
+
+    // Product Edit
+    public function Product_Update(Request $request, $productId)
+    {
+        if ($request->isMethod("post")) {
+            // Edit product info
+
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    "name" => "required",
+                    "description" => "required",
+                    "price" => "required|numeric|gt:0",
+                    "stock" => "required|numeric|gt:-1",
+                    "status" => "required",
+                    "file.*" => "image|mimes:png,jpg|max:2048",
+                    "catagory" => "required",
+                    "discount" => "required",
+                ],
+                [
+                    "name.required" => "Enter Name Are Required.",
+                    "description.required" => "Enter Description Are Required.",
+                    "price.required" => "Enter Price Are Required.",
+                    "price.numeric" => "Enter Price Is Numeric Required.",
+                    "price.gt" => "Enter Price Is Greater Then 0 Required.",
+                    "stock.required" => "Enter Stock Are Required.",
+                    "stock.numeric" => "Enter Stock Is Numeric Required.",
+                    "stock.gt" => "Enter Stock Is Greater Then -1 Required.",
+                    "status.required" => "Enter Status Are Required.",
+                    'file.*.image' => 'The uploaded file must be an image.',
+                    'file.*.mimes' => 'Only JPEG, PNG, JPG images are allowed.',
+                    'file.*.max' => 'Each image must not exceed 2MB in size.',
+                    "catagory.required" => "Enter Catagory Are Required.",
+                    "discount.required" => "Enter Discount Are Required.",
+                ]
+            );
+
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+
+            $product = Product::find($request->id);
+            $admin = Admin::where("name",  Session::get("adminname"))->first();
+
+            $product->update([
+                "name" => $request->name,
+                "description" => $request->description,
+                "price" => $request->price,
+                "stock" => $request->stock,
+                "status" => $request->status,
+                "sub_category_id" => $request->catagory,
+                "discount" => $request->discount,
+            ]);
+
+            if ($admin) {
+                $product->admin_id = $admin->id;
+                $product->save();
+            }
+
+            if ($files = $request->file("file")) {
+                foreach ($files as $file) {
+                    $file->storeAs("public/UploadeFile", $file->getClientOriginalName());
+                    $image = new Images();
+                    $image->image_name = $file->getClientOriginalName();
+                    $image->product_id = $product->id;
+                    $image->save();
+                }
+            }
+
+            if ($product->images->count() == 0) {
+                $image = new Images();
+                $image->image_name = "default_image.png";
+                $image->product_id = $product->id;
+                $image->save();
+            }
+        }
+        // Edit product data get
+        $productData = Product::where("id", $productId)->first();
+        if ($productData) {
+            return view("Admin.Page.Product.productedit", ["productData" => $productData]);
+        }
     }
 
     // Order Manage
@@ -302,8 +301,8 @@ class AdminController extends Controller
                     ],
                     'email' => [
                         'required',
-                        'email',
-                        Rule::unique('CustomerAndShopkeeper', 'email')->ignore($request->id),
+                        'email:rfc,dns',
+                        Rule::unique('CustomerAndShopkeeper', 'id')->ignore($request->id),
                     ]
                 ], [
                     "name.required" => "Enter Admin Name is Required.",
@@ -316,7 +315,7 @@ class AdminController extends Controller
                     "password.symbols" => "Enter Symbols is Required.",
                     "password.numbers" => "Enter Numbers is Required.",
                     "email.required" => "Enter Admin Email is Required.",
-                    "email.email" => "Enter Only Email is Required.",
+                    'email.email' => 'The email you provided is not valid.',
                 ]);
 
                 if ($validator->fails()) {

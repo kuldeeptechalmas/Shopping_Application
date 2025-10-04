@@ -130,7 +130,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary" onclick="update()">Save Change</button>
+                <button type="submit" class="btn btn-primary" onclick="update()">Save Chang</button>
             </div>
         </div>
     </div>
@@ -227,7 +227,7 @@
 
         $.ajax({
             type: 'post'
-            , url: "/shopkeeperupdate"
+            , url: "/CustomerUpdate"
             , data: {
                 id: $('#id').val()
                 , name: $('#name').val()
@@ -243,6 +243,8 @@
                 , conformpassword: $('#conpassword').val()
             }
             , success: function(res) {
+                window.location.href = res["redirect_url"];
+
                 $("#profilemodel").modal("hide");
             }
             , error: function(e) {

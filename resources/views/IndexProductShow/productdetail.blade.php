@@ -148,7 +148,9 @@
                 </p>
             </a>
         </div>
+
         @else
+
         <div class="row" style="margin-top: 21px; margin-left: 70px;">
             <a class="col" style="cursor: not-allowed;border-radius: 8px;text-align: center;background: #ae708c;margin-right: 11px;text-decoration: none;  color:white;">
                 <p class="m-3">

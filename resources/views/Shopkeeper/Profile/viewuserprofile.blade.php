@@ -38,7 +38,7 @@
         <div data-mdb-input-init class="form-outline flex-fill mb-0">
             <label class="form-label" for="form3Example1c">Country</label>
             <select class="form-select" id="country" value="{{old('country')}}" name="country">
-                <option>Select</option>
+                <option value="">Select</option>
                 @if (isset($contrylist))
                 @foreach ($contrylist as $item)
                 <option value={{$item['id']}} {{$data->country == $item['id'] ? 'selected' : ''}}>
@@ -46,9 +46,7 @@
                 @endforeach
                 @endif
             </select>
-            @error('country')
-            <div style="color:red;">{{$message}}</div>
-            @enderror
+            <div style="color:red;" id="ecountry" hidden></div>
         </div>
     </div>
     <div class="d-flex flex-row align-items-center mb-4">
@@ -57,9 +55,7 @@
             <select class="form-select" id="state" value="{{$data->state}}" name="state">
                 <option>Select</option>
             </select>
-            @error('state')
-            <div style="color:red;">{{$message}}</div>
-            @enderror
+            <div style="color:red;" id="estate" hidden></div>
         </div>
     </div>
 
@@ -71,9 +67,7 @@
             <select placeholder="Select" class="form-select" id="city" value="{{$data->city}}" name="city">
                 <option>Select</option>
             </select>
-            @error('city')
-            <div style="color:red;">{{$message}}</div>
-            @enderror
+            <div style="color:red;" id="ecity" hidden></div>
         </div>
     </div>
 

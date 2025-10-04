@@ -19,22 +19,22 @@
         </div>
 
         <div class="d-flex justify-content-between ps-3 pe-3" style="margin-bottom: 15px;">
-            <form action="{{ route('product.manage') }}" method="post">
-                @csrf
-                <input type="text" name="action" value="editProductData" hidden>
-                <input type="text" name="id" value="{{ $item->id }}" hidden>
-                <button type="submit" class="btn btn-primary">
+            <a href="/AdminInProductUpdate/{{ $item->id }}">
+                <button type="button" class="btn btn-primary">
                     Edit
                 </button>
-            </form>
-            <form action="{{ route('product.manage') }}" method="post">
-                @csrf
-                <input type="text" name="action" value="remove" hidden>
-                <input type="text" name="id" value="{{ $item->id }}" hidden>
-                <button type="submit" class="btn btn-danger text-white" style="" onclick="deleteproductdata('{{$item->id}}','{{$item->name}}')">
-                    Delete
-                </button>
-            </form>
+            </a>
+            <button type="button" class="btn btn-danger" onclick="deleteproductdata('{{$item->id}}','{{$item->name}}')" data-bs-toggle="modal" data-bs-target="#AdminProductDeleteModal">
+                Delete
+            </button>
+            {{-- <form action="{{ route('product.manage') }}" method="post">
+            @csrf
+            <input type="text" name="action" value="remove" hidden>
+            <input type="text" name="id" value="{{ $item->id }}" hidden>
+            <button type="submit" class="btn btn-danger text-white" style="" onclick="deleteproductdata('{{$item->id}}','{{$item->name}}')">
+                Delete
+            </button>
+            </form> --}}
         </div>
     </div>
     @endforeach
@@ -45,12 +45,38 @@
 @else
 <h1 style="color: red;display: flex;justify-content: center;align-items: center;margin-top: 172px;">Not Found Product</h1>
 @endif
+
+<!--Product Delete Modal -->
+<div class="modal fade" id="AdminProductDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Product Delete Modal</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{route('product.manage')}}" method="post">
+                @csrf
+                <div class="modal-body">
+                    Are You Sore This Record Delete
+                    <label id="deletenameproduct" style="font-weight: bold"></label>
+                    <input id="deleteproductid" name="id" name="id" hidden>
+                    <input type="text" name="action" value="remove" hidden>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push("script_content")
 <script>
     function deleteproductdata(id, name) {
-        document.getElementById("deleteid").value = id;
+        document.getElementById("deletenameproduct").textContent = name;
+        document.getElementById("deleteproductid").value = id;
     }
 
 </script>

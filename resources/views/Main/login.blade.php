@@ -5,6 +5,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login</title>
@@ -36,9 +37,9 @@
                         <!-- Email input -->
                         <div data-mdb-input-init class="form-outline mb-4">
                             <label class="form-label" for="form3Example3">Email address</label>
-                            <input type="email" name="email" id="form3Example3" value="{{old('email')}}" class="form-control form-control-lg" placeholder="Enter a valid email address" />
+                            <input type="email" name="email" oninput="Email_Check_Exist_Or_Not()" id="email-id" value="{{old('email')}}" class="form-control form-control-lg" placeholder="Enter a valid email address" />
                         </div>
-
+                        <div style="color:red;" id="emailCheckError" hidden></div><br>
                         @error('email')
                         <div style="color:red;">{{$message}}</div><br>
                         @enderror
@@ -96,6 +97,43 @@
 
 
     <script>
+        function Email_Check_Exist_Or_Not() {
+            var emails = document.getElementById("email-id").value;
+            if (emails == "") {
+                $("#emailCheckError").attr("hidden", true);
+
+            } else {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    url: "/EmailCheck"
+                    , type: "post"
+                    , data: {
+                        searchData: emails
+                    }
+                    , success: function(res) {
+                        if (res['emailError'] == "notShow") {
+                            $("#emailCheckError").attr("hidden", true);
+                        } else {
+                            $("#emailCheckError").removeAttr("hidden");
+                            $("#emailCheckError").html(res['emailError']);
+                        }
+                    }
+                    , error: function(e) {
+                        console.log(e);
+
+                    }
+                })
+            }
+        }
+
+
+
+
         // password 
         function passwordshow() {
             $("#passwordhidden").removeAttr("hidden");

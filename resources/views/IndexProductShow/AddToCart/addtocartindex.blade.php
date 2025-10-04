@@ -287,7 +287,7 @@
                         @else
                         @foreach ($datacart as $item1)
 
-                        <?php            $count++;
+                        <?php            $count+=$item1['quantity'];
                                         $amount = $amount + (round(($item1['product_data']->price - (($item1['product_data']->price * $item1['product_data']->discount / 100)))) * $item1['quantity']); ?>
                         @endforeach
                         @endif

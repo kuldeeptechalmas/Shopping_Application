@@ -92,7 +92,7 @@
         </div>
 
     </div>
-    @error('image')
+    @error('file.*')
 
     <div style="color:red;">{{$message}}</div>
     @enderror
@@ -122,7 +122,7 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
             </a>
         </div>
-        <button type="submit" class="btn btn-primary">Save Change</button>
+        <button type="submit" class="btn btn-primary">Save Chang</button>
     </div>
 </form>
 @endsection

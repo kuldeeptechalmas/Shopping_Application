@@ -12,11 +12,13 @@ use App\Models\FavouriceProduct;
 use App\Models\Product;
 use App\Models\UserCoupunData;
 use Exception;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password as RulesPassword;
 
 class MainController extends Controller
@@ -171,14 +173,41 @@ class MainController extends Controller
     {
         if ($request->isMethod("post")) {
 
-            $request->validate([
-                "newpassword" => "required",
-                "confpassword" => "required|same:newpassword",
+            $validator = Validator::make($request->all(), [
+                "confpassword" => [
+                    "required",
+                    "same:newpassword",
+                    RulesPassword::min(8)
+                        ->mixedCase()
+                        ->symbols()
+                        ->numbers()
+                ],
+                "newpassword" => [
+                    "required",
+                    RulesPassword::min(8)
+                        ->mixedCase()
+                        ->symbols()
+                        ->numbers()
+                ],
             ], [
-                "newpassword.required" => "Enter New Password are Required",
-                "confpassword.required" => "Enter Conform Password are Required",
-                "confpassword.same" => "Enter Password are Not Match to New Password",
+                "newpassword.required" => "The new password is required.",
+                "newpassword.min" => "The new password must be at least 8 characters.",
+                "newpassword.symbols" => "The new password must contain at least one symbol.",
+                "newpassword.numbers" => "The new password must contain at least one number.",
+                "newpassword.mixedCase" => "The new password must contain at least one uppercase and one lowercase letter.",
+
+                "confpassword.required" => "The conform password is required.",
+                "confpassword.min" => "The conform password must be at least 8 characters.",
+                "confpassword.symbols" => "The conform password must contain at least one symbol.",
+                "confpassword.numbers" => "The conform password must contain at least one number.",
+                "confpassword.mixedCase" => "The conform password must contain at least one uppercase and one lowercase letter.",
+
+                "confpassword.same" => "The new password and conform password do not match.",
             ]);
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+
             $shopkeeperdata = CustomerAndShopkeeper::where("email", Session::get("emailforgotpassword"))->first();
             $shopkeeperdata->password = Crypt::encryptString($request->confpassword);
             $shopkeeperdata->save();
@@ -436,7 +465,7 @@ class MainController extends Controller
             ->leftJoin('products', 'favourite_product.product_id', '=', 'products.id')
             ->where("name", "like", "%" . $request->search_data . "%")
             ->get();
-        return view("IndexProductShow.WishList.wishlistshow", ["wishlist" => $wishlist]);
+        return view("IndexProductShow.WishList.wishlistshow", ["wishlist" => $wishlist, "oldSearch" => $request->search_data]);
     }
 
     public function discount_coupun($coupon_id, $product_id)
@@ -470,5 +499,24 @@ class MainController extends Controller
             Session::forget("discountamount");
         }
         return redirect()->back();
+    }
+
+    // Email Check - Login
+    public function Login_Email_Check(Request $request)
+    {
+        $userData = CustomerAndShopkeeper::where("email", "like", "%" . $request->searchData . "%")->get();
+
+        if ($userData->count() == 0) {
+
+            $adminData = Admin::where("email", "like", "%" . $request->searchData . "%")->get();
+
+            if ($adminData->count() == 0) {
+                return Response()->json(["emailError" => "email user not exist !!!"]);
+            } else {
+                return Response()->json(["emailError" => "notShow"]);
+            }
+        } else {
+            return Response()->json(["emailError" => "notShow"]);
+        }
     }
 }

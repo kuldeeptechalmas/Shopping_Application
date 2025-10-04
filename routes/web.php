@@ -16,7 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware("adminCheck")->group(function () {
 
     Route::match(["get", "post"], '/AdminInUser', [AdminController::class, 'CustomerAndShopkeeper_Manage'])->name('admindashboard');
+    Route::match(["get", "post"], '/AdminInUserUpdate/{userId}', [AdminController::class, 'CustomerAndShopkeeper_Update'])->name('admindashboard.update');
     Route::match(["get", "post"], '/AdminInProduct', [AdminController::class, 'Product_Manage'])->name('product.manage');
+    Route::match(["get", "post"], '/AdminInProductUpdate/{productId}', [AdminController::class, 'Product_Update'])->name('product.Manage.Update');
     Route::match(["get", "post"], '/AdminInOrder', [AdminController::class, 'Order_Manage'])->name('order.Manage');
     Route::match(["get", "post"], '/AdminProfile', [AdminController::class, 'Admin_Profile_Manage'])->name('admin.Profile.Manage');
 
@@ -40,7 +42,9 @@ Route::middleware("adminCheck")->group(function () {
 Route::middleware("customerCheck")->group(function () {
 
     Route::match(["post", "get"], '/customerchangepassword/{customeremail}', [CustomerController::class, "customer_change_password"]);
-    Route::get('/customerprofile/{customeremail}', [CustomerController::class, "customer_profile"]);
+    Route::get('/CustomerProfile', [CustomerController::class, "customer_profile"])->name("Customer.Profile");
+    Route::post('/CustomerUpdate', [CustomerController::class, "Customer_Update"]);
+
     Route::get('/viewprofilecustomer/{email}', [CustomerController::class, "view_profile"]);
     Route::get('/logout', [CustomerController::class, 'logout'])->name('customerlogout');
     Route::get('/wishlist', [MainController::class, 'wishlist'])->name("wishlist");
@@ -72,6 +76,9 @@ Route::get('/removediscount/{productid}', [MainController::class, 'remove_discou
 Route::get('/favourite/{productid}', [MainController::class, 'add_to_favourite']);
 Route::get('/CartCount', [MainController::class, 'Cart_Count']);
 
+// Email Check (Ajax)
+Route::post('/EmailCheck', [MainController::class, "Login_Email_Check"]);
+
 // State & City Data get
 Route::get('/getstate', [CustomerController::class, "getstate"]);
 Route::get('/getcity', [CustomerController::class, "getcity"]);
@@ -80,6 +87,7 @@ Route::get('/getcountry', [CustomerController::class, "getcountry"]);
 Route::get("/welcome", function () {
     return view("Main.welcome");
 });
+
 
 
 // Shopkeeper New Route
@@ -91,7 +99,7 @@ Route::middleware("shopkeeperCheck")->group(function () {
     Route::get('/viewprofile/{email}', [ShopkeeperController::class, "view_profile"]);
     Route::match(['get', 'post'], '/ShopkeeperOrderList', [ShopkeeperController::class, "Shopkeeper_Order_List"])->name("shopkeeper.Order.List");
 
-    Route::get('/RemoveImage/{ImageId}', [ShopkeeperController::class, "Remove_Image_Product"]);
+    Route::get('/RemoveImage/{ImageId}/{ProductId}', [ShopkeeperController::class, "Remove_Image_Product"]);
 });
 Route::post('/shopkeeperupdate', [ShopkeeperController::class, "updateuser"]);
 Route::get('/shopkeeperprofile', [ShopkeeperController::class, "shopkeeper_profile"])->name("Shopkeeper.Profile");
@@ -108,7 +116,7 @@ Route::post('/productadd', [Product_Controller::class, 'product_add_and_update']
 Route::get('/getproductall', [Product_Controller::class, 'product_get_all']);
 Route::post('/editproduct', [Product_Controller::class, 'product_edit']);
 Route::post('/deleteproductadmin', [Product_Controller::class, 'admin_product_remove'])->name("delete_product_admin");
-Route::get('/deleteproduct', [Product_Controller::class, 'Product_Delete']);
+Route::post('/deleteproduct', [Product_Controller::class, 'Product_Delete']);
 Route::get('/searchproduct', [Product_Controller::class, 'product_search']);
 Route::get('/getproductshopkeeper', [Product_Controller::class, 'product_list_get_shopkeeper']);
 Route::match(['get', 'post'], '/productaddshop/{category_name}', [Product_Controller::class, 'product_add_show']);

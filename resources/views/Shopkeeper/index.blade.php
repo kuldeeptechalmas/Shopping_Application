@@ -179,7 +179,7 @@
 
                     <a class="nav-link" id="showProductdiv">
                         <i class="nav-icon cil-speedometer"></i>
-                        <p>Products</p>
+                        Products
                         <i class="fa-solid fa-chevron-down" id="showProduct" style="margin-left: 41%;"></i>
                         <i class="fa-solid fa-chevron-up" id="hideProduct" style="margin-left: 41%;" hidden></i>
                     </a>
@@ -264,15 +264,18 @@
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Product Delete Modal</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    Are You Sore This Record Delete
-                    <label id="deletenameproduct" style="font-weight: bold"></label>
-                    <label id="deleteid" hidden></label>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-danger" onclick="deleteReacordProduct()">Delete</button>
-                </div>
+                <form action="/deleteproduct" method="post">
+                    @csrf
+                    <div class="modal-body">
+                        Are You Sore This Record Delete
+                        <label id="deletenameproduct" style="font-weight: bold"></label>
+                        <input id="deleteid" name="id" hidden>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -298,28 +301,7 @@
         // done
         function deleteproductdata(id, name) {
             document.getElementById("deletenameproduct").textContent = name;
-            document.getElementById("deleteid").textContent = id;
-        }
-
-        function deleteReacordProduct() {
-            const did = document.getElementById("deleteid").textContent;
-            console.log(did);
-
-            $.ajax({
-                type: "get"
-                , url: '/deleteproduct'
-                , data: {
-                    id: did
-                , }
-                , headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-                , success: function(res) {
-                    $('#productdeletemodel').modal("hide");
-                    showproduct();
-                }
-                , error: function(e) {}
-            , });
+            document.getElementById("deleteid").value = id;
         }
 
         // password 
@@ -420,5 +402,4 @@
 
     </script>
 </body>
-
 </html>

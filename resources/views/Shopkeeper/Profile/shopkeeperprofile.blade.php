@@ -129,7 +129,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary" onclick="update()">Save Change</button>
+                <button type="submit" class="btn btn-primary" onclick="update()">Save Chang</button>
             </div>
         </div>
     </div>
@@ -245,6 +245,8 @@
             }
             , error: function(e) {
                 const data = e['responseJSON']['errors'];
+                console.log(data);
+
                 if (data['name']) {
                     $("#ename").text(data['name'][0]).removeAttr("hidden");
                 }
