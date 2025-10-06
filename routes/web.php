@@ -132,3 +132,4 @@ Route::get('/addtocart_desbord/{product_id}', [AddToCartController::class, 'inde
 Route::get('/addtocartget', [AddToCartController::class, 'addtocart_get_all'])->name("addtocart_get_all");
 Route::get('/deletetocart/{cartid}', [AddToCartController::class, 'delete_cart']);
 Route::get('/addtocartqueantitychange', [AddToCartController::class, 'update_queantity']);
+Route::get('/DirectChangeQuentity', [AddToCartController::class, 'direct_change_quentity']);

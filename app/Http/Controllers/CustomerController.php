@@ -123,12 +123,21 @@ class CustomerController extends Controller
     public function Customer_Update(Request $request)
     {
         $request->validate([
-            "name" => "required",
+            "name" =>  [
+                'required',
+                'regex:/^[a-zA-Z0-9\s]+$/',
+                'not_regex:/^\d+$/',
+            ],
             "phone" => [
                 'required',
                 'numeric',
                 "digits:10",
                 Rule::unique('CustomerAndShopkeeper', 'phone')->ignore($request->id),
+            ],
+            "email" => [
+                "required",
+                "email:rfc,dns",
+                Rule::unique('CustomerAndShopkeeper', 'email')->ignore($request->id),
             ],
             "address" => "required",
             "city" => "required",
@@ -144,12 +153,15 @@ class CustomerController extends Controller
             "name" => $request->name,
             "address" => $request->address,
             "phone" => $request->phone,
+            "email" => $request->email,
             "city" => $request->city,
             "state" => $request->state,
             "country" => $request->country,
             "pincode" => $request->pincode,
             "gender" => $request->gender,
         ]);
+
+        Session::put("customeremail", $customer->email);
 
         return response()->json([
             'status' => 'success',

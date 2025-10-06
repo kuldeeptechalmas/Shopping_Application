@@ -1,7 +1,13 @@
 @extends('Admin.index')
 
 @section('css_content')
+<style>
+    .pagination {
+        margin-bottom: 0px;
+        margin-right: 120px;
+    }
 
+</style>
 @endsection
 
 @section('content')
@@ -43,7 +49,7 @@
                 <th scope="col">
                     @if ($item->status == "Pending")
                     <span class="text-warning">{{$item->status}}</span>
-                    @elseif ($item->status == "Processing" || $item->status == "Shipped")
+                    @elseif ($item->status == "Processing" || $item->status == "Shipping")
                     <span class="text-info">{{$item->status}}</span>
                     @elseif ($item->status == "Delivered")
                     <span class="text-success">{{$item->status}}</span>
@@ -57,18 +63,59 @@
                         <button type="submit" class="btn btn-primary">
                             View
                         </button>
+                        @if ($item->status == "Delivered")
+                        <button type="button" class="btn btn-danger" onclick="deleteorderdata('{{$item->id}}','{{$item->product->name}}')" data-bs-toggle="modal" data-bs-target="#AdminOrderDeleteModal">
+                            Delete
+                        </button>
+                        @endif
                     </form>
                 </th>
             </tr>
             @endforeach
         </tbody>
     </table>
+    <div class="paginationDiv" id="usertableid" style="margin-bottom: 30px;">
+
+        <div class="paginationDiv" id="usertableid" style="margin-bottom: 30px;">
+            <div class="card row" style="margin-left: 0px;width: 96%;height: 58px;justify-content:center;">
+                <div class="col-2">
+                    Page {{ $order->currentPage() }} of {{ $order->lastPage() }} in {{ $order->count() }} Records
+                </div>
+                <div class="col-10" style="display: flex;justify-content: center;">
+                    {{ $order->links('pagination::bootstrap-4') }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     @else
     <h1 style="color: red;display: flex;justify-content: center;align-items: center;margin-top: 172px;">Not Found Order</h1>
     @endif
 
-    <div class="paginationDiv" style="margin-right: 73%;">
-        <p> {{ $order->links('pagination::bootstrap-5') }}</p>
+    <!--Product Delete Modal -->
+    <div class="modal fade" id="AdminOrderDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Order Delete Modal</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{route('order.Manage')}}" method="post">
+                    @csrf
+                    <div class="modal-body">
+                        Are You Sore This Record Delete
+                        <label id="deletenameorder" style="font-weight: bold"></label>
+                        <input id="deleteorderid" name="id" name="id" hidden>
+                        <input type="text" name="action" value="removeorder" hidden>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     @endsection
@@ -79,6 +126,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <script>
+        function deleteorderdata(id, name) {
+            document.getElementById("deletenameorder").textContent = name;
+            document.getElementById("deleteorderid").value = id;
+        }
+
+
         $(document).on('click', '.pagination a', function(e) {
             e.preventDefault();
             var page = $(this).attr('href');

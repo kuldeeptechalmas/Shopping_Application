@@ -52,7 +52,7 @@
 
                                 <i class="fa-solid fa-minus product_id" onclick="minus_quentity(this)"></i>
 
-                                <input type="text" name="quentity" value="{{$item->quantity}}" style="width: 29px;margin-left: 10px;margin-right: 10px;text-align: center;" min="1" max="100" id="quentity">
+                                <input type="text" name="quentity" oninput="DirectChangeInput('{{$item->product->id}}')" value="{{$item->quantity}}" style="width: 29px;margin-left: 10px;margin-right: 10px;text-align: center;" min="1" max="100" id="quentity">
 
                                 <i class="fa-solid fa-plus queality product_id" onclick="plus_quentity(this)"></i>
 
@@ -316,6 +316,29 @@
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
+    function DirectChangeInput(productId) {
+        if ($("#quentity").val() != "") {
+
+            $.ajax({
+                type: "get"
+                , url: "/DirectChangeQuentity"
+                , data: {
+                    product_id: productId
+                    , queantity: $("#quentity").val()
+                , }
+                , success: function(res) {
+                    console.log(res);
+
+                    window.location.href = res.redirect_url;
+                }
+                , error: function(e) {
+                    console.log(e);
+                }
+            , });
+        }
+
+    }
+
     function plus_quentity(e) {
         $(e).prev()[0].value = parseInt($(e).prev()[0].value, 10) + 1;
 

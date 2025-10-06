@@ -1,5 +1,15 @@
 @extends('Admin.index')
 
+@section('css_content')
+<style>
+    .pagination {
+        margin-bottom: 0px;
+        margin-right: 120px;
+    }
+
+</style>
+@endsection
+
 @section('content')
 @if ($data->isNotEmpty())
 <h1>Show Product</h1>
@@ -27,20 +37,22 @@
             <button type="button" class="btn btn-danger" onclick="deleteproductdata('{{$item->id}}','{{$item->name}}')" data-bs-toggle="modal" data-bs-target="#AdminProductDeleteModal">
                 Delete
             </button>
-            {{-- <form action="{{ route('product.manage') }}" method="post">
-            @csrf
-            <input type="text" name="action" value="remove" hidden>
-            <input type="text" name="id" value="{{ $item->id }}" hidden>
-            <button type="submit" class="btn btn-danger text-white" style="" onclick="deleteproductdata('{{$item->id}}','{{$item->name}}')">
-                Delete
-            </button>
-            </form> --}}
         </div>
     </div>
     @endforeach
 </div>
-<div class="paginationDiv" style="margin-right: 73%;">
-    {{ $data->links('pagination::bootstrap-5') }}
+<div class="paginationDiv" id="usertableid" style="margin-bottom: 30px;">
+
+    <div class="paginationDiv" id="usertableid" style="margin-bottom: 30px;">
+        <div class="card row" style="margin-left: 0px;width: 96%;height: 58px;justify-content:center;">
+            <div class="col-2">
+                Page {{ $data->currentPage() }} of {{ $data->lastPage() }} in {{ $data->count() }} Records
+            </div>
+            <div class="col-10" style="display: flex;justify-content: center;">
+                {{ $data->links('pagination::bootstrap-4') }}
+            </div>
+        </div>
+    </div>
 </div>
 @else
 <h1 style="color: red;display: flex;justify-content: center;align-items: center;margin-top: 172px;">Not Found Product</h1>

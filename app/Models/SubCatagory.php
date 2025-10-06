@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SubCatagory extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
     protected $table = "subcatagory";
 
     protected $fillable = [
@@ -18,5 +18,10 @@ class SubCatagory extends Model
     public function subcategory()
     {
         return $this->belongsTo(CategoryProduct::class);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
     }
 }

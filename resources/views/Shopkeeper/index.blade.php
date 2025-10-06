@@ -15,6 +15,11 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
 </head>
 <style>
+    .pagination {
+        margin-bottom: 0px;
+        margin-right: 120px;
+    }
+
     .modal-backdrop.show {
         opacity: 0.1 !important;
     }
@@ -215,6 +220,7 @@
 
 
                     @if (isset($data))
+
                     <div class="row">
                         @foreach ($data as $item)
                         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 card" style="width: 18rem; margin: 10px;">
@@ -244,8 +250,19 @@
                         </div>
                         @endforeach
                     </div>
-                    <div class="paginationDiv" style="margin-right: 73%;">
-                        {{ $data->links('pagination::bootstrap-5') }}
+
+                    <div class="paginationDiv" id="usertableid" style="margin-bottom: 30px;">
+
+                        <div class="paginationDiv" id="usertableid" style="margin-bottom: 30px;">
+                            <div class="card row" style="margin-left: 0px;width: 96%;height: 58px;justify-content:center;">
+                                <div class="col-2">
+                                    Page {{ $data->currentPage() }} of {{ $data->lastPage() }} in {{ $data->count() }} Records
+                                </div>
+                                <div class="col-10" style="display: flex;justify-content: center;">
+                                    {{ $data->links('pagination::bootstrap-4') }}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     @else
                     <h1 style="color:red;display: flex;justify-content: center;margin-top: 267px;">NOT FOUND PRODUCT</h1>

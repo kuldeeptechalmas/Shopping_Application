@@ -78,6 +78,14 @@
             <div style="color:red;" id="epincode" hidden></div>
         </div>
     </div>
+    <div class="d-flex flex-row align-items-center mb-4">
+        <div data-mdb-input-init class="form-outline flex-fill mb-0">
+            <label class="form-label" for="form3Example1c">Email</label>
+            <input type="text" id="email" value="{{$data->email}}" name='email' class="form-control" />
+            <div style="color:red;" id="eemail" hidden></div>
+        </div>
+    </div>
+
 </form>
 
 

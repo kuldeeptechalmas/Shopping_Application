@@ -33,7 +33,7 @@
 
     <div class="d-flex flex-row align-items-center mb-4">
         <div data-mdb-input-init class="form-outline flex-fill mb-0">
-            <label class="form-label" for="form3Example1c">Sub-Catagory ({{ $product_data->category->category_name }})</label>
+            <label class="form-label" for="form3Example1c">Sub-Catagory of <label class="fw-bold">{{ $product_data->category->category_name }}</label></label>
             <select class="form-select" id="vpcatagory" name="catagory">
                 <option value="">Select</option>
                 @if (isset($subcatagory))
@@ -83,7 +83,7 @@
                 @foreach ($product_data->images as $item)
                 <div class="col-md-3" style="margin: 17px;">
                     <img style="width: 100%; height: 100%; object-fit: cover;position: relative;" src="{{ asset('storage/UploadeFile/' . $item->image_name) }}" alt="Image">
-                    <a href="/RemoveImage/{{ $item->id }}" style="color: red;">
+                    <a href="/RemoveImage/{{ $item->id }}/{{ $product_data->id }}" style="color: red;">
                         <i class="fa-solid fa-circle-xmark" style="position: absolute"></i>
                     </a>
                 </div>

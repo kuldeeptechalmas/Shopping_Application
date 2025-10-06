@@ -1,5 +1,13 @@
 @extends('Admin.index')
+@section('css_content')
+<style>
+    .pagination {
+        margin-bottom: 0px;
+        margin-right: 120px;
+    }
 
+</style>
+@endsection
 @section('content')
 @if ($data->isNotEmpty())
 <div id="dataOutput" class="mt-3">
@@ -36,20 +44,9 @@
                             </a>
                         </div>
                         <div class="col-8">
-                            {{-- <button type="button" class="btn btn-danger text-white" style="" onclick="deleteproductdata('{{$item->id}}','{{$item->name}}')" data-bs-toggle="modal" data-bs-target="#productdeletemodel">
-                            Delete
-                            </button> --}}
                             <button type="button" class="btn btn-danger" onclick="deleteuserdata('{{$item->id}}','{{$item->name}}')" data-bs-toggle="modal" data-bs-target="#AdminUserDeleteModal">
                                 Delete
                             </button>
-                            {{-- <form action="{{route('admindashboard')}}" method="post">
-                            @csrf
-                            <input type="text" name="action" hidden value="remove">
-                            <input type="text" name="id" hidden value="{{$item->id}}">
-                            <button type="submit" class="btn btn-danger">
-                                Delete
-                            </button>
-                            </form> --}}
                         </div>
                     </div>
                 </th>
@@ -57,8 +54,19 @@
             @endforeach
         </tbody>
     </table>
-    <div class="paginationDiv" style="margin-right: 73%;" id="usertableid">
-        {{ $data->links('pagination::bootstrap-5') }}
+
+    <div class="paginationDiv" id="usertableid" style="margin-bottom: 30px;">
+
+        <div class="paginationDiv" id="usertableid" style="margin-bottom: 30px;">
+            <div class="card row" style="margin-left: 0px;width: 96%;height: 58px;justify-content:center;">
+                <div class="col-2">
+                    Page {{ $data->currentPage() }} of {{ $data->lastPage() }} in {{ $data->count() }} Records
+                </div>
+                <div class="col-10" style="display: flex;justify-content: center;">
+                    {{ $data->links('pagination::bootstrap-4') }}
+                </div>
+            </div>
+        </div>
     </div>
 
     @else

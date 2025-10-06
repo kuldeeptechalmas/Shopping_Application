@@ -104,8 +104,8 @@
                 <form class="d-flex">
 
                     <div>
-                        <div class="hover-trigger position-relative">
-                            <h1><i class="fa-solid fa-circle-user" style="margin-left: 11px;"></i></h1>
+                        <div class="hover-trigger position-relative" style="margin-right: 20px;">
+                            <h1><i class="fa-solid fa-circle-user"></i></h1>
                             {{session('adminname')}}
                             <div class="show-on-hover position-absolute" style="right: 0px; width: 222px; background: white;border-radius: 15px;">
                                 <div class="shadow p-3 bg-body rounded">

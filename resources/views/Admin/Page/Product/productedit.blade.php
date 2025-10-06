@@ -29,10 +29,11 @@
 
     <div class="d-flex flex-row align-items-center mb-4">
         <div data-mdb-input-init class="form-outline flex-fill mb-0">
-            <label class="form-label" for="form3Example1c">Sub-Catagory</label>
+            <label class="form-label" for="form3Example1c">Sub-Catagory of <label class="fw-bolder">{{$productData->category->category_name }}</label></label>
+            {{$productData->subcategory }}
             <select class="form-select" id="vpcatagory" name="catagory">
                 <option value="">Select</option>
-                <option value="{{$productData->sub_category_id}}" selected>{{$productData->sub_category_id}}</option>
+                <option value="{{$productData->sub_category_id}}" selected>{{$productData->sub_category_id }}</option>
             </select>
             @error('catagory')
 

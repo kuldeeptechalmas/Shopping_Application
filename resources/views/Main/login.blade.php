@@ -37,12 +37,12 @@
                         <!-- Email input -->
                         <div data-mdb-input-init class="form-outline mb-4">
                             <label class="form-label" for="form3Example3">Email address</label>
-                            <input type="email" name="email" oninput="Email_Check_Exist_Or_Not()" id="email-id" value="{{old('email')}}" class="form-control form-control-lg" placeholder="Enter a valid email address" />
+                            <input type="text" name="email" oninput="Email_Check_Exist_Or_Not()" id="email-id" value="{{old('email')}}" class="form-control form-control-lg" placeholder="Enter a valid email address" />
                         </div>
-                        <div style="color:red;" id="emailCheckError" hidden></div><br>
                         @error('email')
                         <div style="color:red;">{{$message}}</div><br>
                         @enderror
+                        <div style="color:red;" id="emailCheckError" hidden></div><br>
 
                         <!-- Password input -->
                         <div data-mdb-input-init class="form-outline mb-3" style="position: relative;">

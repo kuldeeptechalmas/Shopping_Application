@@ -38,6 +38,7 @@ class Product_Controller extends Controller
                 ],
                 [
                     "name.required" => "Enter Name Are Required.",
+                    "name.not_regex" => "Enter Not only Numeric Required.",
                     "description.required" => "Enter Description Are Required.",
                     "price.required" => "Enter Price Are Required.",
                     "price.numeric" => "Enter Price Is Numeric Required.",
@@ -98,6 +99,19 @@ class Product_Controller extends Controller
                 $product->save();
             }
             if ($files = $request->file("file")) {
+
+                // Image Update 
+                if ($product->images->count() == 1) {
+                    if ($product->images[0]->image_name == "default_image.png") {
+                        $ImageData = Images::find($product->images[0]->id);
+                        if ($ImageData) {
+                            $ImageData->delete();
+                        }
+                        $product->image = $request->file("file")[0]->getClientOriginalName();
+                        $product->save();
+                    }
+                }
+
                 foreach ($files as $file) {
                     $file->storeAs("public/UploadeFile", $file->getClientOriginalName());
                     $image = new Images();
@@ -126,6 +140,7 @@ class Product_Controller extends Controller
                     "file" => "required",
                 ],
                 [
+                    "name.not_regex" => "Enter Not only Numeric Required.",
                     "name.required" => "Enter Name Are Required.",
                     "description.required" => "Enter Description Are Required.",
                     "price.required" => "Enter Price Are Required.",
@@ -332,7 +347,11 @@ class Product_Controller extends Controller
         }
         $subcatagorydata = SubCatagory::where("catagroy_id", $catagoryid)->get();
 
+        // all catagory
+        $catagory = CategoryProduct::all();
+
         return view("Shopkeeper.Product.viewproduct", [
+            "catagory" => $catagory,
             "product_data" => $productdata,
             "subcatagory" => $subcatagorydata
         ]);

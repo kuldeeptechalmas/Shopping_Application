@@ -30,16 +30,32 @@ class MainController extends Controller
 
         if ($request->isMethod("post")) {
 
-            $validator = $request->validate(
+            $userData = CustomerAndShopkeeper::where("email", "like", "%" . $request->email . "%")->get();
+            if ($userData->count() == 0) {
+                $adminData = Admin::where("email", "like", "%" . $request->email . "%")->get();
+
+                if ($adminData->count() == 0) {
+                    return redirect()->back()->withErrors(["email" => "Email User Not Exist !"])->withInput();
+                }
+            }
+
+            $validator = Validator::make(
+                $request->all(),
                 [
-                    "email" => "required",
+                    "email" => ["required", 'email:rfc,dns'],
                     "password" => "required",
                 ],
                 [
                     "email.required" => "Enter Email is Required.",
+                    'email.email' => 'Enter Email Must Be A Valid Email Address.',
                     "password.required" => "Enter Password is Required."
                 ]
             );
+
+
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
 
             $customer = CustomerAndShopkeeper::where("email", $request->email)->first();
             $admin = Admin::where("email", $request->email)->first();
@@ -51,9 +67,6 @@ class MainController extends Controller
                 } else {
                     return redirect()->back()->with("passworderror", "The password is Invalid password")->withInput();
                 }
-            }
-            if (empty($customer)) {
-                return redirect()->route("error");
             }
 
             if (!empty($customer->rols)) {
@@ -511,7 +524,7 @@ class MainController extends Controller
             $adminData = Admin::where("email", "like", "%" . $request->searchData . "%")->get();
 
             if ($adminData->count() == 0) {
-                return Response()->json(["emailError" => "email user not exist !!!"]);
+                return Response()->json(["emailError" => "Email User Not Exist !"]);
             } else {
                 return Response()->json(["emailError" => "notShow"]);
             }

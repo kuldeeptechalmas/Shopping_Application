@@ -11,6 +11,13 @@
 <link href="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.4.1/dist/css/coreui.min.css" rel="stylesheet">
 <script defer src="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.4.1/dist/js/coreui.bundle.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+    .pagination {
+        margin-bottom: 0px;
+        margin-right: 120px;
+    }
+
+</style>
 @endsection
 
 @section('content')
@@ -50,8 +57,19 @@
     </div>
     @endforeach
 </div>
-<div class="paginationDiv" style="margin-right: 73%;">
-    {{ $dataProduct->links('pagination::bootstrap-5') }}
+
+<div class="paginationDiv" id="usertableid" style="margin-bottom: 30px;">
+
+    <div class="paginationDiv" id="usertableid" style="margin-bottom: 30px;">
+        <div class="card row" style="margin-left: 0px;width: 96%;height: 58px;justify-content:center;">
+            <div class="col-2">
+                Page {{ $dataProduct->currentPage() }} of {{ $dataProduct->lastPage() }} in {{ $dataProduct->count() }} Records
+            </div>
+            <div class="col-10" style="display: flex;justify-content: center;">
+                {{ $dataProduct->links('pagination::bootstrap-4') }}
+            </div>
+        </div>
+    </div>
 </div>
 
 @else

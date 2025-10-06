@@ -35,7 +35,8 @@ class ShopkeeperController extends Controller
                 }
             } else {
 
-                $data = Product::where("name", "like", "%" . $request->searchText . "%")->paginate(15);
+                $data = Product::where("name", "like", "%" . $request->searchText . "%")->where("user_id", $user->id)->paginate(15);
+
                 if ($data->count() == 0) {
                     return view("Shopkeeper.index", ["catagory" => $catagory, "showallrecord" => "yes", "searchText" => $request->searchText]);
                 } else {
@@ -65,13 +66,23 @@ class ShopkeeperController extends Controller
     }
     public function updateuser(Request $request)
     {
+
         $request->validate([
-            "name" => "required",
+            "name" =>  [
+                'required',
+                'regex:/^[a-zA-Z0-9\s]+$/',
+                'not_regex:/^\d+$/',
+            ],
             "phone" => [
                 'required',
                 'numeric',
                 "digits:10",
                 Rule::unique('CustomerAndShopkeeper', 'phone')->ignore($request->id),
+            ],
+            "email" => [
+                "required",
+                "email:rfc,dns",
+                Rule::unique('CustomerAndShopkeeper', 'email')->ignore($request->id),
             ],
             "address" => "required",
             "city" => "required",
@@ -85,6 +96,7 @@ class ShopkeeperController extends Controller
 
         $customer->update([
             "name" => $request->name,
+            "email" => $request->email,
             "address" => $request->address,
             "phone" => $request->phone,
             "city" => $request->city,
@@ -95,6 +107,7 @@ class ShopkeeperController extends Controller
         ]);
 
         Session::put("shopkeeperid", $customer->name);
+        Session::put("shopkeeperemail", $customer->email);
 
         return response()->json([
             'status' => 'success',
@@ -190,6 +203,15 @@ class ShopkeeperController extends Controller
     {
         if ($request->isMethod("post")) {
 
+            // Remove data
+            if ($request->action == 'removeorder') {
+                $orderData = CustomerOrder::find($request->id);
+                if ($orderData) {
+                    $orderData->delete();
+                    return redirect()->back();
+                }
+            }
+
             // view data get
             if ($request->action == 'edit') {
                 $view_Order = CustomerOrder::find($request->id);
@@ -232,16 +254,6 @@ class ShopkeeperController extends Controller
         $imageData = Images::find($imageid);
         $productData = Product::find($productId);
 
-        // dd($productData->image);
-        // dd($imageData->image_name == $productData->image);
-        $imageDataall = Images::find($productId);
-        // dd($item);
-        // foreach ($imageDataall as $item) {
-        //     if ($item->image_name == $productData->image) {
-        //         dd($item);
-        //     }
-        // }
-
         if ($imageData) {
             $imageData->delete();
         }
@@ -251,6 +263,12 @@ class ShopkeeperController extends Controller
             $image->image_name = "default_image.png";
             $image->product_id = $productData->id;
             $image->save();
+        }
+
+        $imageDataall = Images::where("product_id", $productId)->get();
+        if ($imageData->image_name == $productData->image) {
+            $productData->image = $imageDataall[0]->image_name;
+            $productData->save();
         }
         return redirect()->back();
     }

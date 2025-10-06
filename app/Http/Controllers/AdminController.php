@@ -202,6 +202,19 @@ class AdminController extends Controller
             }
 
             if ($files = $request->file("file")) {
+
+                // Image Update 
+                if ($product->images->count() == 1) {
+                    if ($product->images[0]->image_name == "default_image.png") {
+                        $ImageData = Images::find($product->images[0]->id);
+                        if ($ImageData) {
+                            $ImageData->delete();
+                        }
+                        $product->image = $request->file("file")[0]->getClientOriginalName();
+                        $product->save();
+                    }
+                }
+
                 foreach ($files as $file) {
                     $file->storeAs("public/UploadeFile", $file->getClientOriginalName());
                     $image = new Images();
@@ -220,6 +233,7 @@ class AdminController extends Controller
         }
         // Edit product data get
         $productData = Product::where("id", $productId)->first();
+
         if ($productData) {
             return view("Admin.Page.Product.productedit", ["productData" => $productData]);
         }
@@ -249,26 +263,14 @@ class AdminController extends Controller
                 }
             }
 
-            // Edit order data
-            if ($request->action == "editOrderData") {
-                $validator = Validator::make($request->all(), [
-                    "status" => "required"
-                ], [
-                    "status.required" => "Select Status of Order Product."
-                ]);
-
-                if ($validator->fails()) {
-                    $orderData = CustomerOrder::find($request->id);
-                    if ($orderData) {
-                        return view("Admin.Page.Order.orderedit", ["validator" => $validator, "orderData" => $orderData]);
-                    }
-                }
+            // Delete order
+            if ($request->action == "removeorder") {
 
                 $orderData = CustomerOrder::find($request->id);
                 if ($orderData) {
-                    $orderData->status = $request->status;
-                    $orderData->save();
+                    $orderData->delete();
                 }
+                return redirect()->back();
             }
         }
         $order = CustomerOrder::paginate(15);
@@ -315,7 +317,7 @@ class AdminController extends Controller
                     "password.symbols" => "Enter Symbols is Required.",
                     "password.numbers" => "Enter Numbers is Required.",
                     "email.required" => "Enter Admin Email is Required.",
-                    'email.email' => 'The email you provided is not valid.',
+                    'email.email' => 'Enter Email Must Be A Valid Email Address.',
                 ]);
 
                 if ($validator->fails()) {

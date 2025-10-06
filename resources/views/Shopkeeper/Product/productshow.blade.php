@@ -28,7 +28,12 @@
     </div>
     @endforeach
 </div>
-<div class="paginationDiv" style="margin-right: 73%;">
-    {{ $data->links('pagination::bootstrap-5') }}
+<div class="paginationDiv" id="usertableid" style="margin-bottom: 30px;">
+    <div style="display: flex;justify-content: center;margin-bottom: 16px;">
+        Page {{ $data->currentPage() }} of {{ $data->lastPage() }} in {{ $data->count() }} Records
+    </div>
+    <div style="display: flex;justify-content: center;">
+        {{ $data->links('pagination::bootstrap-4') }}
+    </div>
 </div>
 @endif

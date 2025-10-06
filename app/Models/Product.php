@@ -39,4 +39,9 @@ class Product extends Model
     {
         return $this->belongsTo(Coupen::class);
     }
+
+    public function subcategory()
+    {
+        return $this->belongsTo(SubCatagory::class);
+    }
 }

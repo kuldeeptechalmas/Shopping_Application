@@ -83,6 +83,7 @@
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                                 <label class="form-label" for="state">State</label>
                                                 <select onchange="findcity()" class="form-select" id="state" value="{{old('state')}}" name="state">
+                                                    <option value="">Select</option>
                                                 </select>
                                                 @error('state')
                                                 <div style="color:red;">{{$message}}</div>
@@ -94,6 +95,7 @@
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                                 <label class="form-label" for="form3Example1c">City</label>
                                                 <select placeholder="Select" class="form-select" id="city" value="{{old('city')}}" name="city">
+                                                    <option value="">Select</option>
                                                 </select>
                                                 @error('city')
                                                 <div style="color:red;">{{$message}}</div>

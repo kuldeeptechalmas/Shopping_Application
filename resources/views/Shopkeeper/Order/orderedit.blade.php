@@ -3,7 +3,7 @@
 @section('content')
 <div class="d-flex justify-content-center" style="height: 62px;text-align: center;margin-top: 16px;">
     <h3 style="width: 225px;border: solid;border-radius: 27px;align-items: center;display: flex;justify-content: center;">
-        Edit Order</h3>
+        View Order</h3>
 </div>
 <form action="{{ route('shopkeeper.Order.List') }}" method="post" style="padding: 10px 169px;">
 
@@ -44,7 +44,7 @@
             <option value="">Select</option>
             <option value="Pending" {{$orderData->status == "Pending" ? 'selected' : ''}}>Pending</option>
             <option value="Processing" {{$orderData->status == "Processing" ? 'selected' : ''}}>Processing</option>
-            <option value="Shipped" {{$orderData->status == "Shipped" ? 'selected' : ''}}>Shipped</option>
+            <option value="Shipping" {{$orderData->status == "Shipping" ? 'selected' : ''}}>Shipping</option>
             <option value="Delivered" {{$orderData->status == "Delivered" ? 'selected' : ''}}>Delivered</option>
         </select>
 

@@ -131,4 +131,39 @@ class AddToCartController extends Controller
             'redirect_url' => route('addtocart_get_all')
         ]);
     }
+
+    public function direct_change_quentity(Request $request)
+    {
+        if (Session::get("customeremail")) {
+
+            $data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+
+            $addtocart1 = AddToCart::where("product_id", $request->product_id)
+                ->where("user_id", $data->id)->first();
+
+            $productData = Product::find($request->product_id);
+
+            if ($request->queantity == 0) {
+                $addtocart1->delete();
+            } else {
+                if ($request->queantity > $productData->stock) {
+                    // dd($request->all());
+                    $addtocart1->quantity = $productData->stock;
+                    $addtocart1->save();
+                    return response()->json([
+                        'status' => 'success',
+                        'outofstock_error' => 'OutOfStock',
+                        'redirect_url' => route('addtocart_get_all')
+                    ]);
+                }
+                $addtocart1->quantity = $request->queantity;
+                $addtocart1->save();
+                return response()->json([
+                    'status' => 'success',
+                    'outofstock_error' => 'OutOfStock',
+                    'redirect_url' => route('addtocart_get_all')
+                ]);
+            }
+        }
+    }
 }
