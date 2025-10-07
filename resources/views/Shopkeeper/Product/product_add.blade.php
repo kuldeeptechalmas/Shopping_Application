@@ -28,7 +28,7 @@
 
     <div class="d-flex flex-row align-items-center mb-4">
         <div data-mdb-input-init class="form-outline flex-fill mb-0">
-            <label class="form-label" for="form3Example1c">Sub-Catagory ({{ $catagoryiddata->category_name }})</label>
+            <label class="form-label" for="form3Example1c">Sub-Catagory of <label class="fw-bold">{{ $catagoryiddata->category_name }}</label></label>
             <select class="form-select" id="vpcatagory" name="catagory">
                 <option value="">Select</option>
                 @if (isset($subcatagory))
@@ -106,7 +106,7 @@
     @enderror
     <div class="modal-footer">
         <div style="padding-right: 20px">
-            <a href="/shopkeeperdashboard">
+            <a href="/productaddshop/{{ $catagoryiddata->category_name }}">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
             </a>
         </div>
@@ -118,7 +118,7 @@
 @push("shopkeeper_script")
 
 <script>
-    // status change 
+    // status change
     // done
     function statuscheck_viewproduct() {
         if (document.getElementById('vpstock').value == "0") {
@@ -127,7 +127,11 @@
             if (document.getElementById('vpstock').value > 0) {
                 document.getElementById('vpstatus').value = "in stock";
             } else {
-                document.getElementById('vpstatus').value = "";
+                if (document.getElementById('vpstock').value < 0) {
+                    document.getElementById('vpstatus').value = "out of stock";
+                } else {
+                    document.getElementById('vpstatus').value = "";
+                }
             }
         }
 

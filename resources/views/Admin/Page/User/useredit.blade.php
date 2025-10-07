@@ -6,6 +6,11 @@
     <h3 style="width: 192px;border: solid;border-radius: 27px;align-items: center;display: flex;justify-content: center;">
         Edit User</h3>
 </div>
+@if (isset($save))
+@toastifyCss
+{{ toastify() -> success('Save Successfully !') }}
+@toastifyJs
+@endif
 <form class="mx-1 mx-md-4" method="post" action="/AdminInUserUpdate/{{ $usereditdata->id }}" style="padding: 10px 169px;">
     @csrf
 

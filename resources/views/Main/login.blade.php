@@ -40,9 +40,11 @@
                             <input type="text" name="email" oninput="Email_Check_Exist_Or_Not()" id="email-id" value="{{old('email')}}" class="form-control form-control-lg" placeholder="Enter a valid email address" />
                         </div>
                         @error('email')
-                        <div style="color:red;">{{$message}}</div><br>
-                        @enderror
+                        <div style="color:red;" id="emailCheckError">{{$message}}</div><br>
+                        @else
                         <div style="color:red;" id="emailCheckError" hidden></div><br>
+                        @enderror
+
 
                         <!-- Password input -->
                         <div data-mdb-input-init class="form-outline mb-3" style="position: relative;">
@@ -99,6 +101,7 @@
     <script>
         function Email_Check_Exist_Or_Not() {
             var emails = document.getElementById("email-id").value;
+
             if (emails == "") {
                 $("#emailCheckError").attr("hidden", true);
 
@@ -134,7 +137,7 @@
 
 
 
-        // password 
+        // password
         function passwordshow() {
             $("#passwordhidden").removeAttr("hidden");
             $("#passwordshow").attr("hidden", true);

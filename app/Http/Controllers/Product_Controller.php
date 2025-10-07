@@ -100,7 +100,7 @@ class Product_Controller extends Controller
             }
             if ($files = $request->file("file")) {
 
-                // Image Update 
+                // Image Update
                 if ($product->images->count() == 1) {
                     if ($product->images[0]->image_name == "default_image.png") {
                         $ImageData = Images::find($product->images[0]->id);
@@ -140,7 +140,7 @@ class Product_Controller extends Controller
                     "file" => "required",
                 ],
                 [
-                    "name.not_regex" => "Enter Not only Numeric Required.",
+                    "name.not_regex" => "Name Not only Numeric Required.",
                     "name.required" => "Enter Name Are Required.",
                     "description.required" => "Enter Description Are Required.",
                     "price.required" => "Enter Price Are Required.",
@@ -211,7 +211,8 @@ class Product_Controller extends Controller
                     $image->save();
                 }
             }
-            return redirect()->route('shopkeeperdashboard');
+
+            return redirect()->route("product.Add.Show", ["category_name" => $product->category->category_name]);
         }
     }
 
@@ -379,8 +380,9 @@ class Product_Controller extends Controller
     {
         $prodcut_delete = Product::find($request->id);
         if ($prodcut_delete) {
+            $delete_category = $prodcut_delete->category->category_name;
             $prodcut_delete->delete();
-            return redirect()->back();
+            return redirect()->route("product.Add.Show", ["category_name" => $delete_category]);
         } else {
             return redirect()->back()->withErrors("not found data");
         }

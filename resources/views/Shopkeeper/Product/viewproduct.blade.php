@@ -118,7 +118,7 @@
 
     <div class="modal-footer">
         <div style="padding-right: 20px">
-            <a href="/shopkeeperdashboard">
+            <a href="/productaddshop/{{ $product_data->category->category_name }}">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
             </a>
         </div>
@@ -129,29 +129,23 @@
 @push("shopkeeper_script")
 
 <script>
-    function statuscheck_viewproduct() {
-        if (document.getElementById('pstock').value == "0") {
-            document.getElementById('pstatus').value = "out of stock";
-        } else {
-            if (document.getElementById('pstock').value > 0) {
-                document.getElementById('pstatus').value = "in stock";
-            } else {
-                document.getElementById('pstatus').value = "";
-            }
-        }
+    // function statuscheck_viewproduct() {
+    //     if (document.getElementById('pstock').value == "0") {
+    //         document.getElementById('pstatus').value = "out of stock";
+    //     } else {
+    //         if (document.getElementById('pstock').value > 0) {
+    //             document.getElementById('pstatus').value = "in stock";
+    //         } else {
+    //             if (document.getElementById('vpstock').value < 0) {
+    //                 document.getElementById('vpstatus').value = "out of stock";
+    //             } else {
+    //                 document.getElementById('vpstatus').value = "";
+    //             }
+    //         }
+    //     }
+    // }
 
-        if (document.getElementById('vpstock').value == "0") {
-            document.getElementById('vpstatus').value = "out of stock";
-        } else {
-            if (document.getElementById('vpstock').value > 0) {
-                document.getElementById('vpstatus').value = "in stock";
-            } else {
-                document.getElementById('vpstatus').value = "";
-            }
-        }
-    }
-
-    // status change 
+    // status change
     // done
     function statuscheck_viewproduct() {
         if (document.getElementById('vpstock').value == "0") {
@@ -160,10 +154,13 @@
             if (document.getElementById('vpstock').value > 0) {
                 document.getElementById('vpstatus').value = "in stock";
             } else {
-                document.getElementById('vpstatus').value = "";
+                if (document.getElementById('vpstock').value < 0) {
+                    document.getElementById('vpstatus').value = "out of stock";
+                } else {
+                    document.getElementById('vpstatus').value = "";
+                }
             }
         }
-
     }
 
 </script>

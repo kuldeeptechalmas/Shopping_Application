@@ -28,6 +28,7 @@
 <a href="/AddProductPage/{{ $catagoryid }}" type="button" class="btn btn-primary" style="margin-left: 86%;">Add Product</a>
 
 @if (isset($dataProduct))
+@if ($dataProduct->isNotEmpty())
 <div class="row">
     @foreach ($dataProduct as $item)
     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 card" style="width: 18rem; margin: 10px;">
@@ -73,12 +74,11 @@
 </div>
 
 @else
-<h1 style="display: flex;justify-content: center;margin-top: 57px;color:red">NOT FOUND PRODUCT</h1>
+<h1 style="display: flex;justify-content: center;margin-top: 57px;color:red">Not Found Product</h1>
 @endif
-
-{{-- @if (!isset($dataProduct))
-<h1>NOT FOUND PRODUCT</h1>
-@endif --}}
+@else
+<h1 style="display: flex;justify-content: center;margin-top: 57px;color:red">Not Found Product</h1>
+@endif
 
 @endsection
 

@@ -10,6 +10,7 @@ use App\Models\CustomerAndShopkeeper;
 use App\Models\CustomerOrder;
 use App\Models\Images;
 use App\Models\Product;
+use App\Models\SubCatagory;
 use FFI\Exception;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -37,11 +38,11 @@ class AdminController extends Controller
             }
 
             // Remove customer and shopkeeper
-            elseif ($request->action == "remove") {
+            if ($request->action == "remove") {
                 $userRemove = CustomerAndShopkeeper::where("id", $request->id)->first();
                 if ($userRemove) {
                     $userRemove->delete();
-                    return redirect()->back();
+                    return redirect()->route("admindashboard");
                 }
             }
         }
@@ -53,6 +54,7 @@ class AdminController extends Controller
     // Customer and shopkeeper Edit
     public function CustomerAndShopkeeper_Update(Request $request, $userId)
     {
+        $success = null;
         if ($request->isMethod("post")) {
             //Edit customer ans shopkeeper
 
@@ -102,7 +104,8 @@ class AdminController extends Controller
                 "pincode" => $request->pincode,
                 "gender" => $request->gender,
             ]);
-            return redirect()->back();
+
+            $success = "";
         }
 
         // Edit customer and shopkeeper data get
@@ -113,7 +116,7 @@ class AdminController extends Controller
             $content = File::get(public_path('countries.json'));
             $contryList = json_decode($content, true);
 
-            return view("Admin.Page.User.useredit", ["usereditdata" => $userEdit, "country" => $contryList]);
+            return view("Admin.Page.User.useredit", ["save" => $success, "usereditdata" => $userEdit, "country" => $contryList]);
         }
     }
 
@@ -135,7 +138,7 @@ class AdminController extends Controller
                 if ($productData) {
                     $productData->delete();
                 }
-                return redirect()->back();
+                return redirect()->route("product.manage");
             }
         }
 
@@ -146,6 +149,7 @@ class AdminController extends Controller
     // Product Edit
     public function Product_Update(Request $request, $productId)
     {
+        $success = null;
         if ($request->isMethod("post")) {
             // Edit product info
 
@@ -203,7 +207,7 @@ class AdminController extends Controller
 
             if ($files = $request->file("file")) {
 
-                // Image Update 
+                // Image Update
                 if ($product->images->count() == 1) {
                     if ($product->images[0]->image_name == "default_image.png") {
                         $ImageData = Images::find($product->images[0]->id);
@@ -230,12 +234,16 @@ class AdminController extends Controller
                 $image->product_id = $product->id;
                 $image->save();
             }
+
+            $success = "";
         }
         // Edit product data get
         $productData = Product::where("id", $productId)->first();
 
+        $SubCategoryData = SubCatagory::where("catagroy_id", $productData->category->id)->get();
+
         if ($productData) {
-            return view("Admin.Page.Product.productedit", ["productData" => $productData]);
+            return view("Admin.Page.Product.productedit", ["save" => $success, "productData" => $productData, "subCategoryData" => $SubCategoryData]);
         }
     }
 
@@ -287,11 +295,16 @@ class AdminController extends Controller
     // Admin profile manage
     public function Admin_Profile_Manage(Request $request)
     {
+        $success = null;
         if ($request->isMethod("post")) {
             if ($request->action == "editOrderData") {
 
                 $validator = Validator::make($request->all(), [
-                    "name" => "required",
+                    "name" =>  [
+                        'required',
+                        'regex:/^[a-zA-Z0-9\s]+$/',
+                        'not_regex:/^\d+$/',
+                    ],
                     "conformpassword" => [
                         "required",
                         "same:password",
@@ -307,6 +320,7 @@ class AdminController extends Controller
                         Rule::unique('CustomerAndShopkeeper', 'id')->ignore($request->id),
                     ]
                 ], [
+                    "name.not_regex" => "Name Not only Numeric Required.",
                     "name.required" => "Enter Admin Name is Required.",
                     "conformpassword.required" => "Enter ConfPassword is Required.",
                     "conformpassword.min" => "Enter Min 8 Charecter is Required.",
@@ -335,6 +349,7 @@ class AdminController extends Controller
                     "password" => $request->password,
                     "email" => $request->email,
                 ]);
+                $success = "";
 
                 Session::put("adminname", $Admin->name);
             }
@@ -342,7 +357,7 @@ class AdminController extends Controller
 
         if (Session::get('adminname')) {
             $admin_profile = Admin::where('name', Session::get('adminname'))->first();
-            return view('Admin.Page.AdminProfile.adminprofile', ['admin_profile' => $admin_profile]);
+            return view('Admin.Page.AdminProfile.adminprofile', ["save" => $success, 'admin_profile' => $admin_profile]);
         }
     }
 

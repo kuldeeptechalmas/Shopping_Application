@@ -12,6 +12,7 @@
 
 @section('content')
 
+@if (isset($order))
 @if ($order->isNotEmpty())
 <div id="dataOutput" class="mt-3">
     <h1>Show Order</h1>
@@ -92,8 +93,11 @@
     @else
     <h1 style="color: red;display: flex;justify-content: center;align-items: center;margin-top: 172px;">Not Found Order</h1>
     @endif
+    @else
+    <h1 style="color: red;display: flex;justify-content: center;align-items: center;margin-top: 172px;">Not Found Order</h1>
+    @endif
 
-    <!--Product Delete Modal -->
+    <!--Order Delete Modal -->
     <div class="modal fade" id="AdminOrderDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

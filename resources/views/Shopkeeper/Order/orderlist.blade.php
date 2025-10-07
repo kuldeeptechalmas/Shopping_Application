@@ -1,6 +1,9 @@
 @extends('Shopkeeper.index')
 
 @section('content')
+@if (isset($order_Data))
+
+@if ($order_Data->isNotEmpty())
 <div id="dataOutput" class="mt-3">
     <h1>Show Order</h1>
     <table class="table table-striped">
@@ -19,7 +22,6 @@
         </thead>
         <tbody>
 
-            @if (isset($order_Data))
             @foreach ($order_Data as $item)
             <tr>
                 <th scope="col">{{$item->product->name}}</th>
@@ -61,7 +63,6 @@
                 </th>
             </tr>
             @endforeach
-            @endif
         </tbody>
     </table>
     <div class="paginationDiv" id="usertableid" style="margin-bottom: 30px;">
@@ -77,6 +78,12 @@
             </div>
         </div>
     </div>
+    @else
+    <h1 style="color: red;display: flex;justify-content: center;align-items: center;margin-top: 263px;">Not Found Order</h1>
+    @endif
+    @else
+    <h1 style="color: red;display: flex;justify-content: center;align-items: center;margin-top: 263px;">Not Found Order</h1>
+    @endif
 
 
     <!--Product Delete Modal -->

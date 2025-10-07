@@ -1,6 +1,13 @@
 @extends('Admin.index')
 
 @section('content')
+
+@if (isset($save))
+@toastifyCss
+{{ toastify() -> success('Save Successfully !') }}
+@toastifyJs
+@endif
+
 <h1 style="text-align: center">Admin Profile</h1>
 <form class="mx-1 mx-md-4" method="post" action="{{ route('admin.Profile.Manage') }}" style="padding: 10px 168px;">
     @csrf

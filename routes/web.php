@@ -119,7 +119,7 @@ Route::post('/deleteproductadmin', [Product_Controller::class, 'admin_product_re
 Route::post('/deleteproduct', [Product_Controller::class, 'Product_Delete']);
 Route::get('/searchproduct', [Product_Controller::class, 'product_search']);
 Route::get('/getproductshopkeeper', [Product_Controller::class, 'product_list_get_shopkeeper']);
-Route::match(['get', 'post'], '/productaddshop/{category_name}', [Product_Controller::class, 'product_add_show']);
+Route::match(['get', 'post'], '/productaddshop/{category_name}', [Product_Controller::class, 'product_add_show'])->name("product.Add.Show");
 Route::get('/productdetails/{productid}', [Product_Controller::class, 'product_details']);
 Route::match(['get', 'post'], '/productview/{productid}', [Product_Controller::class, 'product_view']);
 Route::match(['get', 'post'], '/AddProductPage/{catagoryid}', [Product_Controller::class, 'Add_Product_Page']);

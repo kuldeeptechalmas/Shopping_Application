@@ -12,7 +12,7 @@
     @endforeach
 </ul>
 @foreach ($data as $item1)
-<div class="row w-100">
+<div class="row w-100" style="margin-left: 15px;">
     @foreach ($item1->productsdata as $item)
     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 card" style="width: 18rem; margin: 10px;">
         <div class="likes">

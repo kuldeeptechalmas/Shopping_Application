@@ -36,7 +36,6 @@ class ShopkeeperController extends Controller
             } else {
 
                 $data = Product::where("name", "like", "%" . $request->searchText . "%")->where("user_id", $user->id)->paginate(15);
-
                 if ($data->count() == 0) {
                     return view("Shopkeeper.index", ["catagory" => $catagory, "showallrecord" => "yes", "searchText" => $request->searchText]);
                 } else {
@@ -56,14 +55,15 @@ class ShopkeeperController extends Controller
             $data = Product::where("user_id", $user->id)->paginate(15);
             return view("Shopkeeper.index", ["data" => $data, "catagory" => $catagory, "showallrecord" => "yes"]);
         }
-        // return view("Shopkeeper.index", ["catagory" => $catagory, ]);
     }
+
     public function profileuser(Request $request)
     {
         $data = CustomerAndShopkeeper::where("email", $request->shopkeeperemail)->first();
         $data->password = Crypt::decryptString($data->password);
         return response()->json($data);
     }
+
     public function updateuser(Request $request)
     {
 
@@ -203,6 +203,24 @@ class ShopkeeperController extends Controller
     {
         if ($request->isMethod("post")) {
 
+            // Search
+            if ($request->action == 'searchOrder') {
+
+                $shopkeeper_Data = CustomerAndShopkeeper::where("email", Session::get('shopkeeperemail'))->first();
+                $sid = $shopkeeper_Data->id;
+                $searchData = $request->searchText;
+
+                $paginatedata = CustomerOrder::whereHas('product', function ($query) use ($sid, $searchData) {
+                    $query->where('user_id', $sid);
+                    $query->where('name', "like", "%" . $searchData . "%");
+                })->paginate(15);
+
+                // all catagory
+                $catagory = CategoryProduct::all();
+
+                return view("Shopkeeper.Order.orderlist", ["catagory" => $catagory, 'order_Data' => $paginatedata]);
+            }
+
             // Remove data
             if ($request->action == 'removeorder') {
                 $orderData = CustomerOrder::find($request->id);
@@ -240,13 +258,18 @@ class ShopkeeperController extends Controller
                 }
             }
         }
+
         $shopkeeper_Data = CustomerAndShopkeeper::where("email", Session::get('shopkeeperemail'))->first();
         $sid = $shopkeeper_Data->id;
 
         $paginatedata = CustomerOrder::whereHas('product', function ($query) use ($sid) {
             $query->where('user_id', $sid);
         })->paginate(15);
-        return view("Shopkeeper.Order.orderlist", ['order_Data' => $paginatedata]);
+
+        // all catagory
+        $catagory = CategoryProduct::all();
+
+        return view("Shopkeeper.Order.orderlist", ["catagory" => $catagory, 'order_Data' => $paginatedata]);
     }
 
     public function Remove_Image_Product($imageid, $productId)

@@ -30,6 +30,22 @@ class MainController extends Controller
 
         if ($request->isMethod("post")) {
 
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'email' => ['required', 'email:rfc,dns', 'regex:/^[a-zA-Z0-9._%+-]+@(gmail|yahoo)\.com$/'],
+                ],
+                [
+                    'email.required' => 'Enter Email is Required.',
+                    'email.email' => 'Enter Email Must Be A Valid Email Address.',
+                    'email.regex' => 'The email must be from an allowed domain (gmail.com, yahoo.com).',
+                ]
+            );
+
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+
             $userData = CustomerAndShopkeeper::where("email", "like", "%" . $request->email . "%")->get();
             if ($userData->count() == 0) {
                 $adminData = Admin::where("email", "like", "%" . $request->email . "%")->get();
@@ -39,22 +55,17 @@ class MainController extends Controller
                 }
             }
 
-            $validator = Validator::make(
+            $validator1 = Validator::make(
                 $request->all(),
                 [
-                    "email" => ["required", 'email:rfc,dns'],
                     "password" => "required",
                 ],
                 [
-                    "email.required" => "Enter Email is Required.",
-                    'email.email' => 'Enter Email Must Be A Valid Email Address.',
                     "password.required" => "Enter Password is Required."
                 ]
             );
-
-
-            if ($validator->fails()) {
-                return redirect()->back()->withErrors($validator)->withInput();
+            if ($validator1->fails()) {
+                return redirect()->back()->withErrors($validator1)->withInput();
             }
 
             $customer = CustomerAndShopkeeper::where("email", $request->email)->first();
@@ -65,7 +76,7 @@ class MainController extends Controller
                     Session::put("adminname", $admin->name);
                     return redirect()->route("admindashboard");
                 } else {
-                    return redirect()->back()->with("passworderror", "The password is Invalid password")->withInput();
+                    return redirect()->back()->with("password", "The password is Invalid password")->withInput();
                 }
             }
 
@@ -331,6 +342,45 @@ class MainController extends Controller
         return view("IndexProductShow.CheckOut.checkoutpage", ["customerdata" => $data, "couponuserdata" => $coupon, "cart" => $addtocart, "contrylist" => $contrylist]);
     }
 
+    // Email Check - Login
+    public function Login_Email_Check(Request $request)
+    {
+        $userData = CustomerAndShopkeeper::where("email", "like", "%" . $request->searchData . "%")->get();
+
+        if ($userData->count() == 0) {
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    'searchData' => ['required', 'email:rfc,dns', 'regex:/^[a-zA-Z0-9._%+-]+@(gmail|yahoo)\.com$/'],
+                ]
+            );
+
+            if ($validator->fails()) {
+                return Response()->json(["emailError" => "notShow"]);
+            }
+            $adminData = Admin::where("email", "like", "%" . $request->searchData . "%")->get();
+
+            if ($adminData->count() == 0) {
+                return Response()->json(["emailError" => "Email User Not Exist !"]);
+            } else {
+                return Response()->json(["emailError" => "notShow"]);
+            }
+        } else {
+            return Response()->json(["emailError" => "notShow"]);
+        }
+    }
+
+    // Main page Search Bar
+    public function search_product_name(Request $request)
+    {
+        $data_of_input = $request->search_data;
+        if ($data_of_input == '') {
+            return redirect()->route("MainIndex");
+        }
+        $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
+        return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input]);
+    }
+
     public function delete_cart_summry($cartid)
     {
         $addtocart = AddToCart::find($cartid);
@@ -394,16 +444,6 @@ class MainController extends Controller
         return redirect()->back();
     }
 
-    // Main page Search Bar
-    public function search_product_name(Request $request)
-    {
-        $data_of_input = $request->search_data;
-        if ($data_of_input == '') {
-            return redirect()->route("MainIndex");
-        }
-        $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
-        return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input]);
-    }
 
     public function get_category_wise_product($categoryname)
     {
@@ -512,24 +552,5 @@ class MainController extends Controller
             Session::forget("discountamount");
         }
         return redirect()->back();
-    }
-
-    // Email Check - Login
-    public function Login_Email_Check(Request $request)
-    {
-        $userData = CustomerAndShopkeeper::where("email", "like", "%" . $request->searchData . "%")->get();
-
-        if ($userData->count() == 0) {
-
-            $adminData = Admin::where("email", "like", "%" . $request->searchData . "%")->get();
-
-            if ($adminData->count() == 0) {
-                return Response()->json(["emailError" => "Email User Not Exist !"]);
-            } else {
-                return Response()->json(["emailError" => "notShow"]);
-            }
-        } else {
-            return Response()->json(["emailError" => "notShow"]);
-        }
     }
 }

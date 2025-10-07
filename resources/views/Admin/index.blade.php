@@ -186,7 +186,7 @@
     @stack("script_content")
 
     <script>
-        // status change 
+        // status change
         // done
         function statuscheck_viewproduct() {
             if (document.getElementById('vpstock').value == "0") {
@@ -195,7 +195,11 @@
                 if (document.getElementById('vpstock').value > 0) {
                     document.getElementById('vpstatus').value = "in stock";
                 } else {
-                    document.getElementById('vpstatus').value = "";
+                    if (document.getElementById('vpstock').value < 0) {
+                        document.getElementById('vpstatus').value = "out of stock";
+                    } else {
+                        document.getElementById('vpstatus').value = "";
+                    }
                 }
             }
 

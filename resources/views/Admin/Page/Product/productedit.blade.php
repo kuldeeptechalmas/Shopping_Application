@@ -5,6 +5,11 @@
     <h3 style="width: 225px;border: solid;border-radius: 27px;align-items: center;display: flex;justify-content: center;">
         Edit Product</h3>
 </div>
+@if (isset($save))
+@toastifyCss
+{{ toastify() -> success('Save Successfully !') }}
+@toastifyJs
+@endif
 <form id="view-product-from" style="padding: 10px 169px;" action="/AdminInProductUpdate/{{ $productData->id }}" enctype="multipart/form-data" method="post">
     @csrf
     <input type="text" name="id" value="{{$productData->id}}" id="vpid" hidden>
@@ -30,10 +35,13 @@
     <div class="d-flex flex-row align-items-center mb-4">
         <div data-mdb-input-init class="form-outline flex-fill mb-0">
             <label class="form-label" for="form3Example1c">Sub-Catagory of <label class="fw-bolder">{{$productData->category->category_name }}</label></label>
-            {{$productData->subcategory }}
             <select class="form-select" id="vpcatagory" name="catagory">
                 <option value="">Select</option>
-                <option value="{{$productData->sub_category_id}}" selected>{{$productData->sub_category_id }}</option>
+                @if (isset($subCategoryData))
+                @foreach ($subCategoryData as $item)
+                <option value="{{$item->id}}" {{$productData->sub_category_id==$item->id?'selected':''}}>{{$item->name }}</option>
+                @endforeach
+                @endif
             </select>
             @error('catagory')
 

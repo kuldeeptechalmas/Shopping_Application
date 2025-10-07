@@ -22,8 +22,20 @@ class AddToCartController extends Controller
     public function index($product_id)
     {
         if (Session::get("customeremail")) {
+
             $data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))
                 ->first();
+            $findCartData = AddToCart::where("user_id", $data->id)
+                ->where("product_id", $product_id)->first();
+            $productData = Product::find($product_id);
+            // dd($findCartData->quantity == $productData->stock);
+            if ($findCartData) {
+
+                $findCartData->quantity += 1;
+                $findCartData->save();
+                return redirect()->route("addtocart_get_all");
+            }
+
             $cart = new AddToCart();
             $cart->user_id = $data->id;
             $cart->product_id = $product_id;

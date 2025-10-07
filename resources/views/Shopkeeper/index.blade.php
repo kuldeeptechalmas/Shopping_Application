@@ -129,6 +129,7 @@
                             @csrf
                             <input class="form-control me-2" name="searchText" id="searchproductid" value="{{ isset($searchText)?$searchText:'' }}" type="search" placeholder="Search" aria-label="Search">
                             <input type="text" name="catagoryid" value="{{isset($catagoryid) ? $catagoryid : ''}}" hidden id="">
+                            <input type="text" name="action" value="searchOrder" hidden>
                             <button class="btn btn-outline-success" type="submit">Search</button>
                         </form>
                     </div>
@@ -217,9 +218,9 @@
                     @yield('content')
 
                     @if (isset($showallrecord))
-
-
                     @if (isset($data))
+
+                    @if ($data->isNotEmpty())
 
                     <div class="row">
                         @foreach ($data as $item)
@@ -251,8 +252,8 @@
                         @endforeach
                     </div>
 
-                    <div class="paginationDiv" id="usertableid" style="margin-bottom: 30px;">
 
+                    <div class="paginationDiv" id="usertableid" style="margin-bottom: 30px;">
                         <div class="paginationDiv" id="usertableid" style="margin-bottom: 30px;">
                             <div class="card row" style="margin-left: 0px;width: 96%;height: 58px;justify-content:center;">
                                 <div class="col-2">
@@ -265,8 +266,12 @@
                         </div>
                     </div>
                     @else
-                    <h1 style="color:red;display: flex;justify-content: center;margin-top: 267px;">NOT FOUND PRODUCT</h1>
+                    <h1 style="color:red;display: flex;justify-content: center;margin-top: 267px;">Not Found Product</h1>
                     @endif
+                    @else
+                    <h1 style="color:red;display: flex;justify-content: center;margin-top: 267px;">Not Found Product</h1>
+                    @endif
+
                     @endif
                 </div>
             </div>
@@ -321,7 +326,7 @@
             document.getElementById("deleteid").value = id;
         }
 
-        // password 
+        // password
         function passwordshow() {
             $("#passwordhidden").removeAttr("hidden");
             $("#passwordshow").attr("hidden", true);
