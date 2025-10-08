@@ -218,7 +218,7 @@ class ShopkeeperController extends Controller
                 // all catagory
                 $catagory = CategoryProduct::all();
 
-                return view("Shopkeeper.Order.orderlist", ["catagory" => $catagory, 'order_Data' => $paginatedata]);
+                return view("Shopkeeper.Order.orderlist", ["searchText" => $request->searchText, "catagory" => $catagory, 'order_Data' => $paginatedata]);
             }
 
             // Remove data

@@ -1,7 +1,6 @@
 @extends('index')
 
 @section('content')
-
 @toastifyCss
 @if ($data->isNotEmpty())
 <ul class="d-flex justify-content-around" style="list-style: none; box-shadow: 0px 3px 15px #afafaf; padding: 10px;">

@@ -27,7 +27,6 @@ class MainController extends Controller
     // Login
     public function Login(Request $request)
     {
-
         if ($request->isMethod("post")) {
 
             $validator = Validator::make(
@@ -93,19 +92,24 @@ class MainController extends Controller
                 Session::put("customerid", $customer->name);
                 Session::put("customeremail", $customer->email);
                 Session::forget("discountamount");
-                $cart = Session::get("cart");
+
+                $cart = $request->cart;
                 if (!empty($cart)) {
                     foreach ($cart as $key => $value) {
+
+                        $productData = Product::find($key);
+                        $productData->stock -= $value['quantity'];
+                        $productData->save();
                         $cart = new AddToCart();
                         $cart->user_id = $customer->id;
                         $cart->product_id = $key;
-                        $cart->quantity = 1;
+                        $cart->quantity = $value['quantity'];
                         $cart->save();
                     }
                 }
-                Session::forget("cart");
                 return redirect()->route("MainIndex");
             } else {
+                Session::forget("cart");
                 Session::put("shopkeeperid", $customer->name);
                 Session::put("shopkeeperemail", $customer->email);
                 return redirect()->route("shopkeeperdashboard");
@@ -123,15 +127,11 @@ class MainController extends Controller
 
         if ($request->isMethod("post")) {
 
-            $validator = $request->validate([
-                "name" => "required",
-                "conformpassword" => [
-                    "required",
-                    "same:password",
-                    RulesPassword::min(8)
-                        ->mixedCase()
-                        ->symbols()
-                        ->numbers()
+            $request->validate([
+                "name" =>  [
+                    'required',
+                    'regex:/^[a-zA-Z0-9\s]+$/',
+                    'not_regex:/^\d+$/',
                 ],
                 "password" => [
                     "required",
@@ -140,7 +140,20 @@ class MainController extends Controller
                         ->symbols()
                         ->numbers()
                 ],
-                "email" => "required|email|unique:CustomerAndShopkeeper,email",
+                "conformpassword" => [
+                    "required",
+                    "same:password",
+                    RulesPassword::min(8)
+                        ->mixedCase()
+                        ->symbols()
+                        ->numbers()
+                ],
+                'email' => [
+                    'required',
+                    'email:rfc,dns',
+                    'unique:CustomerAndShopkeeper,email',
+                    'regex:/^[a-zA-Z0-9._%+-]+@(gmail|yahoo)\.com$/'
+                ],
                 "phone" => "required|numeric|digits:10|unique:CustomerAndShopkeeper,phone",
                 "address" => "required",
                 "city" => "required",
@@ -148,6 +161,10 @@ class MainController extends Controller
                 "country" => "required",
                 "pincode" => "required|numeric|digits:6",
                 "gender" => "required",
+            ], [
+                'email.required' => 'Enter Email is Required.',
+                'email.email' => 'Enter Email Must Be A Valid Email Address.',
+                'email.regex' => 'The email must be from an allowed domain (gmail.com, yahoo.com).',
             ]);
 
             $customer = new CustomerAndShopkeeper();
@@ -242,8 +259,19 @@ class MainController extends Controller
     }
 
     // Main page
-    public function Index()
+    public function Index(Request $request)
     {
+        if ($request->isMethod("post")) {
+            if ($request->action == "Search") {
+
+                $data_of_input = $request->search_data;
+                if ($data_of_input == '') {
+                    return redirect()->route("MainIndex");
+                }
+                $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
+                return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input]);
+            }
+        }
         $data = CategoryProduct::with('productsdata')->get();
 
         if (Session::get("customeremail") != null) {
@@ -312,14 +340,6 @@ class MainController extends Controller
                 $cartcount += $key->quantity;
             }
             return response()->json(['cartcount' => $cartcount]);
-        } else {
-
-            $cart = session()->get('cart');
-            foreach ($cart as $key) {
-                $cartcount += $key['quantity'];
-            }
-
-            return response()->json(['cartcount' => $cartcount]);
         }
     }
     public function Checkout_Product()
@@ -345,19 +365,40 @@ class MainController extends Controller
     // Email Check - Login
     public function Login_Email_Check(Request $request)
     {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'searchData' => ['regex:/^.+\.com$/i'],
+            ]
+        );
+        if ($validator->fails()) {
+            return Response()->json(["emailError" => "notShow"]);
+        }
+
+        $validator2 = Validator::make(
+            $request->all(),
+            [
+                'searchData' => ['email'],
+            ]
+        );
+        if ($validator2->fails()) {
+            return Response()->json(["emailError" => "Enter Email Must Be A Valid Email Address."]);
+        }
+
+        $validator1 = Validator::make(
+            $request->all(),
+            [
+                'searchData' => ['regex:/^[a-zA-Z0-9._%+-]+@(gmail|yahoo)\.com$/'],
+            ]
+        );
+        if ($validator1->fails()) {
+            return Response()->json(["emailError" => "The email must be from an allowed domain (gmail.com, yahoo.com)."]);
+        }
+
         $userData = CustomerAndShopkeeper::where("email", "like", "%" . $request->searchData . "%")->get();
 
         if ($userData->count() == 0) {
-            $validator = Validator::make(
-                $request->all(),
-                [
-                    'searchData' => ['required', 'email:rfc,dns', 'regex:/^[a-zA-Z0-9._%+-]+@(gmail|yahoo)\.com$/'],
-                ]
-            );
 
-            if ($validator->fails()) {
-                return Response()->json(["emailError" => "notShow"]);
-            }
             $adminData = Admin::where("email", "like", "%" . $request->searchData . "%")->get();
 
             if ($adminData->count() == 0) {
@@ -395,11 +436,9 @@ class MainController extends Controller
 
         if ($request->isMethod("post")) {
 
-
             $addtocart = AddToCart::where("user_id", $data1->id)->get();
 
             foreach ($addtocart as $item) {
-
                 $order = new CustomerOrder();
                 $order->name = $request->name;
                 $order->email = $request->email;
@@ -416,10 +455,10 @@ class MainController extends Controller
                 $order->order_date = now();
                 $order->delivery_date = now()->addDays(7);
                 $order->save();
-
-                $product = Product::find($item->product_id);
-                $product->stock = $product->stock - $item->quantity;
-                $product->save();
+            }
+            foreach ($addtocart as $item) {
+                $deleteFind = AddToCart::find($item->id);
+                $deleteFind->delete();
             }
 
             $data = CustomerOrder::where("email", Session::get("customeremail"))->get();
@@ -445,8 +484,19 @@ class MainController extends Controller
     }
 
 
-    public function get_category_wise_product($categoryname)
+    public function get_category_wise_product($categoryname, Request $request)
     {
+        if ($request->isMethod("post")) {
+            if ($request->action == "Search") {
+
+                $data_of_input = $request->search_data;
+                if ($data_of_input == '') {
+                    return redirect()->route("MainIndex");
+                }
+                $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
+                return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input]);
+            }
+        }
 
         if (Session::get("customeremail")) {
             $category_data = CategoryProduct::where("category_name", $categoryname)->get();

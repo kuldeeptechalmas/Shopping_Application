@@ -108,8 +108,9 @@
                 </a>
             </div>
             <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
-                <form class="d-flex dropdown_search_main" action="/search" method="post" role="search" style="width: 300px;">
+                <form class="d-flex dropdown_search_main" method="post" role="search" style="width: 300px;">
                     @csrf
+                    <input type="text" name="action" value="Search" hidden id="">
                     <input class="form-control dropdown_search me-2" type="search" id="search_id" placeholder="Search" aria-label="Search" name="search_data" value="{{isset($inputdata) ? $inputdata : ''}}" />
                     <button type="submit" class="btn btn-primary" name="submit">Search</button>
                     <div class="dropdown_search_content" style="text-decoration: none; color: #000;" id="searchdataname" hidden>
@@ -133,12 +134,7 @@
                             <i class="fa fa-shopping-cart" style="font-size:24px"></i>
                             <span class="badge" id="cart-item-count"></span>
                         </div>
-                        {{-- <img style="height: 30px; width: 30px; object-fit: contain;" src="{{ asset('storage/UploadeFile/pic36.png') }}" alt="Image"> --}}
-
                         <span class="ms-2">Cart</span>
-
-                        {{-- demo --}}
-
                     </a>
                     @if (Session::get("customerid"))
 
@@ -251,7 +247,6 @@
                 }
             })
         }
-
         cartcount();
 
     </script>

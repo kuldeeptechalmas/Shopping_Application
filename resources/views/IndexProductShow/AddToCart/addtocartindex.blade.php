@@ -59,7 +59,10 @@
                                 <input type="text" hidden value="{{$item->product->id}}">
                             </div>
 
-                            @if ($item->quantity==$item->product->stock)
+                            {{-- @if ($item->quantity==$item->product->stock)
+                            <div style="color: red;margin-top: 17px;">Now Limited Stock <br>Other Stock Come Then Notify</div>
+                            @endif --}}
+                            @if ($item->product->stock==0)
                             <div style="color: red;margin-top: 17px;">Now Limited Stock <br>Other Stock Come Then Notify</div>
                             @endif
 
@@ -172,146 +175,6 @@
         </div>
         @endif
     </div>
-
-    @else
-    {{-- customer is not found then use Session to show data
-            done --}}
-    <div class="row">
-        <div class="col-8">
-            @if (!empty($datacart))
-            <?php        $removeid = 0; ?>
-            @foreach ($datacart as $item1)
-            <div class="card" style="margin-left: 25px;margin-top: 25px;">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-4" style="width: 255px;;">
-                            <a href="/ProductDetails/{{$item1['product_data']->id}}">
-                                <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item1['product_data']->image) }}" alt="Image">
-                            </a>
-                        </div>
-                        <div class="col-8">
-                            <p class="card-text">{{$item1['product_data']->name}}</p>
-                            @if (Session::get("discountamount"))
-                            @if (Session::get("discountamount")["product_id"] == $item1['product_data']->id)
-
-
-                            <h2>
-                                ₹{{round($item1['product_data']->price - ($item1['product_data']->price *
-                                                    $item1['product_data']->discount / 100) - Session::get("discountamount")["amount"])}}
-                            </h2>
-                            <div style="color: green">
-                                ₹{{Session::get("discountamount")["amount"]}} off <a href="/removediscount/{{$item1['product_data']->id}}">Remove</a>
-                            </div>
-                            <div style="color: green">
-                                <del>₹{{$item1['product_data']->price}}</del>
-                                {{$item1['product_data']->discount}}% off
-                            </div>
-                            @else
-                            <h5>₹{{round($item1['product_data']->price - ($item1['product_data']->price *
-                                                    $item1['product_data']->discount / 100))}}</h5>
-                            <div style="color: green">
-                                <del>₹{{$item1['product_data']->price}}</del>
-                                {{$item1['product_data']->discount}}% off
-                            </div>
-                            @endif
-
-                            @else
-                            <h5>₹{{round($item1['product_data']->price - ($item1['product_data']->price *
-                                                $item1['product_data']->discount / 100))}}</h5>
-                            <div style="color: green">
-                                <del>₹{{$item1['product_data']->price}}</del>
-                                {{$item1['product_data']->discount}}% off
-                            </div>
-                            @endif
-
-                            <div style="margin-top:46px">
-                                <input type="text" hidden value="{{$item1['product_data']->id}}">
-
-                                <i class="fa-solid fa-minus product_id" onclick="minus_quentity(this)"></i>
-
-                                <input type="text" name="quentity" value="{{$item1['quantity']}}" style="width: 29px;margin-left: 10px;margin-right: 10px;text-align: center;" min="1" max="100" id="quentity">
-
-                                <i class="fa-solid fa-plus queality product_id" onclick="plus_quentity(this)"></i>
-
-                                <input type="text" hidden value="{{$item1['product_data']->id}}">
-                            </div>
-
-                            <div class="d-flex justify-content-end">
-                                <div style="border-radius: 8px;text-align: center;margin-right: 11px;text-decoration: none;font-weight: bold;">
-                                    <p style="margin-top: 27px;">
-                                        <a href="/deletetocart/{{$removeid}}" id="remove_a">Remove</a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <?php            $removeid++; ?>
-            <hr style="box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.5);">
-            @endforeach
-            <div class="card" style="margin-left: 25px;text-align: end;">
-                <div style="margin-right: 68px;height: 55px;">
-                    <a href="/SummryOfProduct">
-                        <button class="btn " style="color:white;background:#fb641b;margin-top: 10px;">PLEASE
-                            ORDER</button>
-                    </a>
-                </div>
-            </div>
-            @else
-            <div style="background-color: transparent;">
-                <img src="{{ asset('storage/UploadeFile/missingcart.png') }}" style="margin-left: 59%;margin-top: 10%;width:237px;" alt="Image">
-            </div>
-            @endif
-
-        </div>
-        @if (!empty($datacart))
-        <div class="col-4">
-            <div class="card" style="border-radius: 0px;margin-top: 25px;">
-                <div class="card-body">
-                    <div>
-                        <h5 class="card-subtitle mb-2 text-muted">PRICE DETAILS</h5>
-                        <hr>
-                    </div>
-                    <div class="row">
-                        <?php        $count = 0;
-                    $amount = 0; ?>
-                        @if (isset(Session::get("discountamount")["amount"]))
-                        @foreach ($datacart as $item1)
-
-                        <?php            $count++;
-                                        $amount = $amount + (round(($item1['product_data']->price - (($item1['product_data']->price * $item1['product_data']->discount / 100)) - Session::get("discountamount")["amount"])) * $item1['quantity']); ?>
-                        @endforeach
-
-                        @else
-                        @foreach ($datacart as $item1)
-
-                        <?php            $count+=$item1['quantity'];
-                                        $amount = $amount + (round(($item1['product_data']->price - (($item1['product_data']->price * $item1['product_data']->discount / 100)))) * $item1['quantity']); ?>
-                        @endforeach
-                        @endif
-
-
-                        <div class="col-8">
-                            <h6 class="card-subtitle mb-2 text-muted">Price ({{$count}} item)</h6>
-                        </div>
-                        <div class="col-4 font-weight-bold">₹{{$amount}}</div>
-
-                    </div>
-                    <hr>
-                    <div class="row" style="font-weight: bold;">
-
-                        <div class="col-8">
-                            <h6 class="card-subtitle mb-2">Total Amount</h6>
-                        </div>
-                        <div class="col-4">₹{{$amount}}</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @endif
-    </div>
     @endif
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -340,7 +203,6 @@
     }
 
     function plus_quentity(e) {
-        $(e).prev()[0].value = parseInt($(e).prev()[0].value, 10) + 1;
 
         $.ajax({
             type: "get"
@@ -348,6 +210,7 @@
             , data: {
                 product_id: $(e).next()[0].value
                 , queantity: $(e).prev()[0].value
+                , action: "plus"
             , }
             , success: function(res) {
                 window.location.href = res.redirect_url;
@@ -359,7 +222,6 @@
     }
 
     function minus_quentity(e) {
-        $(e).next()[0].value = $(e).next()[0].value - 1;
         console.log($(e).prev()[0].value);
 
         $.ajax({
@@ -368,6 +230,7 @@
             , data: {
                 product_id: $(e).prev()[0].value
                 , queantity: $(e).next()[0].value
+                , action: "minus"
             , }
             , success: function(res) {
                 window.location.href = res.redirect_url;

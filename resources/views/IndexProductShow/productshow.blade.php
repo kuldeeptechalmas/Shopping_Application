@@ -16,7 +16,6 @@
 
 @if ($data->isNotEmpty())
 
-
 <ul class="d-flex justify-content-around" style="list-style: none; box-shadow: 0px 3px 15px #afafaf; padding: 10px;">
     @foreach ($data as $item1)
     <a href="/getcategroywiseproduct/{{$item1->category_name}}" style="text-decoration: none;color:black;">
@@ -26,6 +25,8 @@
 </ul>
 
 @foreach ($data as $item1)
+
+
 <h1 class="ps-3">{{$item1->category_name}}</h1>
 <div class="row w-100" style="padding-left: 27px;">
     @foreach ($item1->productsdata as $item)
@@ -59,6 +60,7 @@
     @endforeach
     <br>
 </div>
+
 @endforeach
 @endif
 

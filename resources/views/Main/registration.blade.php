@@ -82,7 +82,7 @@
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                                 <label class="form-label" for="state">State</label>
-                                                <select onchange="findcity()" class="form-select" id="state" value="{{old('state')}}" name="state">
+                                                <select class="form-select" id="state" value="{{old('state')}}" name="state">
                                                     <option value="">Select</option>
                                                 </select>
                                                 @error('state')
@@ -132,11 +132,11 @@
                                                 @enderror
                                             </div>
                                         </div>
-
+                                        {{old('password')}}
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
                                                 <label class="form-label" for="form3Example4c">Password</label>
-                                                <input type="password" id="password" name="password" class="form-control" />
+                                                <input type="password" id="password" name="password" value="{{ old('password') }}" class="form-control" />
                                                 <i class="fa-solid fa-eye" id="passwordshow" style="position:absolute;top: 62%;right: 5%;" onclick="passwordshow()"></i>
                                                 <i class="fa-solid fa-eye-slash" hidden id="passwordhidden" style="position:absolute;top: 62%;right: 5%;" onclick="passwordhidden()"></i>
                                             </div>
@@ -150,7 +150,7 @@
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
                                                 <label class="form-label" for="form3Example4cd">Repeat your
                                                     password</label>
-                                                <input type="password" id="conpassword" name="conformpassword" class="form-control" />
+                                                <input type="password" id="conpassword" value="{{old('conformpassword')}}" name="conformpassword" class="form-control" />
                                                 <i class="fa-solid fa-eye" id="conformpasswordshow" style="position:absolute;top: 62%;right: 5%;" onclick="conformpasswordshow()"></i>
                                                 <i class="fa-solid fa-eye-slash" hidden id="conformpasswordhidden" style="position:absolute;top: 62%;right: 5%;" onclick="conformpasswordhidden()"></i>
                                             </div>
@@ -284,13 +284,6 @@
             , })
         });
 
-        function findstate() {
-
-        }
-
-        function findcity() {
-
-        }
         $("#state").on("change", function() {
             const selectElement = $('#city');
             selectElement.empty();
@@ -315,8 +308,7 @@
             , })
         });
 
-
-        // password 
+        // password
         function passwordshow() {
             $("#passwordhidden").removeAttr("hidden");
             $("#passwordshow").attr("hidden", true);

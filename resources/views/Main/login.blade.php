@@ -119,6 +119,7 @@
                         searchData: emails
                     }
                     , success: function(res) {
+
                         if (res['emailError'] == "notShow") {
                             $("#emailCheckError").attr("hidden", true);
                         } else {

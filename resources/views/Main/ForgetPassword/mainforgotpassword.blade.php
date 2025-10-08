@@ -56,10 +56,12 @@
         <div class="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
             <div class="row gx-lg-5 align-items-center mb-5">
                 <div class="col-lg-6 mb-5 mb-lg-0" style="z-index: 10">
-                    <h1 class="my-5 display-5 fw-bold ls-tight" style="color: hsl(218, 81%, 95%)">
-                        The My Shop <br />
-                        <span style="color: hsl(218, 81%, 75%)">for Best business</span>
-                    </h1>
+                    <a href="/MyShop" style="color: rgb(13 110 253 / 0%);">
+                        <h1 class="my-5 display-5 fw-bold ls-tight" style="color: hsl(218, 81%, 95%)">
+                            The My Shop <br />
+                            <span style="color: hsl(218, 81%, 75%)">for Best business</span>
+                        </h1>
+                    </a>
                     <p class="mb-4 opacity-70" style="color: hsl(218, 81%, 85%)">
                         To receive a password reset text, ensure your account's <br>
                         recovery Email is up-to-date in your account settings

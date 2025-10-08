@@ -64,13 +64,13 @@ Route::match(['get', 'post'], '/Registration', [MainController::class, 'Registra
 Route::match(['get', 'post'], '/Login', [MainController::class, 'Login'])->name('login')->middleware("checksession");
 Route::match(["post", "get"], '/ForgetPassword', [MainController::class, "Forget_Password_Email_Find"])->name("forget.Password");
 Route::match(["get", "post"], '/ForgetPasswords', [MainController::class, "Forget_Password"])->name("forget.Password.Data");
-Route::get("/MyShop", [MainController::class, "Index"])->name("MainIndex");
+Route::match(['get', 'post'], "/MyShop", [MainController::class, "Index"])->name("MainIndex");
 Route::get('/ProductDetails/{productid}', [MainController::class, 'Product_id_Detail']);
 Route::get('/SummryOfProduct', [MainController::class, 'Summry_Product_Detail'])->name("summryproductdetail");
 Route::get('/deletecartsummry/{cartid}', [MainController::class, 'delete_cart_summry']);
 Route::get('/CheckOut', [MainController::class, 'Checkout_Product'])->name("checkout_product");
 Route::post('/search', [MainController::class, 'search_product_name']);
-Route::get('/getcategroywiseproduct/{categoryname}', [MainController::class, 'get_category_wise_product']);
+Route::match(['get', 'post'], '/getcategroywiseproduct/{categoryname}', [MainController::class, 'get_category_wise_product']);
 Route::get('/discountcoupun/{couponid}/{productid}', [MainController::class, 'discount_coupun']);
 Route::get('/removediscount/{productid}', [MainController::class, 'remove_discount_coupun']);
 Route::get('/favourite/{productid}', [MainController::class, 'add_to_favourite']);
@@ -102,7 +102,7 @@ Route::middleware("shopkeeperCheck")->group(function () {
     Route::get('/RemoveImage/{ImageId}/{ProductId}', [ShopkeeperController::class, "Remove_Image_Product"]);
 });
 Route::post('/shopkeeperupdate', [ShopkeeperController::class, "updateuser"]);
-Route::get('/shopkeeperprofile', [ShopkeeperController::class, "shopkeeper_profile"])->name("Shopkeeper.Profile");
+Route::match(['get', 'post'], '/shopkeeperprofile', [ShopkeeperController::class, "shopkeeper_profile"])->name("Shopkeeper.Profile");
 
 
 // Error
@@ -129,7 +129,7 @@ Route::match(['get', 'post'], '/AddProductPage/{catagoryid}', [Product_Controlle
 
 // Add To Cart Functionality
 Route::get('/addtocart_desbord/{product_id}', [AddToCartController::class, 'index']);
-Route::get('/addtocartget', [AddToCartController::class, 'addtocart_get_all'])->name("addtocart_get_all");
+Route::match(['get', 'post'], '/addtocartget', [AddToCartController::class, 'addtocart_get_all'])->name("addtocart_get_all");
 Route::get('/deletetocart/{cartid}', [AddToCartController::class, 'delete_cart']);
 Route::get('/addtocartqueantitychange', [AddToCartController::class, 'update_queantity']);
 Route::get('/DirectChangeQuentity', [AddToCartController::class, 'direct_change_quentity']);

@@ -124,7 +124,7 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 </ul>
                 <div class="d-flex justify-content-end">
-                    <div class="pe-5">
+                    <div class="pe-5">  
                         <form class="d-flex" method="POST">
                             @csrf
                             <input class="form-control me-2" name="searchText" id="searchproductid" value="{{ isset($searchText)?$searchText:'' }}" type="search" placeholder="Search" aria-label="Search">
