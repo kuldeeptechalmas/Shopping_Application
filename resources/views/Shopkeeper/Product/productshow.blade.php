@@ -2,7 +2,7 @@
 <div class="row">
     @foreach ($data as $item)
     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 card" style="width: 18rem; margin: 10px;">
-        <a href="/productdetails/{{$item->id}}">
+        <a href="/ProductDetailsShow/{{$item->id}}">
             <div style="height: 300px; width: 100%;">
                 <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->image) }}" alt="Image">
             </div>

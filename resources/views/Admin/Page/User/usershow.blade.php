@@ -70,7 +70,23 @@
     </div>
 
     @else
-    <h1 style="color: red;display: flex;justify-content: center;align-items: center;margin-top: 172px;">Not Found User</h1>
+    <div style="display: flex;justify-content: center;margin-top: 116px;">
+        <div>
+            <div style="width: 100px; height: auto; display: flex;justify-content: center;">
+                <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/not_found_result_image.WEBP') }}" alt="Image">
+            </div>
+        </div>
+    </div>
+    <div style="display: flex;justify-content: center;text-align: center;">
+        <div>
+
+            <h5>Sorry, no results found <br /></h5>
+            Edit search or go back to Users Page <br /><br />
+            <a href="/AdminInUser">
+                <button class="btn btn-primary" style="width: 192px;">Go To Users</button>
+            </a>
+        </div>
+    </div>
     @endif
 
     <!--User Delete Modal -->

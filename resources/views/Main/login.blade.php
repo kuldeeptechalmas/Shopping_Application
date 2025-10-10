@@ -37,7 +37,8 @@
                         <!-- Email input -->
                         <div data-mdb-input-init class="form-outline mb-4">
                             <label class="form-label" for="form3Example3">Email address</label>
-                            <input type="text" name="email" oninput="Email_Check_Exist_Or_Not()" id="email-id" value="{{old('email')}}" class="form-control form-control-lg" placeholder="Enter a valid email address" />
+                            <input type="text" name="email" value="{{old('email')}}" class="form-control form-control-lg" placeholder="Enter a valid email address" />
+                            {{-- <input type="text" name="email" oninput="Email_Check_Exist_Or_Not()" id="email-id" value="{{old('email')}}" class="form-control form-control-lg" placeholder="Enter a valid email address" /> --}}
                         </div>
                         @error('email')
                         <div style="color:red;" id="emailCheckError">{{$message}}</div><br>
@@ -99,41 +100,42 @@
 
 
     <script>
-        function Email_Check_Exist_Or_Not() {
-            var emails = document.getElementById("email-id").value;
+        // Email Check
+        // function Email_Check_Exist_Or_Not() {
+        //     var emails = document.getElementById("email-id").value;
 
-            if (emails == "") {
-                $("#emailCheckError").attr("hidden", true);
+        //     if (emails == "") {
+        //         $("#emailCheckError").attr("hidden", true);
 
-            } else {
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
+        //     } else {
+        //         $.ajaxSetup({
+        //             headers: {
+        //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //             }
+        //         });
 
-                $.ajax({
-                    url: "/EmailCheck"
-                    , type: "post"
-                    , data: {
-                        searchData: emails
-                    }
-                    , success: function(res) {
+        //         $.ajax({
+        //             url: "/EmailCheck"
+        //             , type: "post"
+        //             , data: {
+        //                 searchData: emails
+        //             }
+        //             , success: function(res) {
 
-                        if (res['emailError'] == "notShow") {
-                            $("#emailCheckError").attr("hidden", true);
-                        } else {
-                            $("#emailCheckError").removeAttr("hidden");
-                            $("#emailCheckError").html(res['emailError']);
-                        }
-                    }
-                    , error: function(e) {
-                        console.log(e);
+        //                 if (res['emailError'] == "notShow") {
+        //                     $("#emailCheckError").attr("hidden", true);
+        //                 } else {
+        //                     $("#emailCheckError").removeAttr("hidden");
+        //                     $("#emailCheckError").html(res['emailError']);
+        //                 }
+        //             }
+        //             , error: function(e) {
+        //                 console.log(e);
 
-                    }
-                })
-            }
-        }
+        //             }
+        //         })
+        //     }
+        // }
 
 
 

@@ -142,7 +142,7 @@
                     ADD TO CART
                 </p>
             </a>
-            <a class="col" style="border-radius: 8px;text-align: center;background: #ae708c;text-decoration: none;  color:white;">
+            <a href="/BuyNow/{{$productdatails->id}}" class="col" style="border-radius: 8px;text-align: center;background: #ae708c;text-decoration: none;  color:white;">
                 <p class="m-3">
                     BUY NOW
                 </p>

@@ -32,7 +32,7 @@
 <div class="row">
     @foreach ($dataProduct as $item)
     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 card" style="width: 18rem; margin: 10px;">
-        <a href="/productdetails/{{$item->id}}">
+        <a href="/ProductDetailsShow/{{$item->id}}">
             <div style="height: 300px; width: 100%;">
                 <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->image) }}" alt="Image">
             </div>
@@ -74,10 +74,43 @@
 </div>
 
 @else
-<h1 style="display: flex;justify-content: center;margin-top: 57px;color:red">Not Found Product</h1>
+<div style="display: flex;justify-content: center;margin-top: 48px;">
+    <div>
+        <div style="width: 100px; height: auto; display: flex;justify-content: center;">
+            <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/not_found_result_image.WEBP') }}" alt="Image">
+        </div>
+    </div>
+</div>
+<div style="display: flex;justify-content: center;text-align: center;">
+    <div>
+
+        <h5>Sorry, no results found <br /></h5>
+        Edit search or go back to Product Page <br /><br />
+        <form action="" method="get">
+            <button class="btn btn-primary" type="submit" style="width: 192px;">Go To Product</button>
+        </form>
+    </div>
+</div>
 @endif
 @else
-<h1 style="display: flex;justify-content: center;margin-top: 57px;color:red">Not Found Product</h1>
+<div style="display: flex;justify-content: center;margin-top: 48px;">
+    <div>
+        <div style="width: 100px; height: auto; display: flex;justify-content: center;">
+            <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/not_found_result_image.WEBP') }}" alt="Image">
+        </div>
+    </div>
+</div>
+<div style="display: flex;justify-content: center;text-align: center;">
+    <div>
+
+        <h5>Sorry, no results found <br /></h5>
+        Edit search or go back to Product Page <br /><br />
+        <form action="" method="get">
+
+            <button class="btn btn-primary" type="submit" style="width: 192px;">Go To Product</button>
+        </form>
+    </div>
+</div>
 @endif
 
 @endsection

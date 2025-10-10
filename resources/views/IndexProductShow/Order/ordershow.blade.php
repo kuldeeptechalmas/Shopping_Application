@@ -49,8 +49,14 @@
                         <div class="d-flex justify-content-end">
                             <div style="border-radius: 8px;text-align: center;margin-right: 11px;text-decoration: none;font-weight: bold;">
                                 <p style="margin-top: 27px;">
+                                    {{-- <a href="/deleteorder/{{$item->id}}" id="remove_a">Cancel</a> --}}
+                                    <form action="{{route('order.Product')}}" method="post">
+                                        @csrf
+                                        <input type="text" name="action" value="Remove" hidden id="">
+                                        <input type="text" name="orderId" value="{{$item->id}}" hidden id="">
 
-                                    <a href="/deleteorder/{{$item->id}}" id="remove_a">Cancel</a>
+                                        <button type="submit" style="background: white;border: none;"><i class="fa-solid fa-trash" style="margin-right: 27px;"></i></button>
+                                    </form>
                                 </p>
                             </div>
                         </div>
@@ -60,8 +66,22 @@
         </div>
         @endforeach
         @else
-        <div style="color: red;margin-top: 11%;margin-left: 41%;">
-            <h1>NOT ORDER</h1>
+        <div style="display: flex;justify-content: center;margin-top: 116px;">
+            <div>
+                <div style="width: 100px; height: auto; display: flex;justify-content: center;">
+                    <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/not_found_result_image.WEBP') }}" alt="Image">
+                </div>
+            </div>
+        </div>
+        <div style="display: flex;justify-content: center;text-align: center;">
+            <div>
+
+                <h5>Sorry, no results found <br /></h5>
+                Go back to My Order Page <br /><br />
+                <a href="/order">
+                    <button class="btn btn-primary" style="width: 192px;">Go To My Orders</button>
+                </a>
+            </div>
         </div>
     </div>
 </div>

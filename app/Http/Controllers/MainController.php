@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password as RulesPassword;
+use PhpParser\Node\Expr\Cast\Void_;
 
 class MainController extends Controller
 {
@@ -97,15 +98,57 @@ class MainController extends Controller
                 if (!empty($cart)) {
                     foreach ($cart as $key => $value) {
 
-                        $productData = Product::find($key);
-                        $productData->stock -= $value['quantity'];
+                        $ExistAddToCart = AddToCart::where("product_id", $key)
+                            ->where("user_id", $customer->id)->first();
+
+                        if (!$ExistAddToCart) {
+                            $productData = Product::find($key);
+                            $productData->stock -= $value['quantity'];
+                            $productData->save();
+
+                            if ($productData->stock == 0) {
+                                $productData->status = "out of stock";
+                                $productData->save();
+                            } else {
+                                $productData->status = "in stock";
+                                $productData->save();
+                            }
+                            $cart = new AddToCart();
+                            $cart->user_id = $customer->id;
+                            $cart->product_id = $key;
+                            $cart->quantity = $value['quantity'];
+                            $cart->save();
+                        }
+                    }
+                    return redirect()->route("addtocart_get_all");
+                }
+
+                $cartBuyNow = $request->cartBuyNow;
+                if ($cartBuyNow) {
+
+                    $productIdSession = Session::get('productId');
+                    $productData = Product::find($productIdSession);
+                    $productData->stock -= $cartBuyNow[$productIdSession]['quantity'];
+                    $productData->save();
+
+                    if ($productData->stock == 0) {
+                        $productData->status = "out of stock";
                         $productData->save();
+                    } else {
+                        $productData->status = "in stock";
+                        $productData->save();
+                    }
+                    $ExistAddToCart = AddToCart::where("product_id", $productIdSession)->where("user_id", $customer->id)->first();
+                    // dd($ExistAddToCart);
+                    if (!$ExistAddToCart) {
                         $cart = new AddToCart();
                         $cart->user_id = $customer->id;
-                        $cart->product_id = $key;
-                        $cart->quantity = $value['quantity'];
+                        $cart->product_id = $productIdSession;
+                        $cart->quantity = $cartBuyNow[$productIdSession]['quantity'];
                         $cart->save();
                     }
+                    // dd($cart->id);
+                    return redirect()->route("buy.Now.Summary");
                 }
                 return redirect()->route("MainIndex");
             } else {
@@ -350,7 +393,12 @@ class MainController extends Controller
 
         // cart record are get
         $data1 = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
-        $addtocart = AddToCart::where("user_id", $data1->id)->get();
+        if (Session::get("productId")) {
+            $addtocart = AddToCart::where("user_id", $data1->id)
+                ->where("product_id", Session::get('productId'))->get();
+        } else {
+            $addtocart = AddToCart::where("user_id", $data1->id)->get();
+        }
 
         // user data
         $data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
@@ -362,54 +410,54 @@ class MainController extends Controller
         return view("IndexProductShow.CheckOut.checkoutpage", ["customerdata" => $data, "couponuserdata" => $coupon, "cart" => $addtocart, "contrylist" => $contrylist]);
     }
 
-    // Email Check - Login
-    public function Login_Email_Check(Request $request)
-    {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'searchData' => ['regex:/^.+\.com$/i'],
-            ]
-        );
-        if ($validator->fails()) {
-            return Response()->json(["emailError" => "notShow"]);
-        }
+    // // Email Check - Login
+    // public function Login_Email_Check(Request $request)
+    // {
+    //     $validator = Validator::make(
+    //         $request->all(),
+    //         [
+    //             'searchData' => ['regex:/^.+\.com$/i'],
+    //         ]
+    //     );
+    //     if ($validator->fails()) {
+    //         return Response()->json(["emailError" => "notShow"]);
+    //     }
 
-        $validator2 = Validator::make(
-            $request->all(),
-            [
-                'searchData' => ['email'],
-            ]
-        );
-        if ($validator2->fails()) {
-            return Response()->json(["emailError" => "Enter Email Must Be A Valid Email Address."]);
-        }
+    //     $validator2 = Validator::make(
+    //         $request->all(),
+    //         [
+    //             'searchData' => ['email'],
+    //         ]
+    //     );
+    //     if ($validator2->fails()) {
+    //         return Response()->json(["emailError" => "Enter Email Must Be A Valid Email Address."]);
+    //     }
 
-        $validator1 = Validator::make(
-            $request->all(),
-            [
-                'searchData' => ['regex:/^[a-zA-Z0-9._%+-]+@(gmail|yahoo)\.com$/'],
-            ]
-        );
-        if ($validator1->fails()) {
-            return Response()->json(["emailError" => "The email must be from an allowed domain (gmail.com, yahoo.com)."]);
-        }
+    //     $validator1 = Validator::make(
+    //         $request->all(),
+    //         [
+    //             'searchData' => ['regex:/^[a-zA-Z0-9._%+-]+@(gmail|yahoo)\.com$/'],
+    //         ]
+    //     );
+    //     if ($validator1->fails()) {
+    //         return Response()->json(["emailError" => "The email must be from an allowed domain (gmail.com, yahoo.com)."]);
+    //     }
 
-        $userData = CustomerAndShopkeeper::where("email", "like", "%" . $request->searchData . "%")->get();
+    //     $userData = CustomerAndShopkeeper::where("email", "like", "%" . $request->searchData . "%")->get();
 
-        if ($userData->count() == 0) {
+    //     if ($userData->count() == 0) {
 
-            $adminData = Admin::where("email", "like", "%" . $request->searchData . "%")->get();
+    //         $adminData = Admin::where("email", "like", "%" . $request->searchData . "%")->get();
 
-            if ($adminData->count() == 0) {
-                return Response()->json(["emailError" => "Email User Not Exist !"]);
-            } else {
-                return Response()->json(["emailError" => "notShow"]);
-            }
-        } else {
-            return Response()->json(["emailError" => "notShow"]);
-        }
-    }
+    //         if ($adminData->count() == 0) {
+    //             return Response()->json(["emailError" => "Email User Not Exist !"]);
+    //         } else {
+    //             return Response()->json(["emailError" => "notShow"]);
+    //         }
+    //     } else {
+    //         return Response()->json(["emailError" => "notShow"]);
+    //     }
+    // }
 
     // Main page Search Bar
     public function search_product_name(Request $request)
@@ -422,6 +470,7 @@ class MainController extends Controller
         return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input]);
     }
 
+    // Delete Summry in Check out Time
     public function delete_cart_summry($cartid)
     {
         $addtocart = AddToCart::find($cartid);
@@ -429,15 +478,43 @@ class MainController extends Controller
         return redirect()->back();
     }
 
+    // Order
     public function order_product(Request $request)
     {
         $data1 = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
         $coupon = UserCoupunData::where("user_id", $data1->id)->get();
 
+        // Search Order Data
+        if ($request->action == "Search") {
+            $searchData = $request->search_data;
+            $data = CustomerOrder::whereHas("product", function ($query) use ($searchData) {
+                $query->where("name", "like", "%" . $searchData . "%");
+            })->where("email", Session::get("customeremail"))->get();
+
+            return view("IndexProductShow.Order.ordershow", ["order" => $data, "couponuserdata" => $coupon, 'inputdata' => $searchData]);
+        }
+
+        // Remove order
+        if ($request->action == 'Remove') {
+
+            $order = CustomerOrder::find($request->orderId);
+            if ($order) {
+                $product = Product::find($order->product_id);
+                $product->stock = $product->stock + $order->quantity;
+                $product->save();
+                $order->delete();
+                $data = CustomerOrder::where("email", Session::get("customeremail"))->get();
+
+                return view("IndexProductShow.Order.ordershow", ["order" => $data, "couponuserdata" => $coupon]);
+            }
+        }
         if ($request->isMethod("post")) {
 
-            $addtocart = AddToCart::where("user_id", $data1->id)->get();
-
+            if (Session::get("productId")) {
+                $addtocart = AddToCart::where("user_id", $data1->id)->where("product_id", Session::get("productId"))->get();
+            } else {
+                $addtocart = AddToCart::where("user_id", $data1->id)->get();
+            }
             foreach ($addtocart as $item) {
                 $order = new CustomerOrder();
                 $order->name = $request->name;
@@ -469,6 +546,7 @@ class MainController extends Controller
         return view("IndexProductShow.Order.ordershow", ["order" => $data, "couponuserdata" => $coupon]);
     }
 
+    // Delete order
     public function order_delete($orderid)
     {
         $order = CustomerOrder::find($orderid);
@@ -483,7 +561,7 @@ class MainController extends Controller
         return redirect()->back();
     }
 
-
+    // Get Product data to Category Wise
     public function get_category_wise_product($categoryname, Request $request)
     {
         if ($request->isMethod("post")) {
@@ -526,6 +604,7 @@ class MainController extends Controller
         }
     }
 
+    // Add to Favourite List
     public function add_to_favourite($productid)
     {
         if (Session::get("customeremail") != null) {
@@ -542,13 +621,38 @@ class MainController extends Controller
         }
     }
 
-    public function wishlist()
+    // Wish List Get All
+    public function wishlist(Request $request)
     {
         $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
-        $favourite_product_list = FavouriceProduct::where("user_id", $user_data->id)->get();
-        return view("IndexProductShow.WishList.wishlistshow", ["wishlist" => $favourite_product_list]);
+        if ($user_data) {
+
+            $favourite_product_list = FavouriceProduct::where("user_id", $user_data->id)->get();
+            if ($request->isMethod("post")) {
+
+                // Search Wish List in Data
+                if ($request->action == "Search") {
+                    $wishlist = FavouriceProduct::where("favourite_product.user_id", $user_data->id)
+                        ->leftJoin('products', 'favourite_product.product_id', '=', 'products.id')
+                        ->where("name", "like", "%" . $request->search_data . "%")
+                        ->get();
+                    return view("IndexProductShow.WishList.wishlistshow", ["wishlist" => $wishlist, "inputdata" => $request->search_data]);
+                }
+
+                // Remove Wish List in Data
+                if ($request->action == "Remove") {
+                    $wishlist = FavouriceProduct::where("user_id", $user_data->id)
+                        ->where("product_id", $request->productId)->delete();
+
+                    $newRecord = FavouriceProduct::where("user_id", $user_data->id)->get();
+                    return view("IndexProductShow.WishList.wishlistshow", ["wishlist" => $newRecord]);
+                }
+            }
+            return view("IndexProductShow.WishList.wishlistshow", ["wishlist" => $favourite_product_list]);
+        }
     }
 
+    // Delete in Wish List
     public function remove_wishlist_item($productid, Request $request)
     {
         $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
@@ -561,16 +665,7 @@ class MainController extends Controller
         }
     }
 
-    public function search_wishlist_item(Request $request)
-    {
-        $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
-        $wishlist = FavouriceProduct::where("favourite_product.user_id", $user_data->id)
-            ->leftJoin('products', 'favourite_product.product_id', '=', 'products.id')
-            ->where("name", "like", "%" . $request->search_data . "%")
-            ->get();
-        return view("IndexProductShow.WishList.wishlistshow", ["wishlist" => $wishlist, "oldSearch" => $request->search_data]);
-    }
-
+    // Coupon Apply
     public function discount_coupun($coupon_id, $product_id)
     {
         if (Session::get("customeremail")) {
@@ -591,6 +686,7 @@ class MainController extends Controller
         return redirect()->back();
     }
 
+    // Delete Coupon
     public function remove_discount_coupun($product_id)
     {
 
@@ -602,5 +698,55 @@ class MainController extends Controller
             Session::forget("discountamount");
         }
         return redirect()->back();
+    }
+
+    // Buy Now Functionality
+    public function Buy_Now_Functionality_Customer($productId)
+    {
+        $UserExist = CustomerAndShopkeeper::where("email", Session::get('customeremail'))->first();
+
+        if (isset($UserExist)) {
+            $findCartData = AddToCart::where("user_id", $UserExist->id)
+                ->where("product_id", $productId)->first();
+
+            Session::put("productId", $productId);
+
+            if ($findCartData) {
+                return redirect()->route('buy.Now.Summary');
+            } else {
+
+                $cart = new AddToCart();
+                $cart->user_id = $UserExist->id;
+                $cart->product_id = $productId;
+                $cart->quantity = 1;
+                $cart->save();
+
+                $product = Product::find($productId);
+                $product->stock = $product->stock - 1;
+                $product->save();
+            }
+
+
+            return redirect()->route('buy.Now.Summary');
+        } else {
+            $cart = array();
+            $product = Product::where("id", $productId)->first();
+            $cart[$productId] = [
+                "product_id" => $product->id,
+                'quantity' => 1,
+            ];
+            Session::put("productId", $productId);
+            return redirect()->route("login", ['cartBuyNow' => $cart]);
+        }
+    }
+
+    // Show
+    public function Buy_Now_Summary(Request $request)
+    {
+        $data1 = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+        $addtocart = AddToCart::where("user_id", $data1->id)->where("product_id", Session::get('productId'))->get();
+        $couponuserdata = UserCoupunData::where("user_id", $data1->id)->get();
+
+        return view("IndexProductShow.BuyNow.OrderSummary", ["datacart" => $addtocart, "usercoupondata" => $couponuserdata]);
     }
 }

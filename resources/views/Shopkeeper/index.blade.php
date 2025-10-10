@@ -124,7 +124,7 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 </ul>
                 <div class="d-flex justify-content-end">
-                    <div class="pe-5">  
+                    <div class="pe-5">
                         <form class="d-flex" method="POST">
                             @csrf
                             <input class="form-control me-2" name="searchText" id="searchproductid" value="{{ isset($searchText)?$searchText:'' }}" type="search" placeholder="Search" aria-label="Search">
@@ -225,7 +225,7 @@
                     <div class="row">
                         @foreach ($data as $item)
                         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 card" style="width: 18rem; margin: 10px;">
-                            <a href="/productdetails/{{$item->id}}">
+                            <a href="/ProductDetailsShow/{{$item->id}}">
                                 <div style="height: 300px; width: 100%;">
                                     <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->image) }}" alt="Image">
                                 </div>
@@ -266,10 +266,42 @@
                         </div>
                     </div>
                     @else
-                    <h1 style="color:red;display: flex;justify-content: center;margin-top: 267px;">Not Found Product</h1>
+                    <div style="display: flex;justify-content: center;margin-top: 116px;">
+                        <div>
+                            <div style="width: 100px; height: auto; display: flex;justify-content: center;">
+                                <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/not_found_result_image.WEBP') }}" alt="Image">
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex;justify-content: center;text-align: center;">
+                        <div>
+
+                            <h5>Sorry, no results found <br /></h5>
+                            Edit search or go back to Product Page <br /><br />
+                            <a href="/shopkeeperdashboard">
+                                <button class="btn btn-primary" style="width: 192px;">Go To Product</button>
+                            </a>
+                        </div>
+                    </div>
                     @endif
                     @else
-                    <h1 style="color:red;display: flex;justify-content: center;margin-top: 267px;">Not Found Product</h1>
+                    <div style="display: flex;justify-content: center;margin-top: 116px;">
+                        <div>
+                            <div style="width: 100px; height: auto; display: flex;justify-content: center;">
+                                <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/not_found_result_image.WEBP') }}" alt="Image">
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex;justify-content: center;text-align: center;">
+                        <div>
+
+                            <h5>Sorry, no results found <br /></h5>
+                            Edit search or go back to Product Page <br /><br />
+                            <a href="/shopkeeperdashboard">
+                                <button class="btn btn-primary" style="width: 192px;">Go To Product</button>
+                            </a>
+                        </div>
+                    </div>
                     @endif
 
                     @endif

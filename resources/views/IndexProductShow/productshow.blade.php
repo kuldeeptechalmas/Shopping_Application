@@ -23,9 +23,7 @@
     </a>
     @endforeach
 </ul>
-
 @foreach ($data as $item1)
-
 
 <h1 class="ps-3">{{$item1->category_name}}</h1>
 <div class="row w-100" style="padding-left: 27px;">

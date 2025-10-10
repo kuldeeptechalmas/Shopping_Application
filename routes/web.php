@@ -42,16 +42,15 @@ Route::middleware("adminCheck")->group(function () {
 Route::middleware("customerCheck")->group(function () {
 
     Route::match(["post", "get"], '/customerchangepassword/{customeremail}', [CustomerController::class, "customer_change_password"]);
-    Route::get('/CustomerProfile', [CustomerController::class, "customer_profile"])->name("Customer.Profile");
+    Route::match(["post", "get"], '/CustomerProfile', [CustomerController::class, "customer_profile"])->name("Customer.Profile");
     Route::post('/CustomerUpdate', [CustomerController::class, "Customer_Update"]);
 
     Route::get('/viewprofilecustomer/{email}', [CustomerController::class, "view_profile"]);
     Route::get('/logout', [CustomerController::class, 'logout'])->name('customerlogout');
-    Route::get('/wishlist', [MainController::class, 'wishlist'])->name("wishlist");
+    Route::match(['get', 'post'], '/wishlist', [MainController::class, 'wishlist'])->name("wishlist");
+
     Route::get('/removewishlist/{productid}', [MainController::class, 'remove_wishlist_item']);
-    Route::post('/searchwishlist', [MainController::class, 'search_wishlist_item']);
-    Route::match(["post", "get"], '/order', [MainController::class, 'order_product']);
-    Route::get('/deleteorder/{orderid}', [MainController::class, 'order_delete']);
+    Route::match(["post", "get"], '/order', [MainController::class, 'order_product'])->name('order.Product');
 });
 
 
@@ -75,6 +74,9 @@ Route::get('/discountcoupun/{couponid}/{productid}', [MainController::class, 'di
 Route::get('/removediscount/{productid}', [MainController::class, 'remove_discount_coupun']);
 Route::get('/favourite/{productid}', [MainController::class, 'add_to_favourite']);
 Route::get('/CartCount', [MainController::class, 'Cart_Count']);
+Route::match(['get', 'post'], '/BuyNow/{productId}', [MainController::class, 'Buy_Now_Functionality_Customer']);
+Route::match(['get', 'post'], '/BuyNowSummary', [MainController::class, 'Buy_Now_Summary'])->name('buy.Now.Summary');
+
 
 // Email Check (Ajax)
 Route::post('/EmailCheck', [MainController::class, "Login_Email_Check"]);
@@ -120,7 +122,7 @@ Route::post('/deleteproduct', [Product_Controller::class, 'Product_Delete']);
 Route::get('/searchproduct', [Product_Controller::class, 'product_search']);
 Route::get('/getproductshopkeeper', [Product_Controller::class, 'product_list_get_shopkeeper']);
 Route::match(['get', 'post'], '/productaddshop/{category_name}', [Product_Controller::class, 'product_add_show'])->name("product.Add.Show");
-Route::get('/productdetails/{productid}', [Product_Controller::class, 'product_details']);
+Route::get('/ProductDetailsShow/{productid}', [Product_Controller::class, 'product_details']);
 Route::match(['get', 'post'], '/productview/{productid}', [Product_Controller::class, 'product_view']);
 Route::match(['get', 'post'], '/AddProductPage/{catagoryid}', [Product_Controller::class, 'Add_Product_Page']);
 
@@ -132,4 +134,5 @@ Route::get('/addtocart_desbord/{product_id}', [AddToCartController::class, 'inde
 Route::match(['get', 'post'], '/addtocartget', [AddToCartController::class, 'addtocart_get_all'])->name("addtocart_get_all");
 Route::get('/deletetocart/{cartid}', [AddToCartController::class, 'delete_cart']);
 Route::get('/addtocartqueantitychange', [AddToCartController::class, 'update_queantity']);
+Route::get('/BuyNowaddtocartqueantitychange', [AddToCartController::class, 'Buy_Now_update_queantity']);
 Route::get('/DirectChangeQuentity', [AddToCartController::class, 'direct_change_quentity']);
