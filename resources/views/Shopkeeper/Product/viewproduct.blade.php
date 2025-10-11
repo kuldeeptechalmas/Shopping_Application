@@ -1,10 +1,11 @@
 @extends('Shopkeeper.index')
 
 @section('content')
-
 @toastifyCss
-@if ($product_data->admin_id != 0)
+@if (isset(Session::get("onetime")[$product_data->id]))
+@if (Session::get("onetime")[$product_data->id]['status']==0)
 {{ toastify() -> warning('Admin Update Product Details !') }}
+@endif
 @endif
 @toastifyJs
 

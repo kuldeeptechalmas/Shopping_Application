@@ -347,6 +347,13 @@ class AddToCartController extends Controller
                     $addtocart1->save();
                 }
             }
+            if (isset($request->option)) {
+                return response()->json([
+                    'status' => 'success',
+                    'outofstock_error' => 'OutOfStock',
+                    'redirect_url' => route('buy.Now.Summary')
+                ]);
+            }
             return response()->json([
                 'status' => 'success',
                 'outofstock_error' => 'OutOfStock',

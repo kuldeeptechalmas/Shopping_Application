@@ -351,6 +351,24 @@ class Product_Controller extends Controller
         // all catagory
         $catagory = CategoryProduct::all();
 
+        //One Time Notification Show
+        if ($productdata->admin_id != 0) {
+
+            $cart = session()->get('onetime', []);
+
+            if (isset($cart[$productdata->id])) {
+                $cart[$productdata->id]['status'] = 1;
+            } else {
+
+                $cart[$productdata->id] = [
+                    'product_id' => $productdata->id,
+                    'status' => 0
+                ];
+            }
+            session()->put('onetime', $cart);
+        }
+
+
         return view("Shopkeeper.Product.viewproduct", [
             "catagory" => $catagory,
             "product_data" => $productdata,

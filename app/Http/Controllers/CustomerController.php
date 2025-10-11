@@ -107,6 +107,7 @@ class CustomerController extends Controller
         if (Session::get("shopkeeperid")) {
             Session::forget("shopkeeperid");
             Session::forget("shopkeeperemail");
+            Session::forget("onetime");
         }
         return redirect()->route("MainIndex");
     }

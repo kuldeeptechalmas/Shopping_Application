@@ -5,6 +5,7 @@
 
 @if ($order_Data->isNotEmpty())
 <div id="dataOutput" class="mt-3">
+
     <h1>Show Order</h1>
     <table class="table table-striped">
         <thead>

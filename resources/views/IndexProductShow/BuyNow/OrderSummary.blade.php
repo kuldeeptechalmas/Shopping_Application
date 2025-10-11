@@ -40,61 +40,102 @@
             <div class="card" style="margin-left: 25px;margin-top: 25px;">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-4" style="width: 255px;">
-                            <a href="/ProductDetails/{{$item->product->id}}">
-                                <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->product->image) }}" alt="Image">
+                        <div class="col-4" style="width: 175px;height: 150px;">
+                            <a href="/ProductDetails/{{$item->product->id}}" style="height: 100%">
+                                <img style="width: 100%; height: 100%; object-fit: contain;" src="{{ asset('storage/UploadeFile/' . $item->product->image) }}" alt="Image">
                             </a>
                         </div>
-                        <div class="col-8">
-                            <p class="card-text">{{$item->product->name}}</p>
-                            <h5 class="card-title">
-                                @if ($discountofvalue == 0)
+                        <div class="col-8 d-flex flex-column justify-content-between">
+                            <div>
+                                <p class="card-text">{{$item->product->name}}</p>
+                                <h5 class="card-title">
+                                    @if ($discountofvalue == 0)
 
-                                ₹{{round($item->product->price - ($item->product->price * $item->product->discount / 100))}}
-                                @else
-                                ₹{{round($item->product->price - ($item->product->price * $item->product->discount / 100) - $discountofvalue)}}
+                                    ₹{{round($item->product->price - ($item->product->price * $item->product->discount / 100))}}
+                                    @else
+                                    ₹{{round($item->product->price - ($item->product->price * $item->product->discount / 100) - $discountofvalue)}}
 
+                                    @endif
+                                </h5>
+
+                                @foreach ($usercoupondata as $cd)
+                                @if ($cd->product_id == $item->product->id)
+                                <div style="color: green">₹{{$cd->coupon->value}} off</div>
                                 @endif
-                            </h5>
+                                @endforeach
 
-                            @foreach ($usercoupondata as $cd)
-                            @if ($cd->product_id == $item->product->id)
-                            <div style="color: green">₹{{$cd->coupon->value}} off</div>
-                            @endif
-                            @endforeach
+                                <div style="color: green"><del>₹{{$item->product->price}}</del>
+                                    {{$item->product->discount}}% off</div>
+                                {{-- quentity increament and decriment --}}
+                                <div style="margin-top:17px;display:flex;">
+                                    <input type="text" hidden value="{{$item->product->id}}">
 
-                            <div style="color: green"><del>₹{{$item->product->price}}</del>
-                                {{$item->product->discount}}% off</div>
-                            {{-- quentity increament and decriment --}}
-                            <div style="margin-top:17px">
-                                <input type="text" hidden value="{{$item->product->id}}">
+                                    @if ($item->quantity==1)
+                                    <div style="color:#c2c2c2;margin-top: 4px;border: 2px solid #c2c2c2;border-radius: 47px;width: 22px;height: 22px;display: flex;justify-content: center;align-items: center;">
+                                        <i class="fa-solid fa-minus product_id" style="font-size: 12px;"></i>
+                                    </div>
+                                    @else
+                                    <div onclick="minus_quentity(this)" style="margin-top: 4px;border: 2px solid black;border-radius: 47px;width: 22px;height: 22px;display: flex;justify-content: center;align-items: center;">
+                                        <i class="fa-solid fa-minus product_id" style="font-size: 12px;"></i>
+                                    </div>
+                                    @endif
 
-                                <i class="fa-solid fa-minus product_id" onclick="minus_quentity(this)"></i>
+                                    <input type="text" name="quentity" oninput="DirectChangeInput('{{$item->product->id}}')" value="{{$item->quantity}}" style="width: 40px;margin-left: 10px;margin-right: 10px;text-align: center;" min="1" max="100" id="quentity">
 
-                                <input type="text" name="quentity" oninput="DirectChangeInput('{{$item->product->id}}')" value="{{$item->quantity}}" style="width: 29px;margin-left: 10px;margin-right: 10px;text-align: center;" min="1" max="100" id="quentity">
+                                    <div onclick="plus_quentity(this)" style="margin-top: 4px;border: 2px solid black;border-radius: 47px;width: 22px;height: 22px;display: flex;justify-content: center;align-items: center;">
+                                        <i class="fa-solid fa-plus queality product_id" style="font-size: 12px;"></i>
 
-                                <i class="fa-solid fa-plus queality product_id" onclick="plus_quentity(this)"></i>
+                                    </div>
 
-                                <input type="text" hidden value="{{$item->product->id}}">
+                                    <input type="text" hidden value="{{$item->product->id}}">
+                                </div>
                             </div>
+                            <div class="row mt-2">
+                                @if ($item->product->stock==0)
+                                <div class="col-8" style="color: red;margin-top: 17px;">Now Limited Stock <br>Other Stock Come Then Notify</div>
+                                @else
+                                <div class="col-8"></div>
+                                @endif
 
-                            {{-- @if ($item->quantity==$item->product->stock)
-                            <div style="color: red;margin-top: 17px;">Now Limited Stock <br>Other Stock Come Then Notify</div>
-                            @endif --}}
+                                <div class="col-4 d-flex justify-content-end">
+                                    <div style="border-radius: 8px;text-align: center;margin-right: 11px;text-decoration: none;font-weight: bold;">
+                                        <div class="btn text-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                            REMOVE
+                                        </div>
+                                        {{-- <p style="margin-top: 27px;">
+                                            <a href="/deletetocart/{{$item->product->id}}" id="remove_a" style="text-decoration: none;color: black;"><i class="fa-solid fa-trash"></i></a>
 
-                            @if ($item->product->stock==0)
-                            <div style="color: red;margin-top: 17px;">Now Limited Stock <br>Other Stock Come Then Notify</div>
-                            @endif
-
-                            <div class="d-flex justify-content-end">
-                                <div style="border-radius: 8px;text-align: center;margin-right: 11px;text-decoration: none;font-weight: bold;">
-                                    <p style="margin-top: 27px;">
-                                        <a href="/deletetocart/{{$item->product->id}}" id="remove_a" style="text-decoration: none;color: black;"><i class="fa-solid fa-trash"></i></a>
-
-                                    </p>
+                                        </p> --}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add To Cart Delete Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div>
+                    <i class="fa-solid fa-xmark" data-bs-dismiss="modal" style="position: relative;top: 151px;left: 67%;color: white;font-size: 23px;"></i>
+                </div>
+                <div class="modal-dialog" style="margin-top: 123px;display: flex;justify-content: center;align-items: center;">
+                    <div class="modal-content" style="height: 213px;width: 391px;padding: 18px 14px 26px 28px;">
+                        <h4>Remove Item</h4>
+                        <div style="margin-top: 16px;">
+                            Are you sure you want to remove this item?
+                        </div>
+                        <div class="row" style="margin-top: 33px;">
+                            <div class="col-6">
+                                <a href="/deletetocart/{{$item->product->id}}">
+                                    <button type="button" class="btn btn-primary" style="height: 56px;width: 150px;margin-top: 10px;">REMOVE</button>
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" style="height: 56px;width: 150px;margin-left: -5px;margin-top: 10px;" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -184,24 +225,33 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
     function DirectChangeInput(productId) {
-        if ($("#quentity").val() != "") {
 
-            $.ajax({
-                type: "get"
-                , url: "/DirectChangeQuentity"
-                , data: {
-                    product_id: productId
-                    , queantity: $("#quentity").val()
-                , }
-                , success: function(res) {
-                    console.log(res);
+        if ($("#quentity").val() == 0) {
+            console.log("boom...");
 
-                    window.location.href = res.redirect_url;
-                }
-                , error: function(e) {
-                    console.log(e);
-                }
-            , });
+            $("#quentity").val("");
+        } else {
+
+            if ($("#quentity").val() != "") {
+
+                $.ajax({
+                    type: "get"
+                    , url: "/DirectChangeQuentity"
+                    , data: {
+                        product_id: productId
+                        , queantity: $("#quentity").val()
+                        , option: 'not'
+                    , }
+                    , success: function(res) {
+                        console.log(res);
+
+                        window.location.href = res.redirect_url;
+                    }
+                    , error: function(e) {
+                        console.log(e);
+                    }
+                , });
+            }
         }
 
     }

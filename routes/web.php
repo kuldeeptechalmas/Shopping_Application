@@ -46,12 +46,12 @@ Route::middleware("customerCheck")->group(function () {
     Route::post('/CustomerUpdate', [CustomerController::class, "Customer_Update"]);
 
     Route::get('/viewprofilecustomer/{email}', [CustomerController::class, "view_profile"]);
-    Route::get('/logout', [CustomerController::class, 'logout'])->name('customerlogout');
     Route::match(['get', 'post'], '/wishlist', [MainController::class, 'wishlist'])->name("wishlist");
 
     Route::get('/removewishlist/{productid}', [MainController::class, 'remove_wishlist_item']);
     Route::match(["post", "get"], '/order', [MainController::class, 'order_product'])->name('order.Product');
 });
+Route::get('/logout', [CustomerController::class, 'logout'])->name('customerlogout');
 
 
 // New Main Route - done

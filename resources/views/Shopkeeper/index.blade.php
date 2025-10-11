@@ -266,7 +266,7 @@
                         </div>
                     </div>
                     @else
-                    <div style="display: flex;justify-content: center;margin-top: 116px;">
+                    <div style="display: flex;justify-content: center;margin-top: 225px;">
                         <div>
                             <div style="width: 100px; height: auto; display: flex;justify-content: center;">
                                 <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/not_found_result_image.WEBP') }}" alt="Image">
