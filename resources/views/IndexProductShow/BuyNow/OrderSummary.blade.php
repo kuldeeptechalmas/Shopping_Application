@@ -144,9 +144,12 @@
             @endforeach
             <div class="card" style="margin-left: 25px;text-align: end;">
                 <div style="margin-right: 68px;height: 55px;">
-                    <a href="/CheckOut">
-                        <button class="btn " style="color:white;background:#fb641b;margin-top: 10px;">Continue</button>
-                    </a>
+                    <form action="{{ route('checkout_product') }}" method="post">
+                        @csrf
+                        <input type="text" name="productId" value="{{$item->product->id}}" hidden id="">
+                        <button type="submit" class="btn" style="color:white;background:#fb641b;margin-top: 10px;">Continue</button>
+                    </form>
+
                 </div>
             </div>
             @else

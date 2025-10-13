@@ -143,6 +143,7 @@ class ShopkeeperController extends Controller
         if ($request->isMethod("post")) {
             $request->validate([
 
+                "oldpassword" => "required",
                 "newpassword" => [
                     "required",
                     Password::min(8)
@@ -158,9 +159,6 @@ class ShopkeeperController extends Controller
                         ->symbols()
                         ->numbers()
                 ],
-                "oldpassword" => "required",
-                // "newpassword" => "required",
-                // "confpassword" => "required|same:newpassword",
             ], [
                 "oldpassword.required" => "The old password is required.",
 

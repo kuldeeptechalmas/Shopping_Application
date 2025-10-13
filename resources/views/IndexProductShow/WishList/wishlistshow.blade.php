@@ -1,8 +1,12 @@
 @extends('index')
 
 @section('content')
-<div class="row">
-</div>
+<style>
+    .productnamehover:hover {
+        color: blue;
+    }
+
+</style>
 @if ($wishlist->isNotEmpty())
 <div class="row" style="padding: 10px 270px;">
     <h5>My Wishlist ({{$wishlist->count()}})</h5>
@@ -13,17 +17,25 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-4">
+                        <div>
+
+                        </div>
                         <a href="/ProductDetails/{{$item->product->id}}">
-                            <img style="width: 62%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->product->image) }}" alt="Image">
+                            <img style="width: 86px; height: 113px;display: block; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->product->image) }}" alt="Image">
                         </a>
                     </div>
-                    <div class="col-8">
-                        <p class="card-text">{{$item->product->name}}</p>
+                    <div class="col-6">
+                        <a href="/ProductDetails/{{$item->product->id}}" style="color: black;text-decoration: none;">
+                            <p class="productnamehover" class="card-text">{{$item->product->name}}</p>
+                        </a>
                         <h5 class="card-title">₹{{round($item->product->price-($item->product->price*$item->product->discount/100))}}</h5>
                         <div style="color: green"><del>₹{{$item->product->price}}</del> {{$item->product->discount}}% off</div>
+
+                    </div>
+                    <div class="col-2">
                         <div class="d-flex justify-content-end">
                             <div style="border-radius: 8px;text-align: center;margin-right: 11px;text-decoration: none;font-weight: bold;">
-                                <p style="margin-top: 27px;">
+                                <p style="margin-top: 0px;">
                                     <form action="{{route('wishlist')}}" method="post">
                                         @csrf
                                         <input type="text" name="action" value="Remove" hidden id="">

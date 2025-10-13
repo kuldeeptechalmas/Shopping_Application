@@ -11,6 +11,10 @@
         padding: 15px;
     }
 
+    .productnamehover:hover {
+        color: rgba(0, 0, 255, 0.575) !important;
+    }
+
 </style>
 @toastifyCss
 
@@ -47,7 +51,9 @@
         </a>
         <div class="card-body">
             <p class="card-text" style="text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
-                {{$item->name}}
+                <a class="productnamehover" href="/ProductDetails/{{$item->id}}" style="color:black;text-decoration:none;">
+                    {{$item->name}}
+                </a>
             </p>
             <p class="card-text" style="width: 100%;text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
                 <h3>₹{{round($item->price- ($item->price * $item->discount /100))}}</h3>

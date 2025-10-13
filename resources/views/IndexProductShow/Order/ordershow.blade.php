@@ -5,27 +5,27 @@
 @if ($order->isNotEmpty())
 <div class="row">
     <div class="col" style="padding: 10px 270px;">
-        <h3 style="text-align: center;">My Order History</h3>
+        <h3 style="text-align: center;">My Orders</h3>
         @foreach ($order as $item)
         {{-- @dd($item->product->id) --}}
-        <div class="card" style="margin-left: 25px;margin-top: 25px;">
+        <div class="card">
             <div class="card-body">
                 <div class="row">
-                    <div class="col-4" style="width: 160px;">
+                    <div class="col-4" style="height: 100px; width: 111px;">
                         <a href="/ProductDetails/{{$item->product->id}}">
                             <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->product->image) }}" alt="Image">
                         </a>
                     </div>
-                    <div class="col-8">
+                    <div class="col-6">
 
                         <p class="card-text">{{$item->product->name}}</p>
-                        <h5 class="card-title">
+                        <h6 class="card-title">
                             <?php        $dis = 0; ?>
                             @foreach ($couponuserdata as $cd)
                             @if ($cd->product_id == $item->product->id)
                             <?php                $dis = 1; ?>
                             ₹{{round($item->product->price - ($item->product->price * $item->product->discount / 100) - $cd->coupon->value)}}
-                        </h5>
+                        </h6>
                         <div style="color: green">₹{{$cd->coupon->value}}off</div>
                         @endif
                         @endforeach
@@ -37,30 +37,65 @@
                         Quentity : {{ $item->quantity }}
                         <div style="color: green"><del>₹{{$item->product->price}}</del> {{$item->product->discount}}%
                             off</div>
+
+
+                    </div>
+                    <div class="col-2">
                         <div style="margin-top: 14px;">
                             @if ($item->status == "Pending")
-                            <span class="text-warning">{{$item->status}}</span>
+                            <i class="fa-solid fa-circle text-warning" style="font-size: 10px;"></i>
+                            <span>{{$item->status}}</span>
                             @elseif ($item->status == "Processing" || $item->status == "Shipped")
-                            <span class="text-info">{{$item->status}}</span>
+                            <i class="fa-solid fa-circle text-info" style="font-size: 10px;"></i>
+                            <span>{{$item->status}}</span>
                             @elseif ($item->status == "Delivered")
-                            <span class="text-success">{{$item->status}}</span>
+                            <i class="fa-solid fa-circle text-success" style="font-size: 10px;"></i>
+                            <span>{{$item->status}}</span>
                             @endif
                         </div>
+                    </div>
+                    <div class="col-2">
                         <div class="d-flex justify-content-end">
                             <div style="border-radius: 8px;text-align: center;margin-right: 11px;text-decoration: none;font-weight: bold;">
-                                <p style="margin-top: 27px;">
-                                    {{-- <a href="/deleteorder/{{$item->id}}" id="remove_a">Cancel</a> --}}
-                                    <form action="{{route('order.Product')}}" method="post">
-                                        @csrf
-                                        <input type="text" name="action" value="Remove" hidden id="">
-                                        <input type="text" name="orderId" value="{{$item->id}}" hidden id="">
-
-                                        <button type="submit" style="background: white;border: none;"><i class="fa-solid fa-trash" style="margin-right: 27px;"></i></button>
-                                    </form>
+                                <p style="margin-top: 0px;">
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" style="color:red;background: white;border: none;">CANCLE ORDER</button>
                                 </p>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Order Cancle Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div>
+                            <i class="fa-solid fa-xmark" data-bs-dismiss="modal" style="position: relative;top: 151px;left: 67%;color: white;font-size: 23px;"></i>
+                        </div>
+                        <div class="modal-dialog" style="margin-top: 123px;display: flex;justify-content: center;align-items: center;">
+                            <div class="modal-content" style="height: 213px;width: 391px;padding: 18px 14px 26px 28px;">
+                                <h4>Remove Item</h4>
+                                <div style="margin-top: 16px;">
+                                    Are you sure you want to cancle this order?
+                                </div>
+                                <div class="row" style="margin-top: 33px;">
+                                    <div class="col-6">
+                                        <form action="{{route('order.Product')}}" method="post">
+                                            @csrf
+                                            <input type="text" name="action" value="Remove" hidden id="">
+                                            <input type="text" name="orderId" value="{{$item->id}}" hidden id="">
+
+                                            {{-- <button type="submit" data-bs-toggle="modal" data-bs-target="#exampleModal" style="color:red;background: white;border: none;">CANCLE ORDER</button> --}}
+                                            <button type="submit" class="btn btn-primary" style="height: 56px;width: 150px;margin-top: 10px;">REMOVE</button>
+                                        </form>
+
+                                    </div>
+                                    <div class="col-6">
+                                        <button type="button" style="height: 56px;width: 150px;margin-left: -5px;margin-top: 10px;" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

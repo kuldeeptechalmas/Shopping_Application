@@ -1,6 +1,12 @@
 @extends('index')
 
 @section('content')
+<style>
+    .productnamehover:hover {
+        color: blue !important;
+    }
+
+</style>
 @toastifyCss
 @if ($data->isNotEmpty())
 <ul class="d-flex justify-content-around" style="list-style: none; box-shadow: 0px 3px 15px #afafaf; padding: 10px;">
@@ -33,10 +39,13 @@
         </a>
         <div class="card-body">
             <p class="card-text" style="text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
-                {{$item->name}}
+                <a class="productnamehover" href="/ProductDetails/{{$item->id}}" style="color:black;text-decoration:none;">
+                    {{$item->name}}
+                </a>
             </p>
             <p class="card-text" style="width: 100%;text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
-                <h3>₹{{$item->price}}</h3>
+                <h3>₹{{round($item->price- ($item->price * $item->discount /100))}}</h3>
+                <div style="color: green"><del>₹{{$item->price}}</del> {{$item->discount}}% off</div>
             </p>
         </div>
     </div>

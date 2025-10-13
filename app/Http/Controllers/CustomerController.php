@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
@@ -75,16 +76,59 @@ class CustomerController extends Controller
         $customer_profile->password = Crypt::decryptString($customer_profile->password);
 
         if ($request->isMethod("post")) {
-            $request->validate([
-                "oldpassword" => "required",
-                "newpassword" => "required",
-                "confpassword" => "required|same:newpassword",
-            ], [
-                "oldpassword.required" => "Enter Old Password are Required",
-                "newpassword.required" => "Enter New Password are Required",
-                "confpassword.required" => "Enter Conform Password are Required",
-                "confpassword.same" => "Enter Password are Not Match to New Password",
-            ]);
+            $validator = Validator::make(
+                $request->all(),
+                [
+
+                    "oldpassword" => "required",
+                    "newpassword" => [
+                        "required",
+                        Password::min(8)->mixedCase()->symbols()->numbers()
+                    ],
+                    "confpassword" => [
+                        "required",
+                        "same:newpassword",
+                    ],
+                ],
+                [
+                    "oldpassword.required" => "The old password is required.",
+                    "newpassword.required" => "The new password is required.",
+                    "newpassword.min" => "The new password must be at least 8 characters.",
+                    "newpassword.symbols" => "The new password must contain at least one symbol.",
+                    "newpassword.numbers" => "The new password must contain at least one number.",
+                    "newpassword.mixedCase" => "The new password must contain at least one uppercase and one lowercase letter.",
+                    "confpassword.required" => "The conform password is required.",
+                    "confpassword.same" => "The password confirmation does not match.",
+
+                ]
+            );
+            //             $validator = Validator::make(
+            //     $request->all(),
+            //     [
+            //         "oldpassword" => "required",
+            //         "newpassword" => [
+            //             "required",
+            //             "confirmed",
+            //             Password::min(8)
+            //                 ->mixedCase()
+            //                 ->symbols()
+            //                 ->numbers()
+            //         ],
+            //     ],
+            //     [
+            //         "oldpassword.required" => "The old password is required.",
+            //         "newpassword.required" => "The new password is required.",
+            //         "newpassword.min" => "The new password must be at least 8 characters.",
+            //         "newpassword.symbols" => "The new password must contain at least one symbol.",
+            //         "newpassword.numbers" => "The new password must contain at least one number.",
+            //         "newpassword.mixedCase" => "The new password must contain at least one uppercase and one lowercase letter.",
+            //         "newpassword.confirmed" => "The password confirmation does not match.",
+            //     ]
+            // );
+
+            if ($validator->fails()) {
+                return redirect()->back()->withInput()->withErrors($validator);
+            }
 
             $customerdata = CustomerAndShopkeeper::where("email", $customer_email)->first();
             if (Crypt::decryptString($customerdata->password) == $request->oldpassword) {

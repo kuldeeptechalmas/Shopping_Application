@@ -67,7 +67,7 @@ Route::match(['get', 'post'], "/MyShop", [MainController::class, "Index"])->name
 Route::get('/ProductDetails/{productid}', [MainController::class, 'Product_id_Detail']);
 Route::get('/SummryOfProduct', [MainController::class, 'Summry_Product_Detail'])->name("summryproductdetail");
 Route::get('/deletecartsummry/{cartid}', [MainController::class, 'delete_cart_summry']);
-Route::get('/CheckOut', [MainController::class, 'Checkout_Product'])->name("checkout_product");
+Route::match(['get', 'post'], '/CheckOut', [MainController::class, 'Checkout_Product'])->name("checkout_product");
 Route::post('/search', [MainController::class, 'search_product_name']);
 Route::match(['get', 'post'], '/getcategroywiseproduct/{categoryname}', [MainController::class, 'get_category_wise_product']);
 Route::get('/discountcoupun/{couponid}/{productid}', [MainController::class, 'discount_coupun']);

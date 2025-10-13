@@ -6,33 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>MyShop</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         /* cart css */
         .cart-icon-container {
             position: relative;
-            /* Allows absolute positioning of the badge */
             display: inline-block;
-            /* Ensures the container wraps its content */
         }
 
         .badge {
             position: absolute;
             top: -8px;
-            /* Adjust as needed for vertical positioning */
             right: -8px;
-            /* Adjust as needed for horizontal positioning */
             background-color: blue;
-            /* Example background color */
             color: white;
             border-radius: 50%;
-            /* Makes it circular */
             padding: 3px 6px;
-            /* Adjust padding for size */
             font-size: 12px;
             line-height: 1;
-            /* Ensures text is vertically centered */
             text-align: center;
         }
 
@@ -93,12 +85,16 @@
             text-overflow: ellipsis
         }
 
+        body {
+            overflow-x: hidden;
+        }
+
     </style>
 </head>
 
 <body>
     {{-- Navbar --}}
-    <nav class="navbar navbar-expand-lg bg-light ">
+    <nav class="navbar navbar-expand-lg bg-light fixed-top">
         <div class="container">
             <div style="width: 100px; height: auto;">
                 <a href="/MyShop">
@@ -127,7 +123,7 @@
                     </li>
                     @endif
 
-                    <a href="/addtocartget" style="text-decoration: none ;color: #000;">
+                    <a href="/addtocartget" class="main-cart" style="text-decoration: none ;color: #000;">
                         <div class="cart-icon-container">
                             <i class="fa fa-shopping-cart" style="font-size:24px"></i>
                             <span class="badge" id="cart-item-count"></span>
@@ -178,11 +174,10 @@
             </div>
         </div>
     </nav>
-
+    <div style="margin-top: 96px;"></div>
     @yield(section: 'content')
 
     @stack('index_Main_js')
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 

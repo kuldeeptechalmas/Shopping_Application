@@ -305,14 +305,20 @@ class MainController extends Controller
     public function Index(Request $request)
     {
         if ($request->isMethod("post")) {
+            // Search Product 
             if ($request->action == "Search") {
 
                 $data_of_input = $request->search_data;
                 if ($data_of_input == '') {
                     return redirect()->route("MainIndex");
                 }
+
+                // Favourite Product
+                $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+                $wishlist = FavouriceProduct::where("user_id", $user_data->id)->get();
+
                 $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
-                return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input]);
+                return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input, "wishlist" => $wishlist]);
             }
         }
         $data = CategoryProduct::with('productsdata')->get();
@@ -385,7 +391,7 @@ class MainController extends Controller
             return response()->json(['cartcount' => $cartcount]);
         }
     }
-    public function Checkout_Product()
+    public function Checkout_Product(Request $request)
     {
         // countries data
         $contentcountry = File::get(public_path('countries.json'));
@@ -393,9 +399,9 @@ class MainController extends Controller
 
         // cart record are get
         $data1 = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
-        if (Session::get("productId")) {
+        if (isset($request->productId)) {
             $addtocart = AddToCart::where("user_id", $data1->id)
-                ->where("product_id", Session::get('productId'))->get();
+                ->where("product_id", $request->productId)->get();
         } else {
             $addtocart = AddToCart::where("user_id", $data1->id)->get();
         }
@@ -564,6 +570,7 @@ class MainController extends Controller
     // Get Product data to Category Wise
     public function get_category_wise_product($categoryname, Request $request)
     {
+        // Search Product
         if ($request->isMethod("post")) {
             if ($request->action == "Search") {
 
@@ -571,8 +578,13 @@ class MainController extends Controller
                 if ($data_of_input == '') {
                     return redirect()->route("MainIndex");
                 }
+
+                // Favourite Product
+                $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+                $wishlist = FavouriceProduct::where("user_id", $user_data->id)->get();
+
                 $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
-                return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input]);
+                return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input, "wishlist" => $wishlist]);
             }
         }
 
@@ -709,10 +721,10 @@ class MainController extends Controller
             $findCartData = AddToCart::where("user_id", $UserExist->id)
                 ->where("product_id", $productId)->first();
 
-            Session::put("productId", $productId);
+            // Session::put("productId", $productId);
 
             if ($findCartData) {
-                return redirect()->route('buy.Now.Summary');
+                return redirect()->route('buy.Now.Summary', ['productId' => $productId]);
             } else {
 
                 $cart = new AddToCart();
@@ -727,7 +739,7 @@ class MainController extends Controller
             }
 
 
-            return redirect()->route('buy.Now.Summary');
+            return redirect()->route('buy.Now.Summary', ['productId' => $productId]);
         } else {
             $cart = array();
             $product = Product::where("id", $productId)->first();
@@ -744,7 +756,7 @@ class MainController extends Controller
     public function Buy_Now_Summary(Request $request)
     {
         $data1 = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
-        $addtocart = AddToCart::where("user_id", $data1->id)->where("product_id", Session::get('productId'))->get();
+        $addtocart = AddToCart::where("user_id", $data1->id)->where("product_id", $request->productId)->get();
         $couponuserdata = UserCoupunData::where("user_id", $data1->id)->get();
 
         return view("IndexProductShow.BuyNow.OrderSummary", ["datacart" => $addtocart, "usercoupondata" => $couponuserdata]);

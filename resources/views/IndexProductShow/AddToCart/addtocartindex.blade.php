@@ -95,12 +95,6 @@
                                         <div class="btn text-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                             REMOVE
                                         </div>
-
-                                        {{-- <p style="margin-top: 27px;"> --}}
-                                        {{-- <a href="/deletetocart/{{$item->product->id}}" id="remove_a" style="text-decoration: none;color: black;"><i class="fa-solid fa-trash"></i></a> --}}
-                                        {{-- <a href="/deletetocart/{{$item->product->id}}" id="remove_a" style="text-decoration: none;color: black;"><i class="fa-solid fa-trash"></i></a> --}}
-
-                                        {{-- </p> --}}
                                     </div>
                                 </div>
                             </div>
