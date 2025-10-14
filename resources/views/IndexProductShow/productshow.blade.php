@@ -11,6 +11,29 @@
         padding: 15px;
     }
 
+    .offer {
+        position: absolute;
+        margin-left: -12px;
+        background-color: #fff;
+        border-radius: 10px 0px;
+        padding: 15px;
+        background: #cc0c39;
+        height: 41px;
+        width: 45px;
+    }
+
+    .offer-text {
+        font-size: 11px;
+        color: white;
+        position: absolute;
+        /* right: 10px; */
+        /* background-color: #fff; */
+        border-radius: 10px;
+        padding: 15px;
+        margin-left: -14px;
+        margin-top: -11px;
+    }
+
     .productnamehover:hover {
         color: rgba(0, 0, 255, 0.575) !important;
     }
@@ -32,7 +55,7 @@
 <h1 class="ps-3">{{$item1->category_name}}</h1>
 <div class="row w-100" style="padding-left: 27px;">
     @foreach ($item1->productsdata as $item)
-    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 card" style="width: 18rem; margin: 10px;">
+    <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-12 card" style="width: 18rem; margin: 10px;">
         <div class="likes">
             @if (isset($wishlist))
             @if ($wishlist->contains('product_id', $item->id))
@@ -44,11 +67,21 @@
             <i class="fa-solid fa-heart" onclick="favourite_product_data_save(this,'{{$item->id}}')" style="color: #c2c2c2;"></i>
             @endif
         </div>
-        <a href="/ProductDetails/{{$item->id}}">
-            <div style="height: 300px; width: 100%;">
-                <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->image) }}" alt="Image">
-            </div>
-        </a>
+        <div class="offer">
+        </div>
+        <div class="offer-text">
+            <span>
+                {{ $item->discount }}% <br>
+                OFF
+            </span>
+        </div>
+        <div style="margin: 13px;">
+            <a href="/ProductDetails/{{$item->id}}">
+                <div style="height: 300px; width: 100%;">
+                    <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->image) }}" alt="Image">
+                </div>
+            </a>
+        </div>
         <div class="card-body">
             <p class="card-text" style="text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
                 <a class="productnamehover" href="/ProductDetails/{{$item->id}}" style="color:black;text-decoration:none;">

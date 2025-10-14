@@ -339,23 +339,35 @@ class MainController extends Controller
         }
     }
 
+    // Product Detail Main Page
     public function Product_id_Detail($productid)
     {
         $data = Product::where("id", $productid)->first();
         $couper = Coupen::all();
+
+        $SuggestionProduct =
+            Product::where('sub_category_id', $data->sub_category_id)
+            ->where("category_id", $data->category_id)
+            ->where('id', '!=', $data->id)
+            ->get();
+
         if (Session::get("customeremail")) {
 
             $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
 
-            $wishlist = FavouriceProduct::where("user_id", $user_data->id)
+            $wishlistProduct = FavouriceProduct::where("user_id", $user_data->id)
                 ->where("product_id", $productid)->first();
 
             $coupondata = UserCoupunData::where("user_id", $user_data->id)
                 ->where("product_id", $productid)->first();
 
-            return view("IndexProductShow.productdetail", ["productdatails" => $data, "coupen" => $couper, "coupenuserdata" => $coupondata, "wishlist" => $wishlist]);
+            // Favourite Product
+            $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+            $wishlist = FavouriceProduct::where("user_id", $user_data->id)->get();
+
+            return view("IndexProductShow.productdetail", ["productdatails" => $data, "coupen" => $couper, "coupenuserdata" => $coupondata, "wishlist" => $wishlist, "wishlistProduct" => $wishlistProduct, 'SuggestionProduct' => $SuggestionProduct]);
         }
-        return view("IndexProductShow.productdetail", ["productdatails" => $data, "coupen" => $couper]);
+        return view("IndexProductShow.productdetail", ["productdatails" => $data, "coupen" => $couper, 'SuggestionProduct' => $SuggestionProduct]);
     }
 
     // Checkout Processes
@@ -415,55 +427,6 @@ class MainController extends Controller
 
         return view("IndexProductShow.CheckOut.checkoutpage", ["customerdata" => $data, "couponuserdata" => $coupon, "cart" => $addtocart, "contrylist" => $contrylist]);
     }
-
-    // // Email Check - Login
-    // public function Login_Email_Check(Request $request)
-    // {
-    //     $validator = Validator::make(
-    //         $request->all(),
-    //         [
-    //             'searchData' => ['regex:/^.+\.com$/i'],
-    //         ]
-    //     );
-    //     if ($validator->fails()) {
-    //         return Response()->json(["emailError" => "notShow"]);
-    //     }
-
-    //     $validator2 = Validator::make(
-    //         $request->all(),
-    //         [
-    //             'searchData' => ['email'],
-    //         ]
-    //     );
-    //     if ($validator2->fails()) {
-    //         return Response()->json(["emailError" => "Enter Email Must Be A Valid Email Address."]);
-    //     }
-
-    //     $validator1 = Validator::make(
-    //         $request->all(),
-    //         [
-    //             'searchData' => ['regex:/^[a-zA-Z0-9._%+-]+@(gmail|yahoo)\.com$/'],
-    //         ]
-    //     );
-    //     if ($validator1->fails()) {
-    //         return Response()->json(["emailError" => "The email must be from an allowed domain (gmail.com, yahoo.com)."]);
-    //     }
-
-    //     $userData = CustomerAndShopkeeper::where("email", "like", "%" . $request->searchData . "%")->get();
-
-    //     if ($userData->count() == 0) {
-
-    //         $adminData = Admin::where("email", "like", "%" . $request->searchData . "%")->get();
-
-    //         if ($adminData->count() == 0) {
-    //             return Response()->json(["emailError" => "Email User Not Exist !"]);
-    //         } else {
-    //             return Response()->json(["emailError" => "notShow"]);
-    //         }
-    //     } else {
-    //         return Response()->json(["emailError" => "notShow"]);
-    //     }
-    // }
 
     // Main page Search Bar
     public function search_product_name(Request $request)
@@ -761,4 +724,53 @@ class MainController extends Controller
 
         return view("IndexProductShow.BuyNow.OrderSummary", ["datacart" => $addtocart, "usercoupondata" => $couponuserdata]);
     }
+
+    // Email Check - Login
+    //  public function Login_Email_Check(Request $request)
+    // {
+    //     $validator = Validator::make(
+    //         $request->all(),
+    //         [
+    //             'searchData' => ['regex:/^.+\.com$/i'],
+    //         ]
+    //     );
+    //     if ($validator->fails()) {
+    //         return Response()->json(["emailError" => "notShow"]);
+    //     }
+
+    //     $validator2 = Validator::make(
+    //         $request->all(),
+    //         [
+    //             'searchData' => ['email'],
+    //         ]
+    //     );
+    //     if ($validator2->fails()) {
+    //         return Response()->json(["emailError" => "Enter Email Must Be A Valid Email Address."]);
+    //     }
+
+    //     $validator1 = Validator::make(
+    //         $request->all(),
+    //         [
+    //             'searchData' => ['regex:/^[a-zA-Z0-9._%+-]+@(gmail|yahoo)\.com$/'],
+    //         ]
+    //     );
+    //     if ($validator1->fails()) {
+    //         return Response()->json(["emailError" => "The email must be from an allowed domain (gmail.com, yahoo.com)."]);
+    //     }
+
+    //     $userData = CustomerAndShopkeeper::where("email", "like", "%" . $request->searchData . "%")->get();
+
+    //     if ($userData->count() == 0) {
+
+    //         $adminData = Admin::where("email", "like", "%" . $request->searchData . "%")->get();
+
+    //         if ($adminData->count() == 0) {
+    //             return Response()->json(["emailError" => "Email User Not Exist !"]);
+    //         } else {
+    //             return Response()->json(["emailError" => "notShow"]);
+    //         }
+    //     } else {
+    //         return Response()->json(["emailError" => "notShow"]);
+    //     }
+    // }
 }

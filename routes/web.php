@@ -96,7 +96,6 @@ Route::get("/welcome", function () {
 Route::middleware("shopkeeperCheck")->group(function () {
 
     Route::match(['get', 'post'], '/shopkeeperdashboard', [ShopkeeperController::class, 'dashboard'])->name('shopkeeperdashboard');
-    Route::get('/shopkeeperuser', [ShopkeeperController::class, "profileuser"]);
     Route::match(["post", "get"], '/shopkeeperchangepassword/{shopkeeperid}', [ShopkeeperController::class, "shopkeeper_change_password"]);
     Route::get('/viewprofile/{email}', [ShopkeeperController::class, "view_profile"]);
     Route::match(['get', 'post'], '/ShopkeeperOrderList', [ShopkeeperController::class, "Shopkeeper_Order_List"])->name("shopkeeper.Order.List");
@@ -115,12 +114,8 @@ Route::get('/error', function () {
 
 // Product
 Route::post('/productadd', [Product_Controller::class, 'product_add_and_update'])->name("product_add_update");
-Route::get('/getproductall', [Product_Controller::class, 'product_get_all']);
 Route::post('/editproduct', [Product_Controller::class, 'product_edit']);
-Route::post('/deleteproductadmin', [Product_Controller::class, 'admin_product_remove'])->name("delete_product_admin");
 Route::post('/deleteproduct', [Product_Controller::class, 'Product_Delete']);
-Route::get('/searchproduct', [Product_Controller::class, 'product_search']);
-Route::get('/getproductshopkeeper', [Product_Controller::class, 'product_list_get_shopkeeper']);
 Route::match(['get', 'post'], '/productaddshop/{category_name}', [Product_Controller::class, 'product_add_show'])->name("product.Add.Show");
 Route::get('/ProductDetailsShow/{productid}', [Product_Controller::class, 'product_details']);
 Route::match(['get', 'post'], '/productview/{productid}', [Product_Controller::class, 'product_view']);

@@ -3,6 +3,15 @@
 @section('content')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
+    .likes {
+        position: absolute;
+        right: 10px !important;
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 15px !important;
+        margin-top: 0px !important;
+    }
+
     .carousel-control-prev-icon,
     .carousel-control-next-icon {
         height: 30px !important;
@@ -168,8 +177,8 @@
 
     <div class="col">
         <div class="likes">
-            @if (isset($wishlist))
-            @if ($wishlist->product_id == $productdatails->id)
+            @if (isset($wishlistProduct))
+            @if ($wishlistProduct->product_id == $productdatails->id)
             <i class="fa-solid fa-heart" onclick="favourite_product_data_save(this,'{{$productdatails->id}}')" style="color: red;"></i>
             @else
             <i class="fa-solid fa-heart" onclick="favourite_product_data_save(this,'{{$productdatails->id}}')" style="color: #c2c2c2;"></i>
@@ -270,6 +279,44 @@
         </div>
     </div>
 </div>
+
+<div class="row w-100" style="padding-left: 27px;margin-top: 23px;">
+    @foreach ($SuggestionProduct as $item)
+    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 card" style="width: 18rem; margin: 10px;">
+        <div class="likes">
+            @if (isset($wishlist))
+            @if ($wishlist->contains('product_id', $item->id))
+            <i class="fa-solid fa-heart" onclick="favourite_product_data_save(this,'{{$item->id}}')" style="color: red;"></i>
+            @else
+            <i class="fa-solid fa-heart" onclick="favourite_product_data_save(this,'{{$item->id}}')" style="color: #c2c2c2;"></i>
+            @endif
+            @else
+            <i class="fa-solid fa-heart" onclick="favourite_product_data_save(this,'{{$item->id}}')" style="color: #c2c2c2;"></i>
+            @endif
+        </div>
+        <div>
+            <a href="/ProductDetails/{{$item->id}}">
+                <div style="height: 300px; width: 100%;">
+                    <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->image) }}" alt="Image">
+                </div>
+            </a>
+        </div>
+        <div class="card-body">
+            <p class="card-text" style="text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
+                <a class="productnamehover" href="/ProductDetails/{{$item->id}}" style="color:black;text-decoration:none;">
+                    {{$item->name}}
+                </a>
+            </p>
+            <p class="card-text" style="width: 100%;text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
+                <h3>₹{{round($item->price- ($item->price * $item->discount /100))}}</h3>
+                <div style="color: green"><del>₹{{$item->price}}</del> {{$item->discount}}% off</div>
+            </p>
+        </div>
+    </div>
+    @endforeach
+    <br>
+</div>
+
 @toastifyJs
 <script>
     function favourite_product_data_save(rs, productid) {

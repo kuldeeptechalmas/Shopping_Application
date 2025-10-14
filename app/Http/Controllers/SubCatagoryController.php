@@ -8,9 +8,9 @@ use Illuminate\Http\Request;
 
 class SubCatagoryController extends Controller
 {
+    // Sub Category Add
     public function sub_catagory_add(Request $request)
     {
-
         if ($request->maincategory) {
             $validator = $request->validate(
                 [
@@ -51,6 +51,7 @@ class SubCatagoryController extends Controller
         }
     }
 
+    // Sub Category Delete
     public function sub_catagory_delete(Request $request)
     {
         $data = SubCatagory::find($request->deleteid);

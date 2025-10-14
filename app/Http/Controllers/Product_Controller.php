@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Validator;
 
 class Product_Controller extends Controller
 {
+    // Product Add and Update
     public function product_add_and_update(Request $request)
     {
         $product = Product::find($request->id);
@@ -216,71 +217,7 @@ class Product_Controller extends Controller
         }
     }
 
-    public function product_get_all(Request $request)
-    {
-        $data = Product::paginate(15);
-
-        if ($request->ajax()) {
-            return view("Admin.Table.producttable", ["data" => $data, "table" => "product"]);
-        }
-
-        return view("Admin.Table.producttable", ["data" => $data]);
-    }
-
-    public function admin_product_remove(Request $request)
-    {
-
-        $db = Product::find($request->deleteid)->first();
-        if ($db) {
-            $db->delete();
-        } else {
-            return response()->withCookie(["erroradmin" => "Not Found Data"]);
-        }
-
-        return redirect()->back();
-    }
-
-    public function product_search(Request $request)
-    {
-
-        $user = CustomerAndShopkeeper::where("email", Session::get("shopkeeperemail"))->first();
-
-        if (isset($request->catagoryid)) {
-
-            $data1 = Product::where("user_id", $user->id)->where("category_id", $request->catagoryid)->where("name", "like", "%" . $request->searchText . "%")->paginate(15);
-            if ($data1->count() == 0) {
-                return view("Shopkeeper.Product.notfoundproduct");
-            } else {
-                return view("Shopkeeper.Product.productshow", ["data" => $data1]);
-            }
-        } else {
-
-            $data = Product::where("name", "like", "%" . $request->searchText . "%")->paginate(15);
-            if ($data->count() == 0) {
-                return view("Shopkeeper.Product.notfoundproduct");
-            } else {
-                return view("Shopkeeper.Product.productshow", ["data" => $data]);
-            }
-        }
-    }
-
-    public function product_list_get_shopkeeper(Request $request)
-    {
-        $user = CustomerAndShopkeeper::where("email", Session::get("shopkeeperemail"))->first();
-        if (isset($request->catagoryid)) {
-
-            $data1 = Product::where("user_id", $user->id)->where("category_id", $request->catagoryid)->paginate(15);
-            return view("Shopkeeper.Product.productshow", ["data" => $data1]);
-        } else {
-
-            $data = Product::where("user_id", $user->id)->paginate(15);
-            if ($request->ajax()) {
-                return view("Shopkeeper.Product.productshow", ["data" => $data]);
-            }
-            return view("Shopkeeper.Product.productshow", ["data" => $data]);
-        }
-    }
-
+    // Product Add and Show to Shopkeeper
     public function product_add_show(Request $request, $catagory)
     {
         $catagorydata = CategoryProduct::all();
@@ -291,17 +228,16 @@ class Product_Controller extends Controller
             if (isset($request->catagoryid)) {
 
                 $data1 = Product::where("user_id", $user->id)->where("category_id", $request->catagoryid)->where("name", "like", "%" . $request->searchText . "%")->paginate(15);
-                // dd($data1);
-                if ($data1->count() == 0) {
+                // dd($data1->total());
+                if ($data1->total() == 0) {
                     return view("Shopkeeper.product_add_show", ["catagory" => $catagorydata, "searchText" => $request->searchText, "catagoryid" => $request->catagoryid]);
                 } else {
                     return view("Shopkeeper.product_add_show", ["catagory" => $catagorydata, "searchText" => $request->searchText, "catagoryid" => $request->catagoryid, "dataProduct" => $data1, "showallrecord" => "yes"]);
                 }
             } else {
-
-
                 $data = Product::where("name", "like", "%" . $request->searchText . "%")->paginate(15);
-                if ($data->count() == 0) {
+                dd($data);
+                if ($data1->total() == 0) {
                     return view("Shopkeeper.index", ["catagory" => $catagorydata, "searchText" => $request->searchText]);
                 } else {
                     return view("Shopkeeper.index", ["catagory" => $catagorydata, "searchText" => $request->searchText, "dataProduct" => $data, "showallrecord" => "yes"]);
@@ -322,9 +258,9 @@ class Product_Controller extends Controller
         );
     }
 
+    // Product Details Shopkeeper and Admin
     public function product_details($productid)
     {
-
         $catagorydata = CategoryProduct::all();
         $data = Product::where("id", $productid)->first();
         if (!empty(Session::get("adminname"))) {
@@ -335,6 +271,7 @@ class Product_Controller extends Controller
         }
     }
 
+    // Product View Shopkeeper
     public function product_view($productid, Request $request)
     {
         $catagoryid = 0;
@@ -368,7 +305,6 @@ class Product_Controller extends Controller
             session()->put('onetime', $cart);
         }
 
-
         return view("Shopkeeper.Product.viewproduct", [
             "catagory" => $catagory,
             "product_data" => $productdata,
@@ -376,9 +312,9 @@ class Product_Controller extends Controller
         ]);
     }
 
+    // Product Add Page
     public function Add_Product_Page($catagoryid)
     {
-
         $catagorydata = CategoryProduct::all();
         Session::put("categoryname", $catagoryid);
         $data = CategoryProduct::where("id", $catagoryid)->first();
@@ -394,6 +330,7 @@ class Product_Controller extends Controller
         );
     }
 
+    // Product Delete 
     public function Product_Delete(Request $request)
     {
         $prodcut_delete = Product::find($request->id);

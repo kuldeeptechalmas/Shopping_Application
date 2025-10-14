@@ -202,6 +202,7 @@ class AddToCartController extends Controller
             'redirect_url' => route('addtocart_get_all')
         ]);
     }
+
     public function Buy_Now_update_queantity(Request $request)
     {
         if (Session::get("customeremail")) {

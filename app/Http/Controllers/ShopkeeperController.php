@@ -17,9 +17,9 @@ use Illuminate\Validation\Rules\Password;
 
 class ShopkeeperController extends Controller
 {
+    // Shopkeeper Main Page
     public function dashboard(Request $request)
     {
-
         $catagory = CategoryProduct::all();
         if ($request->isMethod("post")) {
 
@@ -28,7 +28,7 @@ class ShopkeeperController extends Controller
 
             if (isset($request->catagoryid)) {
                 $data1 = Product::where("user_id", $user->id)->where("category_id", $request->catagoryid)->where("name", "like", "%" . $request->searchText . "%")->paginate(15);
-                if ($data1->count() == 0) {
+                if ($data1->total() == 0) {
                     return view("Shopkeeper.product_add_show", ["catagory" => $catagory, "searchText" => $request->searchText]);
                 } else {
                     return view("Shopkeeper.product_add_show", ["catagory" => $catagory, "searchText" => $request->searchText, "catagoryid" => $request->catagoryid, "data" => $data1, "showallrecord" => "yes"]);
@@ -36,7 +36,7 @@ class ShopkeeperController extends Controller
             } else {
 
                 $data = Product::where("name", "like", "%" . $request->searchText . "%")->where("user_id", $user->id)->paginate(15);
-                if ($data->count() == 0) {
+                if ($data->total() == 0) {
                     return view("Shopkeeper.index", ["catagory" => $catagory, "showallrecord" => "yes", "searchText" => $request->searchText]);
                 } else {
                     return view("Shopkeeper.index", ["catagory" => $catagory, "data" => $data, "showallrecord" => "yes", "searchText" => $request->searchText]);
@@ -57,16 +57,9 @@ class ShopkeeperController extends Controller
         }
     }
 
-    public function profileuser(Request $request)
-    {
-        $data = CustomerAndShopkeeper::where("email", $request->shopkeeperemail)->first();
-        $data->password = Crypt::decryptString($data->password);
-        return response()->json($data);
-    }
-
+    // Update Profile User
     public function updateuser(Request $request)
     {
-
         $request->validate([
             "name" =>  [
                 'required',
@@ -115,6 +108,7 @@ class ShopkeeperController extends Controller
         ]);
     }
 
+    // Show Shopkeeper Profile
     public function shopkeeper_profile()
     {
         // contry data
@@ -131,6 +125,7 @@ class ShopkeeperController extends Controller
         return view("Shopkeeper.Profile.shopkeeperprofile", ["catagory" => $catagory, "contrylist" => $contrylist, "shopkeeper_profile" => $shopkeeper_profile]);
     }
 
+    // Change Password
     public function shopkeeper_change_password($shopkeeper_email, Request $request)
     {
         // all catagory
@@ -187,6 +182,7 @@ class ShopkeeperController extends Controller
         return view("Shopkeeper.Profile.changepassword", ["catagory" => $catagory, "shopkeeper_data" => $shopkeeper_profile]);
     }
 
+    // Profile Form Data Show
     public function view_profile($email)
     {
         // contry data
@@ -197,6 +193,7 @@ class ShopkeeperController extends Controller
         return view("Shopkeeper.Profile.viewuserprofile", ["data" => $data, "contrylist" => $contrylist]);
     }
 
+    // Order List
     public function Shopkeeper_Order_List(Request $request)
     {
         if ($request->isMethod("post")) {
@@ -270,6 +267,7 @@ class ShopkeeperController extends Controller
         return view("Shopkeeper.Order.orderlist", ["catagory" => $catagory, 'order_Data' => $paginatedata]);
     }
 
+    // Remove Image To Product Admin Product and Shopkeeper Product
     public function Remove_Image_Product($imageid, $productId)
     {
         $imageData = Images::find($imageid);

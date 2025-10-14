@@ -155,6 +155,7 @@ class CustomerController extends Controller
         }
         return redirect()->route("MainIndex");
     }
+
     public function view_profile($email)
     {
         // contry data
