@@ -1,12 +1,10 @@
 @extends('index')
 
 @section('content')
-
 <div class="row">
     <div class="col-2">
     </div>
     {{-- customer is found then show cart --}}
-
     @if (Session::get("customeremail"))
     <div class="row">
         <div class="col-8">
@@ -140,9 +138,11 @@
                 </div>
             </div>
             @else
-            <div style="background-color: transparent;">
-                <img src="{{ asset('storage/UploadeFile/missingcart.png') }}" style="margin-left: 59%;margin-top: 10%;width:237px;" alt="Image">
-            </div>
+            <a href="/MyShop">
+                <div style="background-color: transparent;">
+                    <img src="{{ asset('storage/UploadeFile/missingcart.png') }}" style="margin-left: 59%;margin-top: 10%;width:237px;" alt="Image">
+                </div>
+            </a>
             @endif
 
         </div>
@@ -219,78 +219,5 @@
     </div>
     @endif
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script>
-    function DirectChangeInput(productId) {
-
-        if ($("#quentity").val() == 0) {
-            console.log("boom...");
-
-            $("#quentity").val("");
-        } else {
-
-            if ($("#quentity").val() != "") {
-
-                $.ajax({
-                    type: "get"
-                    , url: "/DirectChangeQuentity"
-                    , data: {
-                        product_id: productId
-                        , queantity: $("#quentity").val()
-                    , }
-                    , success: function(res) {
-                        console.log(res);
-
-                        window.location.href = res.redirect_url;
-                    }
-                    , error: function(e) {
-                        console.log(e);
-                    }
-                , });
-            }
-        }
-
-    }
-
-    function plus_quentity(e) {
-
-        $.ajax({
-            type: "get"
-            , url: "/addtocartqueantitychange"
-            , data: {
-                product_id: $(e).next()[0].value
-                , queantity: $(e).prev()[0].value
-                , action: "plus"
-            , }
-            , success: function(res) {
-                window.location.href = res.redirect_url;
-            }
-            , error: function(e) {
-                console.log(e);
-            }
-        , });
-    }
-
-    function minus_quentity(e) {
-        console.log($(e).prev()[0].value);
-
-        $.ajax({
-            type: "get"
-            , url: "/addtocartqueantitychange"
-            , data: {
-                product_id: $(e).prev()[0].value
-                , queantity: $(e).next()[0].value
-                , action: "minus"
-            , }
-            , success: function(res) {
-                window.location.href = res.redirect_url;
-            }
-            , error: function(e) {
-                console.log(e);
-            }
-        , })
-    }
-
-</script>
-
+<script src="{{ asset('js/customer/addtocart.js') }}"></script>
 @endsection

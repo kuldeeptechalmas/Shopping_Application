@@ -102,29 +102,6 @@ class CustomerController extends Controller
 
                 ]
             );
-            //             $validator = Validator::make(
-            //     $request->all(),
-            //     [
-            //         "oldpassword" => "required",
-            //         "newpassword" => [
-            //             "required",
-            //             "confirmed",
-            //             Password::min(8)
-            //                 ->mixedCase()
-            //                 ->symbols()
-            //                 ->numbers()
-            //         ],
-            //     ],
-            //     [
-            //         "oldpassword.required" => "The old password is required.",
-            //         "newpassword.required" => "The new password is required.",
-            //         "newpassword.min" => "The new password must be at least 8 characters.",
-            //         "newpassword.symbols" => "The new password must contain at least one symbol.",
-            //         "newpassword.numbers" => "The new password must contain at least one number.",
-            //         "newpassword.mixedCase" => "The new password must contain at least one uppercase and one lowercase letter.",
-            //         "newpassword.confirmed" => "The password confirmation does not match.",
-            //     ]
-            // );
 
             if ($validator->fails()) {
                 return redirect()->back()->withInput()->withErrors($validator);

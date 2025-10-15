@@ -10,8 +10,8 @@ class CustomerOrder extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $table="customerorder";
-    protected $fillable =[
+    protected $table = "customerorder";
+    protected $fillable = [
         "name",
         "email",
         "phone",
@@ -25,10 +25,15 @@ class CustomerOrder extends Model
         "order_date",
         "delivery_date",
         "status",
+        "rate_id",
     ];
 
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+    public function rates()
+    {
+        return $this->belongsTo(Rating::class, 'rate_id');
     }
 }

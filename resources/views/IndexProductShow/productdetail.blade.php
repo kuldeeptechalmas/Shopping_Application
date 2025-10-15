@@ -1,119 +1,6 @@
 @extends('index')
 
 @section('content')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<style>
-    .likes {
-        position: absolute;
-        right: 10px !important;
-        background-color: #fff;
-        border-radius: 10px;
-        padding: 15px !important;
-        margin-top: 0px !important;
-    }
-
-    .carousel-control-prev-icon,
-    .carousel-control-next-icon {
-        height: 30px !important;
-        width: 30px !important;
-        padding: 20px !important;
-    }
-
-    .likes {
-        position: absolute;
-        right: 78px;
-        background-color: #e9ecef;
-        border-radius: 32px;
-        padding: 15px;
-        margin-top: 29px;
-    }
-
-    /* coupen css */
-
-
-    .coupon-container {
-        width: 188px;
-        border: 2px dashed #ccc;
-        border-radius: 10px;
-        background-color: #fff;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-        text-align: center;
-        height: 361px;
-
-    }
-
-    .coupon-header {
-        background-color: #ff6347;
-        /* Tomato color */
-        color: white;
-        padding: 15px 0;
-        border-bottom: 2px solid #e0523a;
-    }
-
-    .coupon-header h2 {
-        margin: 0;
-        font-size: 1.8em;
-        text-transform: uppercase;
-    }
-
-    .coupon-body {
-        padding: 20px;
-    }
-
-    .discount-amount {
-        font-size: 3em;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 5px;
-    }
-
-    .deal-description {
-        font-size: 1.1em;
-        color: #555;
-        margin-bottom: 15px;
-    }
-
-    .coupon-code {
-        background-color: #f8f8f8;
-        border: 1px solid #eee;
-        padding: 10px 15px;
-        border-radius: 5px;
-        display: inline-block;
-        margin-bottom: 15px;
-    }
-
-    .code-label {
-        font-weight: bold;
-        color: #777;
-        margin-right: 5px;
-    }
-
-    .code-value {
-        font-size: 1.2em;
-        font-weight: bold;
-        color: #ff6347;
-    }
-
-    .expiration {
-        font-size: 0.9em;
-        color: #888;
-    }
-
-    .coupon-footer {
-        background-color: #f2f2f2;
-        padding: 10px 0;
-        border-top: 1px solid #eee;
-    }
-
-    .disclaimer {
-        font-size: 0.8em;
-        color: #a0a0a0;
-        margin: 0;
-    }
-
-</style>
-
 @toastifyCss
 
 <div class="row">
@@ -227,11 +114,20 @@
         @else
         <div class="text-danger">Out of Stock</div>
         @endif
+
+        <p style="margin-top: 10px;">
+            Rate this product
+        </p>
+        <i class="fa-solid fa-star" style="color:#ffe11b" data-toggle="tooltip" data-placement="top" title="Very Bad"></i>
+        <i class="fa-solid fa-star" style="color:#ffe11b" data-toggle="tooltip" data-placement="top" title="Bad"></i>
+        <i class="fa-solid fa-star" style="color:#ffe11b" data-toggle="tooltip" data-placement="top" title="Good"></i>
+        <i class="fa-solid fa-star" style="color:#ffe11b" data-toggle="tooltip" data-placement="top" title="Very Good"></i>
+        <i class="fa-solid fa-star" style="color:#ffe11b" data-toggle="tooltip" data-placement="top" title="Excellent"></i>
         @php
         $dataString = $productdatails->description;
         $items = explode('-', $dataString);
         @endphp
-        <div style="margin-top: 7%;">
+        <div style="margin-top: 5%;">
             <div class="row">
                 <div class="col">
                     Highlights:
@@ -279,10 +175,10 @@
         </div>
     </div>
 </div>
-
-<div class="row w-100" style="padding-left: 27px;margin-top: 23px;">
+<div class=" row w-100" style="padding-left: 27px;margin-top: 23px;">
+    <h3 style="padding-left: 27px;margin-top: 23px;">Similar Products</h3>
     @foreach ($SuggestionProduct as $item)
-    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 card" style="width: 18rem; margin: 10px;">
+    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 card" style="border-radius: 10px;width: 18rem; margin: 10px;">
         <div class="likes">
             @if (isset($wishlist))
             @if ($wishlist->contains('product_id', $item->id))
@@ -294,12 +190,23 @@
             <i class="fa-solid fa-heart" onclick="favourite_product_data_save(this,'{{$item->id}}')" style="color: #c2c2c2;"></i>
             @endif
         </div>
-        <div>
-            <a href="/ProductDetails/{{$item->id}}">
-                <div style="height: 300px; width: 100%;">
-                    <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->image) }}" alt="Image">
-                </div>
-            </a>
+
+        <div class="offer">
+        </div>
+        <div class="offer-text">
+            <span>
+                {{ $item->discount }}% <br>
+                OFF
+            </span>
+        </div>
+        <div style="margin: 13px;">
+            <div>
+                <a href="/ProductDetails/{{$item->id}}">
+                    <div style="height: 300px; width: 100%;">
+                        <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->image) }}" alt="Image">
+                    </div>
+                </a>
+            </div>
         </div>
         <div class="card-body">
             <p class="card-text" style="text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
@@ -316,55 +223,5 @@
     @endforeach
     <br>
 </div>
-
 @toastifyJs
-<script>
-    function favourite_product_data_save(rs, productid) {
-
-        var element = $(rs)[0].style.color;
-
-
-        if (element != "red") {
-
-            $.ajax({
-                url: "/favourite/" + productid
-                , type: "get"
-                , success: function(res) {
-                    if (res.url) {
-                        window.location.href = res.url;
-                    } else {
-                        $(rs)[0].style.color = "red";
-                        toastify().success('Add to Wishlist !!!', {
-                            position: 'center'
-                        , });
-                    }
-
-                }
-                , error: function(e) {
-                    console.log(e);
-                }
-            })
-        } else {
-            $.ajax({
-                url: "/removewishlist/" + productid
-                , type: "get"
-                , success: function(res) {
-                    if (res.url) {
-                        window.location.href = res.url;
-                    } else {
-                        $(rs)[0].style.color = "#c2c2c2";
-                        toastify().error('Remove in Wishlist', {
-                            position: 'center'
-                        , });
-                    }
-                }
-                , error: function(e) {
-                    console.log(e);
-
-                }
-            })
-        }
-    }
-
-</script>
 @endsection

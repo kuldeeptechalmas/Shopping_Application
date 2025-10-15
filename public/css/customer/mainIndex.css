@@ -1,0 +1,229 @@
+/* main index.blade.php to css */
+ /* cart css */
+    .cart-icon-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background-color: blue;
+        color: white;
+        border-radius: 50%;
+        padding: 3px 6px;
+        font-size: 12px;
+        line-height: 1;
+        text-align: center;
+    }
+
+    /* favourite heart css */
+    .likes {
+        position: absolute;
+        right: 10px;
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 15px;
+    }
+
+    /* profile */
+    .hover-trigger {
+        position: relative;
+    }
+
+    .show-on-hover {
+        display: none;
+        position: absolute;
+        top: 100%;
+    }
+
+    .hover-trigger:hover .show-on-hover {
+        display: block;
+        z-index: 9;
+    }
+
+    .btn:focus,
+    .btn:active:focus,
+    .btn.active:focus {
+        box-shadow: none !important;
+    }
+
+    .btn:first-child:active {
+        color: var(--cui-btn-active-color);
+        background-color: var(--cui-btn-active-bg);
+        border-color: var(--cui-btn-active-border-color);
+    }
+
+    .dropdown_search_main {
+        position: relative;
+    }
+
+    .dropdown_search_content {
+        /* visibility: hidden; */
+        background-color: #ffffff;
+        position: absolute;
+        width: 97%;
+        padding: 10px 7px;
+        top: 97%;
+        margin-top: 10px;
+        border-radius: 0 0 5px 5px;
+        box-shadow: 1px 1px 1px rgb(0 0 0 / 16%);
+        max-height: 146px;
+        z-index: 99;
+        overflow: hidden;
+        text-overflow: ellipsis
+    }
+
+    body {
+        overflow-x: hidden;
+    }
+
+/* productshow.blade.php to css */
+    .likes {
+        position: absolute;
+        right: 10px;
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 15px;
+    }
+
+    .offer {
+        position: absolute;
+        margin-left: -12px;
+        background-color: #fff;
+        border-radius: 10px 0px;
+        padding: 15px;
+        background: #cc0c39;
+        height: 41px;
+        width: 45px;
+    }
+
+    .offer-text {
+        font-size: 11px;
+        color: white;
+        position: absolute;
+        /* right: 10px; */
+        /* background-color: #fff; */
+        border-radius: 10px;
+        padding: 15px;
+        margin-left: -14px;
+        margin-top: -11px;
+    }
+
+    .productnamehover:hover {
+        color: rgba(0, 0, 255, 0.575) !important;
+    }
+
+/* productdetail.blade.php  */
+
+     .likes {
+        position: absolute;
+        right: 10px !important;
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 15px !important;
+        margin-top: 0px !important;
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        height: 30px !important;
+        width: 30px !important;
+        padding: 20px !important;
+    }
+
+    .likes {
+        position: absolute;
+        right: 78px;
+        background-color: #e9ecef;
+        border-radius: 32px;
+        padding: 15px;
+        margin-top: 29px;
+    }
+
+    /* coupen css */
+    .coupon-container {
+        width: 188px;
+        border: 2px dashed #ccc;
+        border-radius: 10px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        text-align: center;
+        height: 361px;
+
+    }
+
+    .coupon-header {
+        background-color: #ff6347;
+        /* Tomato color */
+        color: white;
+        padding: 15px 0;
+        border-bottom: 2px solid #e0523a;
+    }
+
+    .coupon-header h2 {
+        margin: 0;
+        font-size: 1.8em;
+        text-transform: uppercase;
+    }
+
+    .coupon-body {
+        padding: 20px;
+    }
+
+    .discount-amount {
+        font-size: 3em;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .deal-description {
+        font-size: 1.1em;
+        color: #555;
+        margin-bottom: 15px;
+    }
+
+    .coupon-code {
+        background-color: #f8f8f8;
+        border: 1px solid #eee;
+        padding: 10px 15px;
+        border-radius: 5px;
+        display: inline-block;
+        margin-bottom: 15px;
+    }
+
+    .code-label {
+        font-weight: bold;
+        color: #777;
+        margin-right: 5px;
+    }
+
+    .code-value {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #ff6347;
+    }
+
+    .expiration {
+        font-size: 0.9em;
+        color: #888;
+    }
+
+    .coupon-footer {
+        background-color: #f2f2f2;
+        padding: 10px 0;
+        border-top: 1px solid #eee;
+    }
+
+    .disclaimer {
+        font-size: 0.8em;
+        color: #a0a0a0;
+        margin: 0;
+    }
+
+    .productnamehover:hover {
+        color: blue !important;
+    }

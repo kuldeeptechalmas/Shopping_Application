@@ -1,12 +1,6 @@
 @extends('index')
 
 @section('content')
-<style>
-    .productnamehover:hover {
-        color: blue;
-    }
-
-</style>
 @if ($wishlist->isNotEmpty())
 <div class="row" style="padding: 10px 270px;">
     <h5>My Wishlist ({{$wishlist->count()}})</h5>
@@ -74,9 +68,3 @@
 </div>
 @endif
 @endsection
-
-@push('index_Main_js')
-<script>
-
-</script>
-@endpush

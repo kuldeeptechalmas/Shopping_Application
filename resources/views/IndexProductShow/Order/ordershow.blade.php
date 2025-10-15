@@ -7,7 +7,6 @@
     <div class="col" style="padding: 10px 270px;">
         <h3 style="text-align: center;">My Orders</h3>
         @foreach ($order as $item)
-        {{-- @dd($item->product->id) --}}
         <div class="card">
             <div class="card-body">
                 <div class="row">
@@ -37,8 +36,31 @@
                         Quentity : {{ $item->quantity }}
                         <div style="color: green"><del>₹{{$item->product->price}}</del> {{$item->product->discount}}%
                             off</div>
+                        <div>
+                            <p style="margin-top: 10px;">
+                                Rate this product
+                            </p>
+                            @if (isset($item->rates))
 
+                            @foreach (range(1,$item->rates->rate) as $it)
+                            <i class="fa-solid fa-star" onclick="productstar(this,'{{ $item->product->id }}')" style="color:#ffe11b" data-toggle="tooltip" data-placement="top" title="Very Bad"></i>
+                            @endforeach
 
+                            @if ($item->rates->rate!=5)
+                            @foreach (range($item->rates->rate,4) as $it)
+                            <i class="fa-solid fa-star" onclick="productstar(this,'{{ $item->product->id }}')" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Very Bad"></i>
+                            @endforeach
+                            @endif
+
+                            @else
+
+                            <i class="fa-solid fa-star" id="firststar" onclick="productstar(this,'{{ $item->product->id }}')" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Very Bad"></i>
+                            <i class="fa-solid fa-star" id="secondstar" onclick="productstar(this,'{{ $item->product->id }}')" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Bad"></i>
+                            <i class="fa-solid fa-star" id="therdstar" onclick="productstar(this,'{{ $item->product->id }}')" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Good"></i>
+                            <i class="fa-solid fa-star" id="fourstar" onclick="productstar(this,'{{ $item->product->id }}')" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Very Good"></i>
+                            <i class="fa-solid fa-star" id="fifthstar" onclick="productstar(this,'{{ $item->product->id }}')" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Excellent"></i>
+                            @endif
+                        </div>
                     </div>
                     <div class="col-2">
                         <div style="margin-top: 14px;">
@@ -121,4 +143,46 @@
     </div>
 </div>
 @endif
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    function productstar(e, pid) {
+        var allStars = $('.fa-solid')
+
+
+        // $('#firststar').css({
+        //     'color': '#ffe11b'
+        // });
+        // $('#secondstar').css({
+        //     'color': '#ffe11b'
+        // });
+        // $('#therdstar').css({
+        //     'color': '#ffe11b'
+        // });
+        // $('#fourstar').css({
+        //     'color': '#ffe11b'
+        // });
+        // e.style['color'] = '#ffe11b';
+        // $.ajaxSetup({
+        //     headers: {
+        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //     }
+        // });
+
+        // $.ajax({
+        //     type: "post"
+        //     , url: "/OrderRating"
+        //     , data: {
+        //         product_id: pid
+        //         , rate: 5
+        //     }
+        //     , success: function(res) {
+        //         console.log(res);
+        //     }
+        //     , error: function(e) {
+        //         console.log(e);
+        //     }
+        // });
+    }
+
+</script>
 @endsection

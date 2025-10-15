@@ -6,6 +6,7 @@ use App\Http\Controllers\CatagoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\Product_Controller;
+use App\Http\Controllers\RatingController;
 use App\Http\Controllers\ShopkeeperController;
 use App\Http\Controllers\SubCatagoryController;
 use App\Http\Middleware\AdminCheck;
@@ -50,6 +51,8 @@ Route::middleware("customerCheck")->group(function () {
 
     Route::get('/removewishlist/{productid}', [MainController::class, 'remove_wishlist_item']);
     Route::match(["post", "get"], '/order', [MainController::class, 'order_product'])->name('order.Product');
+
+    Route::match(['get', 'post'], '/OrderRating', [RatingController::class, 'Order_Rating_Store'])->name('Order_Rating_Store');
 });
 Route::get('/logout', [CustomerController::class, 'logout'])->name('customerlogout');
 

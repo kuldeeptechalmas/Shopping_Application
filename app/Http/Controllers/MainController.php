@@ -10,6 +10,7 @@ use App\Models\CustomerAndShopkeeper;
 use App\Models\CustomerOrder;
 use App\Models\FavouriceProduct;
 use App\Models\Product;
+use App\Models\Rating;
 use App\Models\UserCoupunData;
 use Exception;
 use GuzzleHttp\Psr7\Response;
@@ -500,6 +501,7 @@ class MainController extends Controller
                 $order->status = "Pending";
                 $order->order_date = now();
                 $order->delivery_date = now()->addDays(7);
+                $order->rate_id = 0;
                 $order->save();
             }
             foreach ($addtocart as $item) {
@@ -511,8 +513,10 @@ class MainController extends Controller
             return view("IndexProductShow.Order.ordershow", ["order" => $data, "couponuserdata" => $coupon]);
         }
         $data = CustomerOrder::where("email", Session::get("customeremail"))->get();
+        $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+        $rating_data = Rating::where('user_id', $user_data->id)->get();
 
-        return view("IndexProductShow.Order.ordershow", ["order" => $data, "couponuserdata" => $coupon]);
+        return view("IndexProductShow.Order.ordershow", ['ratingdata' => $rating_data, "order" => $data, "couponuserdata" => $coupon]);
     }
 
     // Delete order
