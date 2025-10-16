@@ -12,7 +12,7 @@
             1
         </h5>
     </div>
-    <div class="col-10" style="align-items: center;display:flex">Login Done <i class="fa-solid fa-check" style="margin-left: 10px;color: blue;"></i></div>
+    <div class="col-10" style="align-items: center;display:flex">Login Done<i class="fa-solid fa-check" style="margin-left: 10px;color: blue;"></i></div>
 </div>
 <div class="row" style="    margin-top: 20px;">
     <div class="col-2" style="color: white;background: blue;border-radius: 12px;margin-left: 31px;width: 35px;height: 35px;display: flex;justify-content: center;align-items: center;">
@@ -82,10 +82,15 @@
 
                                     <input type="text" name="quentity" oninput="DirectChangeInput('{{$item->product->id}}')" value="{{$item->quantity}}" style="width: 40px;margin-left: 10px;margin-right: 10px;text-align: center;" min="1" max="100" id="quentity">
 
+                                    @if ($item->product->stock==0)
+                                    <div style="color:#c2c2c2;margin-top: 4px;border: 2px solid #c2c2c2;border-radius: 47px;width: 22px;height: 22px;display: flex;justify-content: center;align-items: center;">
+                                        <i class="fa-solid fa-plus queality product_id" style="font-size: 12px;"></i>
+                                    </div>
+                                    @else
                                     <div onclick="plus_quentity(this)" style="margin-top: 4px;border: 2px solid black;border-radius: 47px;width: 22px;height: 22px;display: flex;justify-content: center;align-items: center;">
                                         <i class="fa-solid fa-plus queality product_id" style="font-size: 12px;"></i>
-
                                     </div>
+                                    @endif
 
                                     <input type="text" hidden value="{{$item->product->id}}">
                                 </div>
@@ -99,13 +104,9 @@
 
                                 <div class="col-4 d-flex justify-content-end">
                                     <div style="border-radius: 8px;text-align: center;margin-right: 11px;text-decoration: none;font-weight: bold;">
-                                        <div class="btn text-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                        <div class="btn text-primary" onclick="Delete_AddToCart('{{ $item->id }}')" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                             REMOVE
                                         </div>
-                                        {{-- <p style="margin-top: 27px;">
-                                            <a href="/deletetocart/{{$item->product->id}}" id="remove_a" style="text-decoration: none;color: black;"><i class="fa-solid fa-trash"></i></a>
-
-                                        </p> --}}
                                     </div>
                                 </div>
                             </div>
@@ -114,6 +115,9 @@
                 </div>
             </div>
 
+            <hr style="box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.5);margin-left: 30px;">
+
+            @endforeach
             <!-- Add To Cart Delete Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div>
@@ -127,9 +131,11 @@
                         </div>
                         <div class="row" style="margin-top: 33px;">
                             <div class="col-6">
-                                <a href="/deletetocart/{{$item->product->id}}">
-                                    <button type="button" class="btn btn-primary" style="height: 56px;width: 150px;margin-top: 10px;">REMOVE</button>
-                                </a>
+                                <form action="{{ route('Delete_AddToCart') }}" method="post">
+                                    @csrf
+                                    <input type="text" name="cartId" id="cartId" hidden>
+                                    <button type="submit" class="btn btn-primary" style="height: 56px;width: 150px;margin-top: 10px;">REMOVE</button>
+                                </form>
                             </div>
                             <div class="col-6">
                                 <button type="button" style="height: 56px;width: 150px;margin-left: -5px;margin-top: 10px;" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
@@ -139,9 +145,6 @@
                     </div>
                 </div>
             </div>
-
-            <hr style="box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.5);margin-left: 30px;">
-            @endforeach
             <div class="card" style="margin-left: 25px;text-align: end;">
                 <div style="margin-right: 68px;height: 55px;">
                     <form action="{{ route('checkout_product') }}" method="post">
@@ -227,6 +230,11 @@
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
+    function Delete_AddToCart(cartId) {
+        console.log(cartId);
+        $('#cartId').val(cartId);
+    }
+
     function DirectChangeInput(productId) {
 
         if ($("#quentity").val() == 0) {
@@ -244,6 +252,7 @@
                         product_id: productId
                         , queantity: $("#quentity").val()
                         , option: 'not'
+                        , url: "{{ url()->full() }}"
                     , }
                     , success: function(res) {
                         console.log(res);
@@ -268,6 +277,7 @@
                 product_id: $(e).next()[0].value
                 , queantity: $(e).prev()[0].value
                 , action: "plus"
+                , url: "{{ url()->full() }}"
             , }
             , success: function(res) {
                 window.location.href = res.redirect_url;
@@ -280,7 +290,6 @@
 
     function minus_quentity(e) {
         console.log($(e).prev()[0].value);
-
         $.ajax({
             type: "get"
             , url: "/BuyNowaddtocartqueantitychange"
@@ -288,6 +297,7 @@
                 product_id: $(e).prev()[0].value
                 , queantity: $(e).next()[0].value
                 , action: "minus"
+                , url: "{{ url()->full() }}"
             , }
             , success: function(res) {
                 window.location.href = res.redirect_url;

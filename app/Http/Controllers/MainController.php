@@ -315,11 +315,15 @@ class MainController extends Controller
                 }
 
                 // Favourite Product
-                $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
-                $wishlist = FavouriceProduct::where("user_id", $user_data->id)->get();
-
-                $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
-                return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input, "wishlist" => $wishlist]);
+                if (Session::get("customeremail")) {
+                    $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+                    $wishlist = FavouriceProduct::where("user_id", $user_data->id)->get();
+                    $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
+                    return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input, "wishlist" => $wishlist]);
+                } else {
+                    $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
+                    return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input]);
+                }
             }
         }
         $data = CategoryProduct::with('productsdata')->get();
@@ -346,8 +350,8 @@ class MainController extends Controller
         $data = Product::where("id", $productid)->first();
         $couper = Coupen::all();
 
-        $SuggestionProduct =
-            Product::where('sub_category_id', $data->sub_category_id)
+        // Suggetion Product Show
+        $SuggestionProduct = Product::where('sub_category_id', $data->sub_category_id)
             ->where("category_id", $data->category_id)
             ->where('id', '!=', $data->id)
             ->get();
@@ -451,6 +455,7 @@ class MainController extends Controller
     // Order
     public function order_product(Request $request)
     {
+
         $data1 = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
         $coupon = UserCoupunData::where("user_id", $data1->id)->get();
 
@@ -480,11 +485,43 @@ class MainController extends Controller
         }
         if ($request->isMethod("post")) {
 
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    "name" =>  [
+                        'required',
+                        'regex:/^[a-zA-Z0-9\s]+$/',
+                        'not_regex:/^\d+$/',
+                    ],
+                    "phone" => "required|numeric|digits:10",
+                    "address" => "required",
+                    "city" => "required",
+                    "state" => "required",
+                    "country" => "required",
+                    "pincode" => "required|numeric|digits:6",
+                ],
+                [
+                    "name.required" => "Enter name is required",
+                    "email.required" => "Enter name is required",
+                    "phone.required" => "Enter name is required",
+                    "country.required" => "Enter name is required",
+                    "city.required" => "Enter name is required",
+                    "state.required" => "Enter name is required",
+                    "pincode.required" => "Enter name is required",
+                    "address.required" => "Enter name is required",
+                ]
+            );
+
+            if ($validator->fails()) {
+                return redirect()->back()->withInput()->withErrors($validator);
+            }
+            // dd($request->all());
             if (Session::get("productId")) {
                 $addtocart = AddToCart::where("user_id", $data1->id)->where("product_id", Session::get("productId"))->get();
             } else {
                 $addtocart = AddToCart::where("user_id", $data1->id)->get();
             }
+            dd($addtocart);
             foreach ($addtocart as $item) {
                 $order = new CustomerOrder();
                 $order->name = $request->name;
@@ -547,11 +584,15 @@ class MainController extends Controller
                 }
 
                 // Favourite Product
-                $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
-                $wishlist = FavouriceProduct::where("user_id", $user_data->id)->get();
-
-                $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
-                return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input, "wishlist" => $wishlist]);
+                if (Session::get("customeremail")) {
+                    $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+                    $wishlist = FavouriceProduct::where("user_id", $user_data->id)->get();
+                    $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
+                    return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input, "wishlist" => $wishlist]);
+                } else
+                    $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
+                return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input]); {
+                }
             }
         }
 

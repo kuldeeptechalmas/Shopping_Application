@@ -130,7 +130,7 @@ Route::match(['get', 'post'], '/AddProductPage/{catagoryid}', [Product_Controlle
 // Add To Cart Functionality
 Route::get('/addtocart_desbord/{product_id}', [AddToCartController::class, 'index']);
 Route::match(['get', 'post'], '/addtocartget', [AddToCartController::class, 'addtocart_get_all'])->name("addtocart_get_all");
-Route::get('/deletetocart/{cartid}', [AddToCartController::class, 'delete_cart']);
+Route::match(['get', 'post'], '/deletetocart', [AddToCartController::class, 'delete_cart'])->name('Delete_AddToCart');
 Route::get('/addtocartqueantitychange', [AddToCartController::class, 'update_queantity']);
 Route::get('/BuyNowaddtocartqueantitychange', [AddToCartController::class, 'Buy_Now_update_queantity']);
 Route::get('/DirectChangeQuentity', [AddToCartController::class, 'direct_change_quentity']);

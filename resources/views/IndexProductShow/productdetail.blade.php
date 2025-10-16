@@ -7,6 +7,7 @@
     <div class="col">
         <div id="carouselExample" class="carousel slide">
             <div class="carousel-inner">
+
                 <?php $count = 0; ?>
                 @foreach ($productdatails->images as $item)
                 @if ($count == 0)
@@ -115,14 +116,29 @@
         <div class="text-danger">Out of Stock</div>
         @endif
 
-        <p style="margin-top: 10px;">
-            Rate this product
+        <p style="margin-top: 7px;">
         </p>
-        <i class="fa-solid fa-star" style="color:#ffe11b" data-toggle="tooltip" data-placement="top" title="Very Bad"></i>
-        <i class="fa-solid fa-star" style="color:#ffe11b" data-toggle="tooltip" data-placement="top" title="Bad"></i>
-        <i class="fa-solid fa-star" style="color:#ffe11b" data-toggle="tooltip" data-placement="top" title="Good"></i>
-        <i class="fa-solid fa-star" style="color:#ffe11b" data-toggle="tooltip" data-placement="top" title="Very Good"></i>
-        <i class="fa-solid fa-star" style="color:#ffe11b" data-toggle="tooltip" data-placement="top" title="Excellent"></i>
+        @php
+        $rateConversion = 0;
+        $totalRate = 0;
+
+        // // Rate Calculation
+        if ($productdatails->rates->isNotEmpty()) {
+        foreach ($productdatails->rates as $value) {
+        $totalRate += $value->rate;
+        }
+        $rates = ($totalRate * 100) / ($productdatails->rates->count() * 5);
+        $rateConversion = (float)(5 * $rates) / 100;
+        }
+
+        @endphp
+        <div style="display: flex;">
+            <div style="background: #388e3c;width: 49px;height: 22px;color:white;border-radius: 4px;display: flex;justify-content: center;align-items: center;">
+                {{(float) $rateConversion }}
+                <i class="fa-solid fa-star" style="font-size: 11px;margin-top: 4px;margin-left: 2px;"></i>
+            </div>
+            <div style="margin-left:13px">{{ $productdatails->rates->count() }} Ratings</div>
+        </div>
         @php
         $dataString = $productdatails->description;
         $items = explode('-', $dataString);
@@ -214,6 +230,27 @@
                     {{$item->name}}
                 </a>
             </p>
+            @php
+            $rateConversion = 0;
+            $totalRate = 0;
+
+            // // Rate Calculation
+            if ($item->rates->isNotEmpty()) {
+            foreach ($item->rates as $value) {
+            $totalRate += $value->rate;
+            }
+            $rates = ($totalRate * 100) / ($item->rates->count() * 5);
+            $rateConversion = (float)(5 * $rates) / 100;
+            }
+
+            @endphp
+            <div style="display: flex;">
+                <div style="background: #388e3c;width: 36px;height: 22px;color:white;border-radius: 4px;display: flex;justify-content: center;align-items: center;">
+                    {{(float) $rateConversion }}
+                    <i class="fa-solid fa-star" style="font-size: 11px;margin-top: 4px;margin-left: 2px;"></i>
+                </div>
+                <div style="margin-left:13px">{{ $item->rates->count() }} Ratings</div>
+            </div>
             <p class="card-text" style="width: 100%;text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
                 <h3>₹{{round($item->price- ($item->price * $item->discount /100))}}</h3>
                 <div style="color: green"><del>₹{{$item->price}}</del> {{$item->discount}}% off</div>

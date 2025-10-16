@@ -90,7 +90,7 @@
                                 <div class="col-4 d-flex justify-content-end">
                                     <div style="border-radius: 8px;text-align: center;margin-right: 11px;text-decoration: none;font-weight: bold;">
 
-                                        <div class="btn text-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                        <div class="btn text-primary" onclick="Delete_AddToCart('{{ $item->id }}')" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                             REMOVE
                                         </div>
                                     </div>
@@ -101,6 +101,10 @@
                 </div>
             </div>
 
+
+
+            <hr style="box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.5);margin-left: 30px;">
+            @endforeach
             <!-- Add To Cart Delete Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div>
@@ -114,9 +118,11 @@
                         </div>
                         <div class="row" style="margin-top: 33px;">
                             <div class="col-6">
-                                <a href="/deletetocart/{{$item->product->id}}">
-                                    <button type="button" class="btn btn-primary" style="height: 56px;width: 150px;margin-top: 10px;">REMOVE</button>
-                                </a>
+                                <form action="{{ route('Delete_AddToCart') }}" method="post">
+                                    @csrf
+                                    <input type="text" name="cartId" id="cartId" hidden>
+                                    <button type="submit" class="btn btn-primary" style="height: 56px;width: 150px;margin-top: 10px;">REMOVE</button>
+                                </form>
                             </div>
                             <div class="col-6">
                                 <button type="button" style="height: 56px;width: 150px;margin-left: -5px;margin-top: 10px;" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
@@ -126,9 +132,6 @@
                     </div>
                 </div>
             </div>
-
-            <hr style="box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.5);margin-left: 30px;">
-            @endforeach
             <div class="card" style="margin-left: 25px;text-align: end;">
                 <div style="margin-right: 68px;height: 55px;">
                     <a href="/SummryOfProduct">

@@ -75,6 +75,7 @@ class AddToCartController extends Controller
 
     public function addtocart_get_all(Request $request)
     {
+
         if (Session::get("customeremail")) {
             $data1 = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
             $addtocart = AddToCart::where("user_id", $data1->id)->get();
@@ -98,14 +99,13 @@ class AddToCartController extends Controller
         }
     }
 
-    public function delete_cart($cartid)
+    public function delete_cart(Request $request)
     {
         if (Session::get("customeremail")) {
 
             $data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
 
-            $addtocart1 = AddToCart::where("product_id", $cartid)
-                ->where("user_id", $data->id)->first();
+            $addtocart1 = AddToCart::find($request->cartId);
 
             $productData = Product::find($addtocart1->product_id);
 
@@ -220,7 +220,7 @@ class AddToCartController extends Controller
                     return response()->json([
                         'status' => 'success',
                         'outofstock_error' => 'OutOfStock',
-                        'redirect_url' => route('buy.Now.Summary')
+                        'redirect_url' => $request->url
                     ]);
                 }
 
@@ -234,7 +234,7 @@ class AddToCartController extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'redirect_url' => route('buy.Now.Summary')
+                    'redirect_url' => $request->url
                 ]);
             }
             if ($request->action == "minus") {
@@ -246,7 +246,7 @@ class AddToCartController extends Controller
                     $addtocart1->delete();
                     return response()->json([
                         'status' => 'success',
-                        'redirect_url' => route('buy.Now.Summary')
+                        'redirect_url' => $request->url
                     ]);
                 }
                 $addtocart1->quantity = $request->queantity - 1;
@@ -257,13 +257,13 @@ class AddToCartController extends Controller
                 $product->save();
                 return response()->json([
                     'status' => 'success',
-                    'redirect_url' => route('buy.Now.Summary')
+                    'redirect_url' => $request->url
                 ]);
             }
         }
         return response()->json([
             'status' => 'success',
-            'redirect_url' => route('buy.Now.Summary')
+            'redirect_url' => $request->url
         ]);
     }
 
@@ -352,7 +352,7 @@ class AddToCartController extends Controller
                 return response()->json([
                     'status' => 'success',
                     'outofstock_error' => 'OutOfStock',
-                    'redirect_url' => route('buy.Now.Summary')
+                    'redirect_url' => $request->url
                 ]);
             }
             return response()->json([

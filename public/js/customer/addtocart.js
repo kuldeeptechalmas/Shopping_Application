@@ -67,3 +67,8 @@
             }
         , })
     }
+
+    function Delete_AddToCart(cartId) {
+        console.log(cartId);
+        $('#cartId').val(cartId);
+    }

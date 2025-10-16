@@ -227,3 +227,14 @@
     .productnamehover:hover {
         color: blue !important;
     }
+
+/* ordershow.blade.php to css */
+    .star {
+        color: #e0e0e0;
+        cursor: pointer;
+        transition: color 0.2s ease;
+    }
+
+    .star.active {
+        color: #ffe11b !important;
+    }

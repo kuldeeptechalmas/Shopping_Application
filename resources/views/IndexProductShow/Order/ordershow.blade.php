@@ -16,7 +16,6 @@
                         </a>
                     </div>
                     <div class="col-6">
-
                         <p class="card-text">{{$item->product->name}}</p>
                         <h6 class="card-title">
                             <?php        $dis = 0; ?>
@@ -38,27 +37,26 @@
                             off</div>
                         <div>
                             <p style="margin-top: 10px;">
-                                Rate this product
+                                Rating
                             </p>
                             @if (isset($item->rates))
-
                             @foreach (range(1,$item->rates->rate) as $it)
-                            <i class="fa-solid fa-star" onclick="productstar(this,'{{ $item->product->id }}')" style="color:#ffe11b" data-toggle="tooltip" data-placement="top" title="Very Bad"></i>
+                            <i class="fa-solid fa-star star" data-value="{{ $it }}" data-pid="{{ $item->product->id }}" style="color:#ffe11b" data-toggle="tooltip" data-placement="top" title="Very Bad"></i>
                             @endforeach
 
                             @if ($item->rates->rate!=5)
-                            @foreach (range($item->rates->rate,4) as $it)
-                            <i class="fa-solid fa-star" onclick="productstar(this,'{{ $item->product->id }}')" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Very Bad"></i>
+                            @foreach (range($item->rates->rate+1,5) as $it)
+                            <i class="fa-solid fa-star star" data-value="{{ $it }}" data-pid="{{ $item->product->id }}" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Very Bad"></i>
                             @endforeach
                             @endif
 
                             @else
 
-                            <i class="fa-solid fa-star" id="firststar" onclick="productstar(this,'{{ $item->product->id }}')" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Very Bad"></i>
-                            <i class="fa-solid fa-star" id="secondstar" onclick="productstar(this,'{{ $item->product->id }}')" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Bad"></i>
-                            <i class="fa-solid fa-star" id="therdstar" onclick="productstar(this,'{{ $item->product->id }}')" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Good"></i>
-                            <i class="fa-solid fa-star" id="fourstar" onclick="productstar(this,'{{ $item->product->id }}')" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Very Good"></i>
-                            <i class="fa-solid fa-star" id="fifthstar" onclick="productstar(this,'{{ $item->product->id }}')" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Excellent"></i>
+                            <i class="fa-solid fa-star star" data-value="1" data-pid="{{ $item->product->id }}" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Very Bad"></i>
+                            <i class="fa-solid fa-star star" data-value="2" data-pid="{{ $item->product->id }}" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Bad"></i>
+                            <i class="fa-solid fa-star star" data-value="3" data-pid="{{ $item->product->id }}" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Good"></i>
+                            <i class="fa-solid fa-star star" data-value="4" data-pid="{{ $item->product->id }}" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Very Good"></i>
+                            <i class="fa-solid fa-star star" data-value="5" data-pid="{{ $item->product->id }}" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Excellent"></i>
                             @endif
                         </div>
                     </div>
@@ -80,48 +78,49 @@
                         <div class="d-flex justify-content-end">
                             <div style="border-radius: 8px;text-align: center;margin-right: 11px;text-decoration: none;font-weight: bold;">
                                 <p style="margin-top: 0px;">
-                                    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" style="color:red;background: white;border: none;">CANCLE ORDER</button>
+                                    <button type="button" data-bs-toggle="modal" onclick="deleteorder('{{ $item->id }}')" data-bs-target="#exampleModal" style="color:red;background: white;border: none;">CANCLE ORDER</button>
                                 </p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Order Cancle Modal -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div>
-                            <i class="fa-solid fa-xmark" data-bs-dismiss="modal" style="position: relative;top: 151px;left: 67%;color: white;font-size: 23px;"></i>
+
+
+                </div>
+            </div>
+        </div>
+        @endforeach
+        <!-- Order Cancle Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div>
+                <i class="fa-solid fa-xmark" data-bs-dismiss="modal" style="position: relative;top: 151px;left: 67%;color: white;font-size: 23px;"></i>
+            </div>
+            <div class="modal-dialog" style="margin-top: 123px;display: flex;justify-content: center;align-items: center;">
+                <div class="modal-content" style="height: 213px;width: 391px;padding: 18px 14px 26px 28px;">
+                    <h4>Remove Item</h4>
+                    <div style="margin-top: 16px;">
+                        Are you sure you want to cancle this order?
+                    </div>
+                    <div class="row" style="margin-top: 33px;">
+                        <div class="col-6">
+                            <form action="{{route('order.Product')}}" method="post">
+                                @csrf
+                                <input type="text" name="action" value="Remove" hidden id="">
+                                <input type="text" name="orderId" value="{{$item->id}}" hidden id="orderId">
+
+                                {{-- <button type="submit" data-bs-toggle="modal" data-bs-target="#exampleModal" style="color:red;background: white;border: none;">CANCLE ORDER</button> --}}
+                                <button type="submit" class="btn btn-primary" style="height: 56px;width: 150px;margin-top: 10px;">REMOVE</button>
+                            </form>
+
                         </div>
-                        <div class="modal-dialog" style="margin-top: 123px;display: flex;justify-content: center;align-items: center;">
-                            <div class="modal-content" style="height: 213px;width: 391px;padding: 18px 14px 26px 28px;">
-                                <h4>Remove Item</h4>
-                                <div style="margin-top: 16px;">
-                                    Are you sure you want to cancle this order?
-                                </div>
-                                <div class="row" style="margin-top: 33px;">
-                                    <div class="col-6">
-                                        <form action="{{route('order.Product')}}" method="post">
-                                            @csrf
-                                            <input type="text" name="action" value="Remove" hidden id="">
-                                            <input type="text" name="orderId" value="{{$item->id}}" hidden id="">
-
-                                            {{-- <button type="submit" data-bs-toggle="modal" data-bs-target="#exampleModal" style="color:red;background: white;border: none;">CANCLE ORDER</button> --}}
-                                            <button type="submit" class="btn btn-primary" style="height: 56px;width: 150px;margin-top: 10px;">REMOVE</button>
-                                        </form>
-
-                                    </div>
-                                    <div class="col-6">
-                                        <button type="button" style="height: 56px;width: 150px;margin-left: -5px;margin-top: 10px;" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
-                                    </div>
-                                </div>
-
-                            </div>
+                        <div class="col-6">
+                            <button type="button" style="height: 56px;width: 150px;margin-left: -5px;margin-top: 10px;" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
                         </div>
                     </div>
 
                 </div>
             </div>
         </div>
-        @endforeach
         @else
         <div style="display: flex;justify-content: center;margin-top: 116px;">
             <div>
@@ -143,46 +142,8 @@
     </div>
 </div>
 @endif
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script>
-    function productstar(e, pid) {
-        var allStars = $('.fa-solid')
-
-
-        // $('#firststar').css({
-        //     'color': '#ffe11b'
-        // });
-        // $('#secondstar').css({
-        //     'color': '#ffe11b'
-        // });
-        // $('#therdstar').css({
-        //     'color': '#ffe11b'
-        // });
-        // $('#fourstar').css({
-        //     'color': '#ffe11b'
-        // });
-        // e.style['color'] = '#ffe11b';
-        // $.ajaxSetup({
-        //     headers: {
-        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //     }
-        // });
-
-        // $.ajax({
-        //     type: "post"
-        //     , url: "/OrderRating"
-        //     , data: {
-        //         product_id: pid
-        //         , rate: 5
-        //     }
-        //     , success: function(res) {
-        //         console.log(res);
-        //     }
-        //     , error: function(e) {
-        //         console.log(e);
-        //     }
-        // });
-    }
-
-</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ asset('js/customer/ordershow.js') }}"></script>
 @endsection
