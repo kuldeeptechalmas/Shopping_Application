@@ -39,7 +39,7 @@
                 <option value="">Select</option>
                 @if (isset($subCategoryData))
                 @foreach ($subCategoryData as $item)
-                <option value="{{$item->id}}" {{$productData->sub_category_id==$item->id?'selected':''}}>{{$item->name }}</option>
+                <option value="{{$item->id}}" {{old('catagory',$productData->sub_category_id)==$item->id?'selected':''}}>{{$item->name }}</option>
                 @endforeach
                 @endif
             </select>

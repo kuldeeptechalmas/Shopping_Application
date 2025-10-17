@@ -1,91 +1,10 @@
 @extends('index')
 
 @section('content')
-<style>
-    .checkout-container {
-        background-color: #fff;
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        width: 100%;
-        max-width: 600px;
-    }
-
-    h1 {
-        text-align: center;
-        color: #333;
-        margin-bottom: 20px;
-    }
-
-    .section {
-        margin-bottom: 25px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid #eee;
-    }
-
-    .section:last-of-type {
-        border-bottom: none;
-    }
-
-    h2 {
-        color: #555;
-        margin-bottom: 15px;
-    }
-
-    label {
-        display: block;
-        margin-bottom: 8px;
-        color: #666;
-    }
-
-    input[type="text"] {
-        width: calc(100% - 20px);
-        padding: 10px;
-        margin-bottom: 15px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        box-sizing: border-box;
-    }
-
-    .order-summary ul {
-        list-style: none;
-        padding: 0;
-        margin-bottom: 10px;
-    }
-
-    .order-summary li {
-        display: flex;
-        justify-content: space-between;
-        padding: 5px 0;
-        border-bottom: 1px dashed #eee;
-    }
-
-    .order-summary p {
-        font-weight: bold;
-        text-align: right;
-        margin-top: 10px;
-    }
-
-    .place-order-btn {
-        background-color: #007bff;
-        color: #fff;
-        padding: 12px 20px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-        width: 100%;
-        transition: background-color 0.3s ease;
-    }
-
-    .place-order-btn:hover {
-        background-color: #0056b3;
-    }
-
-</style>
+<link rel="stylesheet" href="{{ asset('css/customer/checkoutpage.css') }}">
 
 <div class="container">
-    <div class="row">
+    <div class="row" style="margin-top: 125px;">
         <div class="col-7">
             <div class="checkout-container">
                 <h1>Checkout</h1>
@@ -206,7 +125,9 @@
             @endforeach
 
             <div class="row">
-                <div class="col-6">{{$item->product->name}} × {{$item->quantity}}</div>
+                <div class="col-6">{{$item->product->name}}
+                    <span class="fw-bolder">× {{$item->quantity}}</span>
+                </div>
                 <div class="col-6">
                     ₹{{round($item->product->price - ($item->product->price * $item->product->discount / 100)-$discountusedata)}}</div>
 
@@ -248,6 +169,7 @@
 </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="{{ asset('js/customer/checkoutpage.js') }}"></script>
 <script>
     $(document).ready(function() {
 
@@ -261,7 +183,7 @@
             , }
             , success: function(res) {
 
-                var oldstate = "{{$customerdata->state}}";
+                var oldstate = "{{old('state',$customerdata->state)}}";
                 $("#state").append(`<option value="">Select</option>`);
                 $.each(res["statelist"], function(indexInArray, valueOfElement) {
                     var selectstate = (oldstate == valueOfElement["id"]) ? "selected" : "";
@@ -275,7 +197,6 @@
             }
         , })
 
-
         const selectElement1 = $('#city');
         selectElement1.empty();
         $.ajax({
@@ -286,7 +207,7 @@
             , }
             , success: function(res) {
 
-                var oldcity = "{{$customerdata->city}}";
+                var oldcity = "{{old('city',$customerdata->city)}}";
                 $("#city").append(`<option value="">Select</option>`);
                 $.each(res["citylist"], function(indexInArray, valueOfElement) {
                     var selectcity = (oldcity == valueOfElement["id"]) ? "selected" : "";
@@ -302,80 +223,6 @@
         , })
 
     })
-
-    function showpaymentdetail1() {
-        $("#detail1").removeAttr("hidden");
-        $("#detail2").attr("hidden", true);
-        $("#detail3").attr("hidden", true);
-    }
-
-    function showpaymentdetail2() {
-        $("#detail2").removeAttr("hidden");
-        $("#detail1").attr("hidden", true);
-        $("#detail3").attr("hidden", true);
-    }
-
-    function showpaymentdetail3() {
-        $("#detail3").removeAttr("hidden");
-        $("#detail2").attr("hidden", true);
-        $("#detail1").attr("hidden", true);
-    }
-
-    $("#country").on("change", function() {
-        console.log("boom");
-
-        const selectElement = $('#state');
-        selectElement.empty();
-        $.ajax({
-            type: "get"
-            , url: "/getstate"
-            , data: {
-                data: $('#country').val()
-            , }
-            , success: function(res) {
-
-                var oldstate = "{{old('state')}}";
-                console.log(oldstate);
-                $("#state").append(`<option value="">Select</option>`);
-                $.each(res["statelist"], function(indexInArray, valueOfElement) {
-                    var selectstate = (oldstate == valueOfElement["id"]) ? "selected" : "";
-                    console.log(selectstate);
-
-                    $("#state").append(`<option value="${valueOfElement["id"]}" ${selectstate} >${valueOfElement["name"]}</option>`);
-                });
-            }
-            , error: function(e) {
-                console.log(e);
-
-            }
-        , });
-
-
-    });
-
-    $("#state").on("change", function() {
-        const selectElement = $('#city');
-        selectElement.empty();
-        $.ajax({
-            type: "get"
-            , url: "/getcity"
-            , data: {
-                data: $('#state').val()
-            , }
-            , success: function(res) {
-                $("#city").append(`<option value="">Select</option>`);
-                $.each(res["citylist"], function(indexInArray, valueOfElement) {
-                    $("#city").append(`<option value="${valueOfElement["id"]}">${valueOfElement["name"]}</option>`);
-
-                });
-
-            }
-            , error: function(e) {
-                console.log(e);
-
-            }
-        , });
-    });
 
 </script>
 @endsection

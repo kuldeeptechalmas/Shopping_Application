@@ -5,7 +5,9 @@
 @if ($order->isNotEmpty())
 <div class="row">
     <div class="col" style="padding: 10px 270px;">
-        <h3 style="text-align: center;">My Orders</h3>
+        <h3 style="text-align: center;display: flex;justify-content: center;">
+            <div style="background: white;border-radius: 10px;width: 181px;height: 38px;">My Orders</div>
+        </h3>
         @foreach ($order as $item)
         <div class="card">
             <div class="card-body">
@@ -83,9 +85,6 @@
                             </div>
                         </div>
                     </div>
-
-
-
                 </div>
             </div>
         </div>

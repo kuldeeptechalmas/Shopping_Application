@@ -121,7 +121,7 @@
 
 </style>
 
-<div class="cart-container">
+<div class="cart-container" style="margin-top: 133px;">
     <h1>Your Shopping Cart</h1>
     <div id="cart-items" class="cart-items">
         @if ($cart->isNotEmpty())

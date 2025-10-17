@@ -27,7 +27,7 @@ class Product_Controller extends Controller
                 [
                     "name" =>  [
                         'required',
-                        'regex:/^[a-zA-Z0-9\s]+$/',
+                        'regex:/^[a-zA-Z0-9\s.,()\[\]{}\/]+$/',
                         'not_regex:/^\d+$/',
                     ],
                     "description" => "required",
@@ -129,7 +129,7 @@ class Product_Controller extends Controller
                 [
                     "name" =>  [
                         'required',
-                        'regex:/^[a-zA-Z0-9\s]+$/',
+                        'regex:/^[a-zA-Z0-9\s.,()\[\]{}\/]+$/',
                         'not_regex:/^\d+$/',
                     ],
                     "description" => "required",

@@ -149,7 +149,7 @@ class MainController extends Controller
                         $cart->save();
                     }
                     // dd($cart->id);
-                    return redirect()->route("buy.Now.Summary");
+                    return redirect()->route("buy.Now.Summary", ['productId' => Session::get('productId')]);
                 }
                 return redirect()->route("MainIndex");
             } else {
@@ -419,6 +419,8 @@ class MainController extends Controller
         if (isset($request->productId)) {
             $addtocart = AddToCart::where("user_id", $data1->id)
                 ->where("product_id", $request->productId)->get();
+
+            Session::put("productId", $addtocart[0]->product_id);
         } else {
             $addtocart = AddToCart::where("user_id", $data1->id)->get();
         }
@@ -521,7 +523,6 @@ class MainController extends Controller
             } else {
                 $addtocart = AddToCart::where("user_id", $data1->id)->get();
             }
-            dd($addtocart);
             foreach ($addtocart as $item) {
                 $order = new CustomerOrder();
                 $order->name = $request->name;

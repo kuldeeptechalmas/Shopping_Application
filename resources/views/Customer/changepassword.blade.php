@@ -6,9 +6,9 @@
     Password Successfully Change
 </div>
 @endif
-<form method="post" style="padding: 10px 368px;">
+<form method="post" style="padding: 10px 335px;background-color: white;margin: 122px 30px 26px 30px;">
     @csrf
-    <h3 style="margin-bottom: 15px;">Change Password</h3>
+    <h3 style="margin-bottom: 15px;text-align: center;">Change Password</h3>
     <div class="d-flex flex-row align-items-center mb-4">
         <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
 

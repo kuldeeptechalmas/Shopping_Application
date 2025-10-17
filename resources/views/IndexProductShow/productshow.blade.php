@@ -11,6 +11,45 @@
     </a>
     @endforeach
 </ul>
+{{-- <div>
+    <div>
+        <div class="hover-trigger position-relative">
+            <h1><i class="fa-solid fa-circle-user" style="margin-left: 11px;"></i></h1>
+            {{session('customerid')}}
+<div class="show-on-hover position-absolute" style="right: 0px; width: 222px; background: white;border-radius: 15px;">
+
+    <div class="shadow p-3 bg-body rounded">
+        <div style="padding: 10px; border-bottom: 1px solid #555;">
+            <a style="text-decoration: none;  color: #000;" href="/CustomerProfile">
+                Profile
+            </a>
+        </div>
+        <div style="padding: 10px; border-bottom: 1px solid #555;">
+            <a style="text-decoration: none;  color: #000;" href="/customerchangepassword/{{session('customeremail')}}">
+                Change Password
+            </a>
+        </div>
+        <div style="padding: 10px; border-bottom: 1px solid #555;">
+            <a style="text-decoration: none;  color: #000;" href="/order">
+                My Order
+            </a>
+        </div>
+        <div style="padding: 10px; border-bottom: 1px solid #555;">
+            <a style="text-decoration: none;  color: #000;" href="/wishlist">
+                Wishlist
+            </a>
+        </div>
+
+        <a style="text-decoration: none;  color: #000;" href="/logout">
+            <div style="padding: 10px;color:red;">
+                Logout
+            </div>
+        </a>
+    </div>
+</div>
+</div>
+</div>
+</div> --}}
 @foreach ($data as $item1)
 
 <h1 class="ps-3">{{$item1->category_name}}</h1>

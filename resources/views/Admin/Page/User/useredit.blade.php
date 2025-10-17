@@ -157,7 +157,8 @@
 <script>
     $(document).ready(function() {
         // get state and city use Ajax
-        var oldstate = "{{$usereditdata->state}}";
+        var oldstate = "{{old('state',$usereditdata->state)}}";
+        console.log(oldstate);
 
         $.ajax({
             type: "get"
@@ -179,7 +180,7 @@
             }
         , })
 
-        var oldcity = "{{$usereditdata->city}}";
+        var oldcity = "{{old('city',$usereditdata->city)}}";
 
         $.ajax({
             type: "get"

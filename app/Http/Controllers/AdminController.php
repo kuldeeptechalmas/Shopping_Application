@@ -156,7 +156,11 @@ class AdminController extends Controller
             $validator = Validator::make(
                 $request->all(),
                 [
-                    "name" => "required",
+                    "name" =>  [
+                        'required',
+                        'regex:/^[a-zA-Z0-9\s.,()\[\]{}\/]+$/',
+                        'not_regex:/^\d+$/',
+                    ],
                     "description" => "required",
                     "price" => "required|numeric|gt:0",
                     "stock" => "required|numeric|gt:-1",
@@ -167,6 +171,7 @@ class AdminController extends Controller
                 ],
                 [
                     "name.required" => "Enter Name Are Required.",
+                    "name.not_regex" => "Not Enter Number only Required.",
                     "description.required" => "Enter Description Are Required.",
                     "price.required" => "Enter Price Are Required.",
                     "price.numeric" => "Enter Price Is Numeric Required.",

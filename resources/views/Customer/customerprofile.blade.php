@@ -2,15 +2,12 @@
 
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<div class="row">
-    <div class="col"></div>
-    <div class="col-6"></div>
-    <div class="col">
-        <button type="submit" class="btn btn-primary" onclick="getprofileuser('{{$customer_profile->email}}')" data-bs-toggle="modal" data-bs-target="#profilemodel">Edit
-            Profile</button>
-    </div>
-</div>
-<form class="mx-1 mx-md-4" method="post">
+<form class="mx-1 mx-md-4" method="post" style="position: relative;margin-top: 119px;background-color: white;padding: 20px 45px;">
+    <h3>
+        <div style="text-align: center;margin-bottom: 20px;">Profile Detail</div>
+    </h3>
+    <button type="button" style="position: absolute;right: 18px;top: 18px;" class="btn btn-primary" onclick="getprofileuser('{{$customer_profile->email}}')" data-bs-toggle="modal" data-bs-target="#profilemodel">
+        Edit Profile</button>
     @csrf
     <div class="row justify-content-evenly">
         <div class="col-4">
@@ -137,5 +134,56 @@
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        var oldcountry = "{{$customer_profile->country}}";
+        if (oldcountry) {
+            var oldstate = "{{$customer_profile->state}}";
+            const selectElement = $('#upstate');
+            selectElement.empty();
+            $.ajax({
+                type: "get"
+                , url: "/getstate"
+                , data: {
+                    data: $('#upcountry').val()
+                , }
+                , success: function(res) {
+                    $("#upstate").append(`<option value="">Select</option>`);
+                    $.each(res["statelist"], function(indexInArray, valueOfElement) {
+                        var selectstate = (oldstate == valueOfElement["id"]) ? "selected" : "";
+                        $("#upstate").append(`<option value="${valueOfElement["id"]}" ${selectstate} >${valueOfElement["name"]}</option>`);
+                    });
+                }
+                , error: function(e) {
+                    console.log(e);
+                }
+            , })
+            if (oldstate) {
+                var oldcity = "{{$customer_profile->city}}";
+                const selectElement = $('#upcity');
+                selectElement.empty();
+                $.ajax({
+                    type: "get"
+                    , url: "/getcity"
+                    , data: {
+                        data: oldstate
+                    , }
+                    , success: function(res) {
+                        $("#upcity").append(`<option value="">Select</option>`);
+                        $.each(res["citylist"], function(indexInArray, valueOfElement) {
+                            var selectcity = (oldcity == valueOfElement["id"]) ? "selected" : "";
+                            $("#upcity").append(`<option value="${valueOfElement["id"]}" ${selectcity}>${valueOfElement["name"]}</option>`);
+
+                        });
+                    }
+                    , error: function(e) {
+                        console.log(e);
+                    }
+                , })
+            }
+        }
+    })
+
+</script>
 <script src="{{ asset('js/customer/customerprofile.js') }}"></script>
 @endsection

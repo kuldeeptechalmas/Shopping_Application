@@ -12,9 +12,9 @@
     <link rel="stylesheet" href="{{ asset('css/customer/mainIndex.css') }}">
 </head>
 
-<body>
+<body style="background-color: #f1f3f6;">
     {{-- Navbar --}}
-    <nav class="navbar navbar-expand-lg bg-light fixed-top">
+    <nav class="navbar navbar-expand-lg fixed-top" style="background-color: #fff;">
         <div class="container">
             <div style="width: 100px; height: auto;">
                 <a href="/MyShop">
@@ -22,7 +22,7 @@
                 </a>
             </div>
             <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
-                <form class="d-flex dropdown_search_main" method="post" role="search" style="width: 300px;">
+                <form class="d-flex dropdown_search_main" method="post" role="search" style="width: 387px;">
                     @csrf
                     <input type="text" name="action" value="Search" hidden id="">
                     <input class="form-control dropdown_search me-2" type="search" id="search_id" placeholder="Search" aria-label="Search" name="search_data" value="{{isset($inputdata) ? $inputdata : ''}}" />
@@ -95,7 +95,7 @@
         </div>
     </nav>
     <div style="margin-top: 96px;"></div>
-    @yield(section: 'content')
+    @yield( 'content')
 
     @stack('index_Main_js')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
