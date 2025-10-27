@@ -55,7 +55,7 @@
             @endphp
             <div style="display: flex;">
                 <div style="background: #388e3c;width: 36px;height: 22px;color:white;border-radius: 4px;display: flex;justify-content: center;align-items: center;">
-                    {{(float) $rateConversion }}
+                    {{round($rateConversion,1) }}
                     <i class="fa-solid fa-star" style="font-size: 11px;margin-top: 4px;margin-left: 2px;"></i>
                 </div>
                 <div style="margin-left:13px">{{ $item->rates->count() }} Ratings</div>

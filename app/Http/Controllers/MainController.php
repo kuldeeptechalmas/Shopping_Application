@@ -581,7 +581,7 @@ class MainController extends Controller
 
                 $data_of_input = $request->search_data;
                 if ($data_of_input == '') {
-                    return redirect()->route("MainIndex");
+                    return redirect()->back();
                 }
 
                 // Favourite Product

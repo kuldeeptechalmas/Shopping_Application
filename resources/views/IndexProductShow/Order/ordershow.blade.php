@@ -96,7 +96,7 @@
             </div>
             <div class="modal-dialog" style="margin-top: 123px;display: flex;justify-content: center;align-items: center;">
                 <div class="modal-content" style="height: 213px;width: 391px;padding: 18px 14px 26px 28px;">
-                    <h4>Remove Item</h4>
+                    <h4>Remove Order</h4>
                     <div style="margin-top: 16px;">
                         Are you sure you want to cancle this order?
                     </div>

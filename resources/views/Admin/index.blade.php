@@ -45,19 +45,6 @@
                 white-space: nowrap;
                 padding: 0 10px;
                 cursor: pointer;
-
-                /* .icon:before {
-                    //font-awesome
-                    content: "\f093";
-                }
-
-                &.has-file {
-                    .icon:before {
-                        //font-awesome
-                        content: "\f00c";
-                        color: #5AAC7B;
-                    }
-                } */
             }
         }
 
@@ -151,6 +138,9 @@
                     <a href="/AdminInProduct" class="nav-link">
                         <i class="nav-icon cil-speedometer"></i> Products
                     </a>
+                    <a href="/AdminProductRating" class="nav-link">
+                        <i class="nav-icon cil-speedometer"></i> Product Rating
+                    </a>
                     <a href="/AdminInOrder" class="nav-link">
                         <i class="nav-icon cil-speedometer"></i> Order
                     </a>
@@ -202,7 +192,6 @@
                     }
                 }
             }
-
         }
         $("#pstatus").on("change", function() {
             if (document.getElementById('pstatus').value == "out of stock") {

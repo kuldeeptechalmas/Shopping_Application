@@ -22,6 +22,8 @@ Route::middleware("adminCheck")->group(function () {
     Route::match(["get", "post"], '/AdminInProductUpdate/{productId}', [AdminController::class, 'Product_Update'])->name('product.Manage.Update');
     Route::match(["get", "post"], '/AdminInOrder', [AdminController::class, 'Order_Manage'])->name('order.Manage');
     Route::match(["get", "post"], '/AdminProfile', [AdminController::class, 'Admin_Profile_Manage'])->name('admin.Profile.Manage');
+    Route::match(["get", "post"], '/AdminProductRating', [AdminController::class, 'Admin_Product_Rating'])->name('admin.Product.Rating');
+
 
     Route::get('/SearchData/{SearchData}/{TableName}', [AdminController::class, 'Search_Data_Product_User_Order']);
     Route::get('/AdminProductDetail/{productid}', [AdminController::class, 'Admin_Product_Detail']);

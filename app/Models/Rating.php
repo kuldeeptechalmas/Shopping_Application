@@ -10,4 +10,8 @@ class Rating extends Model
     use HasFactory;
     protected $table = 'rating_product';
     protected $fillable = ['rate', 'user_id', 'product_id'];
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

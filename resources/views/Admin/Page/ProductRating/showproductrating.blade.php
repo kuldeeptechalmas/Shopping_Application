@@ -12,55 +12,43 @@
 
 @section('content')
 @if ($data->isNotEmpty())
-<h1>Show Product</h1>
+<h1>Show Product Rating</h1>
 <div class="row">
-    @foreach ($data as $item)
-    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 card" style="width: 18rem; margin: 10px;">
-        <a href="/AdminProductDetail/{{$item->id}}">
-            <div style="height: 300px; width: 100%;">
-                <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->image) }}" alt="Image">
-            </div>
-        </a>
-        <div class="card-body">
-            <p class="card-text">{{$item->name}}</p>
-            @php
-            $rateConversion = 0;
-            $totalRate = 0;
+    <table class="table table-striped" style="margin-top: 15px">
+        <tr></tr>
+        <tr>
+            <td>Product Name</td>
+            <td>Price</td>
+            <td>Rates</td>
+        </tr>
+        @foreach ($data as $item)
+        <tr>
+            <td>{{ $item->name }}</td>
+            <td>₹ {{ $item->price }}</td>
+            <td>@php
+                $rateConversion = 0;
+                $totalRate = 0;
 
-            // // Rate Calculation
-            if ($item->rates->isNotEmpty()) {
-            foreach ($item->rates as $value) {
-            $totalRate += $value->rate;
-            }
-            $rates = ($totalRate * 100) / ($item->rates->count() * 5);
-            $rateConversion = (float)(5 * $rates) / 100;
-            }
-
-            @endphp
-            <div style="display: flex;">
-                <div style="background: #388e3c;width: 49px;height: 22px;color:white;border-radius: 4px;display: flex;justify-content: center;align-items: center;">
-                    {{round($rateConversion,1) }}
-                    <i class="fa-solid fa-star" style="font-size: 11px;margin-top: 4px;margin-left: 2px;"></i>
+                // Rate Calculation
+                if ($item->rates->isNotEmpty()) {
+                foreach ($item->rates as $value) {
+                $totalRate += $value->rate;
+                }
+                $rates = ($totalRate * 100) / ($item->rates->count() * 5);
+                $rateConversion = (float)(5 * $rates) / 100;
+                }
+                @endphp
+                <div style="display: flex;">
+                    <div style="background: #388e3c;width: 49px;height: 22px;color:white;border-radius: 4px;display: flex;justify-content: center;align-items: center;">
+                        {{round($rateConversion,1) }}
+                        <i class="fa-solid fa-star" style="font-size: 11px;margin-top: 4px;margin-left: 2px;"></i>
+                    </div>
+                    <div style="margin-left:13px">{{ $item->rates->count() }} Ratings</div>
                 </div>
-                <div style="margin-left:13px">{{ $item->rates->count() }} Ratings</div>
-            </div>
-            <p class="card-text" style="width: 100%;text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
-                {{$item->description}}
-            </p>
-        </div>
-
-        <div class="d-flex justify-content-between ps-3 pe-3" style="margin-bottom: 15px;">
-            <a href="/AdminInProductUpdate/{{ $item->id }}">
-                <button type="button" class="btn btn-primary">
-                    Edit
-                </button>
-            </a>
-            <button type="button" class="btn btn-danger" onclick="deleteproductdata('{{$item->id}}','{{$item->name}}')" data-bs-toggle="modal" data-bs-target="#AdminProductDeleteModal">
-                Delete
-            </button>
-        </div>
-    </div>
-    @endforeach
+            </td>
+        </tr>
+        @endforeach
+    </table>
 </div>
 <div class="paginationDiv" id="usertableid" style="margin-bottom: 30px;">
 

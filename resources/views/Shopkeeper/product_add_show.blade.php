@@ -39,6 +39,28 @@
         </a>
         <div class="card-body">
             <p class="card-text">{{$item->name}}</p>
+            @php
+            $rateConversion = 0;
+            $totalRate = 0;
+
+            // Rate Calculation
+            if ($item->rates->isNotEmpty()) {
+            foreach ($item->rates as $value) {
+            $totalRate += $value->rate;
+            }
+            $rates = ($totalRate * 100) / ($item->rates->count() * 5);
+            $rateConversion = (float)(5 * $rates) / 100;
+            }
+
+            @endphp
+            <div style="display: flex;">
+                <div style="background: #388e3c;width: 49px;height: 22px;color:white;border-radius: 4px;display: flex;justify-content: center;align-items: center;">
+                    {{ round($rateConversion ,1)}}
+                    <i class="fa-solid fa-star" style="font-size: 11px;margin-top: 4px;margin-left: 2px;"></i>
+                </div>
+                <div style="margin-left:13px">{{ $item->rates->count() }} Ratings</div>
+            </div>
+            <br>
             <p class="card-text" style="width: 100%;text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
                 {{$item->description}}
             </p>

@@ -21,7 +21,7 @@
     /* favourite heart css */
     .likes {
         position: absolute;
-        right: 10px;
+        right: 3px;
         background-color: #fff;
         border-radius: 10px;
         padding: 15px;
@@ -237,4 +237,23 @@
 
     .star.active {
         color: #ffe11b !important;
+    }
+
+/* productshow.blade.php */
+   #back-to-top {
+        display: none;
+        position: fixed;
+        left: 50%;
+        z-index: 99;
+        border: none;
+        outline: none;
+        background-color: #fff;
+        color: #007bff;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 7%;
+        align-items: center;
+        text-align: center;
+        top: 18%;
+        font-size: 15px;
     }

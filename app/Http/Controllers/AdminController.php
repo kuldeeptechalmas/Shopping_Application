@@ -16,12 +16,15 @@ use GuzzleHttp\Psr7\Response;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+
+use function Laravel\Prompts\error;
 
 class AdminController extends Controller
 {
@@ -278,7 +281,6 @@ class AdminController extends Controller
 
             // Delete order
             if ($request->action == "removeorder") {
-
                 $orderData = CustomerOrder::find($request->id);
                 if ($orderData) {
                     $orderData->delete();
@@ -294,7 +296,11 @@ class AdminController extends Controller
     public function Admin_Product_Detail($productid)
     {
         $data = Product::where("id", $productid)->first();
-        return view("Admin.Page.Product.productdetail", ["productdatails" => $data]);
+        if ($data) {
+            return view("Admin.Page.Product.productdetail", ["productdatails" => $data]);
+        } else {
+            return error("not found data");
+        }
     }
 
     // Admin profile manage
@@ -379,6 +385,28 @@ class AdminController extends Controller
         if ($tableName == "User") {
             $userData = CustomerAndShopkeeper::where("name", "like", "%" . $searchData . "%")->get();
             return Response()->json([$userData]);
+        }
+    }
+
+    // Admin Product Rating Table
+    public function Admin_Product_Rating(Request $request)
+    {
+        // Search Data 
+        if ($request->action == 'searchDataAdmin') {
+            $Product_data_Search = Product::whereHas('rates', function ($query) {
+                $query->where('rate', '>', 0);
+            })->where('name', 'like', "%" . $request->searchData . "%")
+                ->paginate(15);
+            return view("Admin.Page.ProductRating.showproductrating", ['data' => $Product_data_Search, "searchData" => $request->searchData]);
+        }
+
+        $Product_data = Product::whereHas('rates', function ($query) {
+            $query->where('rate', '>', 0);
+        })->paginate(15);
+        if ($Product_data) {
+            return view("Admin.Page.ProductRating.showproductrating", ['data' => $Product_data]);
+        } else {
+            return error("not data found");
         }
     }
 }

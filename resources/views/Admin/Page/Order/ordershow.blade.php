@@ -65,7 +65,7 @@
                             View
                         </button>
                         @if ($item->status == "Delivered")
-                        <button type="button" class="btn btn-danger" onclick="deleteorderdata('{{$item->id}}','{{$item->product->name}}')" data-bs-toggle="modal" data-bs-target="#AdminOrderDeleteModal">
+                        <button type="button" class="btn btn-danger" onclick="deleteorderdata('{{$item->id}}')" data-bs-toggle="modal" data-bs-target="#AdminOrderDeleteModal">
                             Delete
                         </button>
                         @endif
@@ -141,7 +141,6 @@
                     @csrf
                     <div class="modal-body">
                         Are You Sore This Record Delete
-                        <label id="deletenameorder" style="font-weight: bold"></label>
                         <input id="deleteorderid" name="id" name="id" hidden>
                         <input type="text" name="action" value="removeorder" hidden>
                     </div>
@@ -162,8 +161,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <script>
-        function deleteorderdata(id, name) {
-            document.getElementById("deletenameorder").textContent = name;
+        function deleteorderdata(id) {
+            console.log(id);
             document.getElementById("deleteorderid").value = id;
         }
 

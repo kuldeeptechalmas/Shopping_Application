@@ -1,13 +1,20 @@
 @extends('index')
-
 @section('content')
 @toastifyCss
 @if ($data->isNotEmpty())
 <ul class="d-flex justify-content-around" style="list-style: none; box-shadow: 0px 3px 15px #afafaf; padding: 10px;">
     @foreach ($alldata as $item1)
-    <a href="/getcategroywiseproduct/{{$item1->category_name}}" style="text-decoration: none;color:black;">
-        <li>{{$item1->category_name}}</li>
-    </a>
+    <div class="hover-trigger position-relative">
+        {{ $item1->category_name }}
+        <div class="show-on-hover position-absolute" style="right: 0px;left: -49px; width: 222px; background: white;border-radius: 15px;">
+            <div class="shadow p-3 bg-body rounded">
+                @foreach ($item1->subcategory as $subcat)
+                {{ $subcat->name }}
+                <br>
+                @endforeach
+            </div>
+        </div>
+    </div>
     @endforeach
 </ul>
 @foreach ($data as $item1)
@@ -65,7 +72,7 @@
             @endphp
             <div style="display: flex;">
                 <div style="background: #388e3c;width: 49px;height: 22px;color:white;border-radius: 4px;display: flex;justify-content: center;align-items: center;">
-                    {{(float) $rateConversion }}
+                    {{round( $rateConversion,1) }}
                     <i class="fa-solid fa-star" style="font-size: 11px;margin-top: 4px;margin-left: 2px;"></i>
                 </div>
                 <div style="margin-left:13px">{{ $item->rates->count() }} Ratings</div>

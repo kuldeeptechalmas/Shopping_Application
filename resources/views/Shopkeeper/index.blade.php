@@ -123,7 +123,7 @@
                     @if (isset($showallrecord))
                     @if (isset($data))
 
-                    @if ($data->isNotEmpty())
+                    {{-- @if ($data->isNotEmpty()) --}}
 
                     <div class="row">
                         @foreach ($data as $item)
@@ -135,6 +135,30 @@
                             </a>
                             <div class="card-body">
                                 <p class="card-text">{{$item->name}}</p>
+                                @php
+                                $rateConversion = 0;
+                                $totalRate = 0;
+
+                                // Rate Calculation
+                                if ($item->rates->isNotEmpty()) {
+                                foreach ($item->rates as $value) {
+                                $totalRate += $value->rate;
+                                }
+                                $rates = ($totalRate * 100) / ($item->rates->count() * 5);
+                                $rateConversion = (float)(5 * $rates) / 100;
+                                }
+
+                                @endphp
+                                <div style="display: flex;">
+                                    <div style="background: #388e3c;width: 49px;height: 22px;color:white;border-radius: 4px;display: flex;justify-content: center;align-items: center;">
+                                        {{ round($rateConversion ,1)}}
+                                        <i class="fa-solid fa-star" style="font-size: 11px;margin-top: 4px;margin-left: 2px;"></i>
+                                    </div>
+                                    <div style="margin-left:13px">{{ $item->rates->count() }} Ratings</div>
+                                </div>
+                                <p class="card-text" style="width: 100%;text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
+                                    <h3>₹{{round($item->price)}}</h3>
+                                </p>
                                 <p class="card-text" style="width: 100%;text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
                                     {{$item->description}}
                                 </p>
@@ -168,49 +192,53 @@
                             </div>
                         </div>
                     </div>
-                    @else
+                    {{-- @else
                     <div style="display: flex;justify-content: center;margin-top: 225px;">
                         <div>
                             <div style="width: 100px; height: auto; display: flex;justify-content: center;">
                                 <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/not_found_result_image.WEBP') }}" alt="Image">
-                            </div>
-                        </div>
-                    </div>
-                    <div style="display: flex;justify-content: center;text-align: center;">
-                        <div>
-
-                            <h5>Sorry, no results found <br /></h5>
-                            Edit search or go back to Product Page <br /><br />
-                            <a href="/shopkeeperdashboard">
-                                <button class="btn btn-primary" style="width: 192px;">Go To Product</button>
-                            </a>
-                        </div>
-                    </div>
-                    @endif
-                    @else
-                    <div style="display: flex;justify-content: center;margin-top: 116px;">
-                        <div>
-                            <div style="width: 100px; height: auto; display: flex;justify-content: center;">
-                                <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/not_found_result_image.WEBP') }}" alt="Image">
-                            </div>
-                        </div>
-                    </div>
-                    <div style="display: flex;justify-content: center;text-align: center;">
-                        <div>
-
-                            <h5>Sorry, no results found <br /></h5>
-                            Edit search or go back to Product Page <br /><br />
-                            <a href="/shopkeeperdashboard">
-                                <button class="btn btn-primary" style="width: 192px;">Go To Product</button>
-                            </a>
-                        </div>
-                    </div>
-                    @endif
-
-                    @endif
                 </div>
             </div>
         </div>
+        <div style="display: flex;justify-content: center;text-align: center;">
+            <div>
+
+                <h5>Sorry, no results found <br /></h5>
+                Edit search or go back to Product Page <br /><br />
+                <a href="/shopkeeperdashboard">
+                    <button class="btn btn-primary" style="width: 192px;">Go To Product</button>
+                </a>
+            </div>
+        </div>
+        @endif --}}
+        @else
+        @if (!isset($dataProduct))
+
+
+        <div style="display: flex;justify-content: center;margin-top: 116px;">
+            <div>
+                <div style="width: 100px; height: auto; display: flex;justify-content: center;">
+                    <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/not_found_result_image.WEBP') }}" alt="Image">
+                </div>
+            </div>
+        </div>
+        <div style="display: flex;justify-content: center;text-align: center;">
+            <div>
+
+                <h5>Sorry, no results found <br /></h5>
+                Edit search or go back to Product Page <br /><br />
+                <a href="/shopkeeperdashboard">
+                    <button class="btn btn-primary" style="width: 192px;">Go To Product</button>
+                </a>
+            </div>
+        </div>
+        @endif
+        @endif
+
+        @endif
+    </div>
+    </div>
+    </div>
     </div>
 
     <!--Product Delete Modal -->

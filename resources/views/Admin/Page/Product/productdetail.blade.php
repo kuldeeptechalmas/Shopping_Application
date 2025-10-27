@@ -55,6 +55,29 @@
 
         <div>Stock : {{$productdatails->stock}}</div>
         <div>Discount : {{$productdatails->discount}} %</div>
+        <div>
+            @php
+            $rateConversion = 0;
+            $totalRate = 0;
+
+            // // Rate Calculation
+            if ($productdatails->rates->isNotEmpty()) {
+            foreach ($productdatails->rates as $value) {
+            $totalRate += $value->rate;
+            }
+            $rates = ($totalRate * 100) / ($productdatails->rates->count() * 5);
+            $rateConversion = (float)(5 * $rates) / 100;
+            }
+
+            @endphp
+            <div style="display: flex;">
+                <div style="background: #388e3c;width: 49px;height: 22px;color:white;border-radius: 4px;display: flex;justify-content: center;align-items: center;">
+                    {{round($rateConversion,1) }}
+                    <i class="fa-solid fa-star" style="font-size: 11px;margin-top: 4px;margin-left: 2px;"></i>
+                </div>
+                <div style="margin-left:13px">{{ $productdatails->rates->count() }} Ratings</div>
+            </div>
+        </div>
 
         @php
         $dataString = $productdatails->description;

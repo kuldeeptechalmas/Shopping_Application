@@ -12,6 +12,10 @@
     <link rel="stylesheet" href="{{ asset('css/customer/mainIndex.css') }}">
 </head>
 
+<div id="back-to-top">
+    <i class="fa-solid fa-angle-up mx-2"></i> Back To Top
+</div>
+
 <body style="background-color: #f1f3f6;">
     {{-- Navbar --}}
     <nav class="navbar navbar-expand-lg fixed-top" style="background-color: #fff;">
