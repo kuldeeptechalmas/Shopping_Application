@@ -9,8 +9,11 @@
         <div class="show-on-hover position-absolute" style="right: 0px;left: -49px; width: 222px; background: white;border-radius: 15px;">
             <div class="shadow p-3 bg-body rounded">
                 @foreach ($item1->subcategory as $subcat)
-                {{ $subcat->name }}
-                <br>
+                <a href="/subgetcategroywiseproduct/{{ $subcat->name }}" style="color: black;text-decoration: none;margin-left: 14px;">
+
+                    {{ $subcat->name }}
+                </a>
+                <hr>
                 @endforeach
             </div>
         </div>
@@ -19,6 +22,8 @@
 </ul>
 @foreach ($data as $item1)
 <div class="row w-100" style="margin-left: 15px;">
+    @if ($item1->productsdata->isNotEmpty())
+
     @foreach ($item1->productsdata as $item)
     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 card" style="border-radius: 10px;width: 18rem; margin: 10px;">
         <div class="likes">
@@ -84,9 +89,46 @@
         </div>
     </div>
     @endforeach
+    @else
+    <div style="display: flex;justify-content: center;margin-top: 116px;">
+        <div>
+            <div style="width: 100px; height: auto; display: flex;justify-content: center;">
+                <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/not_found_result_image.WEBP') }}" alt="Image">
+            </div>
+        </div>
+    </div>
+    <div style="display: flex;justify-content: center;text-align: center;">
+        <div>
+
+            <h5>Sorry, no results found <br /></h5>
+            go back to Product Page <br /><br />
+            <a href="/MyShop">
+                <button class="btn btn-primary" style="width: 192px;">Go To Product</button>
+            </a>
+        </div>
+    </div>
+    @endif
     <br>
 </div>
 @endforeach
+@else
+<div style="display: flex;justify-content: center;margin-top: 116px;">
+    <div>
+        <div style="width: 100px; height: auto; display: flex;justify-content: center;">
+            <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/not_found_result_image.WEBP') }}" alt="Image">
+        </div>
+    </div>
+</div>
+<div style="display: flex;justify-content: center;text-align: center;">
+    <div>
+
+        <h5>Sorry, no results found <br /></h5>
+        go back to Product Page <br /><br />
+        <a href="/MyShop">
+            <button class="btn btn-primary" style="width: 192px;">Go To Product</button>
+        </a>
+    </div>
+</div>
 @endif
 @toastifyJs
 

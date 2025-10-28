@@ -69,7 +69,8 @@ class AddToCartController extends Controller
                 "product_id" => $product->id,
                 'quantity' => 1,
             ];
-            return redirect()->route("login", ["cart" => $cart]);
+            Session::put('gest_addtocart_data', $cart);
+            return redirect()->route("login");
         }
     }
 

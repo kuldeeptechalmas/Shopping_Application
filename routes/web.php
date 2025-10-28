@@ -46,7 +46,7 @@ Route::middleware("customerCheck")->group(function () {
 
     Route::match(["post", "get"], '/customerchangepassword/{customeremail}', [CustomerController::class, "customer_change_password"]);
     Route::match(["post", "get"], '/CustomerProfile', [CustomerController::class, "customer_profile"])->name("Customer.Profile");
-    Route::post('/CustomerUpdate', [CustomerController::class, "Customer_Update"]);
+    Route::match(['get', 'post'], '/CustomerUpdate', [CustomerController::class, "Customer_Update"])->name("custome.Update");
 
     Route::get('/viewprofilecustomer/{email}', [CustomerController::class, "view_profile"]);
     Route::match(['get', 'post'], '/wishlist', [MainController::class, 'wishlist'])->name("wishlist");
@@ -75,6 +75,7 @@ Route::get('/deletecartsummry/{cartid}', [MainController::class, 'delete_cart_su
 Route::match(['get', 'post'], '/CheckOut', [MainController::class, 'Checkout_Product'])->name("checkout_product");
 Route::post('/search', [MainController::class, 'search_product_name']);
 Route::match(['get', 'post'], '/getcategroywiseproduct/{categoryname}', [MainController::class, 'get_category_wise_product']);
+Route::match(['get', 'post'], '/subgetcategroywiseproduct/{categoryname}', [MainController::class, 'get_sub_category_wise_product']);
 Route::get('/discountcoupun/{couponid}/{productid}', [MainController::class, 'discount_coupun']);
 Route::get('/removediscount/{productid}', [MainController::class, 'remove_discount_coupun']);
 Route::get('/favourite/{productid}', [MainController::class, 'add_to_favourite']);

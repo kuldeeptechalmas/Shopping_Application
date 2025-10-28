@@ -21,13 +21,27 @@
             </div>
         </div>
         <div class="col-4">
-            <div class="d-flex flex-row align-items-center mb-4">
+            {{-- <div class="d-flex flex-row align-items-center mb-4">
                 <div data-mdb-input-init class="form-outline flex-fill mb-0">
                     <label class="form-label" for="form3Example1c">Phone No</label>
                     <input type="text" disabled value="{{$shopkeeper_profile->phone}}" class="form-control" />
-                </div>
-            </div>
         </div>
+    </div> --}}
+    <div class="d-flex flex-row align-items-center mb-4">
+        <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
+            <select class="form-select" name="countrycode" id="countrycode" style="width: 33%;position: absolute;top: 32px;">
+                @foreach ($countrycode as $item)
+                <option value="{{ $item['countryCode'] }}" {{$shopkeeper_profile->countrycode == $item['countryCode'] ? 'selected' : ''}}>{{ $item['Iso'] }}({{ $item['name'] }})</option>
+                @endforeach
+            </select>
+            <label class="form-label" for="form3Example1c">Phone No</label>
+            <input type="text" id="phone" value="{{$shopkeeper_profile->phone}}" style="padding-left: 95px;" name="phone" class="form-control" />
+
+            <div style="color:red;" id="ephone" hidden></div>
+
+        </div>
+    </div>
+    </div>
     </div>
 
     <div class="row justify-content-evenly">

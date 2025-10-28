@@ -52,6 +52,7 @@ function getprofileuser(email) {
                 , pincode: $('#pincode').val()
                 , password: $('#password').val()
                 , conformpassword: $('#conpassword').val()
+                , countrycode: $('#countrycode').val()
             }
             , success: function(res) {
                 window.location.href = res["redirect_url"];

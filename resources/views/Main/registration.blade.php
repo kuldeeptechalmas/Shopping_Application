@@ -42,9 +42,14 @@
                                         <input type="text" name="rols" id="roles" hidden>
 
                                         <div class="d-flex flex-row align-items-center mb-4">
-                                            <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                                            <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
+                                                <select class="form-select" name="countrycode" id="" style="width: 29%;position: absolute;top: 32px;">
+                                                    @foreach ($countrycode as $item)
+                                                    <option value="{{ $item['countryCode'] }}" {{old('countrycode','IN') == $item['countryCode'] ? 'selected' : ''}}>{{ $item['Iso'] }}({{ $item['name'] }})</option>
+                                                    @endforeach
+                                                </select>
                                                 <label class="form-label" for="form3Example1c">Phone No</label>
-                                                <input type="text" value="{{old('phone')}}" name="phone" class="form-control" />
+                                                <input type="text" value="{{old('phone')}}" style="padding-left: 96px;" name="phone" class="form-control" />
                                                 @error('phone')
                                                 <div style="color:red;">{{$message}}</div>
                                                 @enderror
@@ -132,7 +137,7 @@
                                                 @enderror
                                             </div>
                                         </div>
-                                        {{old('password')}}
+
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
                                                 <label class="form-label" for="form3Example4c">Password</label>

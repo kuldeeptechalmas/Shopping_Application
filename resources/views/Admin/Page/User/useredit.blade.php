@@ -29,10 +29,17 @@
         </div>
     </div>
     <input type="text" name="id" value="{{$usereditdata->id}}" hidden id="">
+
     <div class="d-flex flex-row align-items-center mb-4">
-        <div usereditdata-mdb-input-init class="form-outline flex-fill mb-0">
+        <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
+            <select class="form-select" name="countrycode" id="countrycode" style="width: 15%;position: absolute;top: 32px;">
+                @foreach ($countrycode as $item)
+                <option value="{{ $item['countryCode'] }}" {{old("countrycode",$usereditdata->countrycode) == $item['countryCode'] ? 'selected' : ''}}>{{ $item['Iso'] }}({{ $item['name'] }})</option>
+                @endforeach
+            </select>
             <label class="form-label" for="form3Example1c">Phone No</label>
-            <input type="text" id="vphone" value="{{old('phone',$usereditdata->phone)}}" name="phone" class="form-control" />
+            <input type="text" id="phone" value="{{$usereditdata->phone}}" style="padding-left:95px;" name="phone" class="form-control" />
+
             @error('phone')
 
             <div class="alert alert-danger">{{ $message }}</div>
@@ -40,6 +47,17 @@
 
         </div>
     </div>
+    {{-- <div class="d-flex flex-row align-items-center mb-4">
+        <div usereditdata-mdb-input-init class="form-outline flex-fill mb-0">
+            <label class="form-label" for="form3Example1c">Phone No</label>
+            <input type="text" id="vphone" value="{{old('phone',$usereditdata->phone)}}" name="phone" class="form-control" />
+    @error('phone')
+
+    <div class="alert alert-danger">{{ $message }}</div>
+    @enderror
+
+    </div>
+    </div> --}}
 
     <div class="d-flex flex-row align-items-center mb-4">
         <div usereditdata-mdb-input-init class="form-outline flex-fill mb-0">

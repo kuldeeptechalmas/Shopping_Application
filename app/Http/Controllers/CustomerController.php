@@ -61,12 +61,14 @@ class CustomerController extends Controller
         // contry data
         $content = File::get(public_path('countries.json'));
         $contrylist = json_decode($content, true);
+        $countrycode = File::get(public_path('countryandcode.json'));
+        $contrycodelist = json_decode($countrycode, true);
 
         // profile user
         $customer_profile = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
         $customer_profile->password = Crypt::decryptString($customer_profile->password);
 
-        return view("Customer.customerprofile", ["contrylist" => $contrylist, "customer_profile" => $customer_profile]);
+        return view("Customer.customerprofile", ["contrylist" => $contrylist, "customer_profile" => $customer_profile, 'countrycode' => $contrycodelist]);
     }
 
     public function customer_change_password($customer_email, Request $request)
@@ -138,13 +140,16 @@ class CustomerController extends Controller
         // contry data
         $content = File::get(public_path('countries.json'));
         $contrylist = json_decode($content, true);
+        $countrycode = File::get(public_path('countryandcode.json'));
+        $contrycodelist = json_decode($countrycode, true);
 
         $data = CustomerAndShopkeeper::where("email", $email)->first();
-        return view("Shopkeeper.Profile.viewuserprofile", ["data" => $data, "contrylist" => $contrylist]);
+        return view("Shopkeeper.Profile.viewuserprofile", ["data" => $data, "contrylist" => $contrylist, 'countrycode' => $contrycodelist]);
     }
 
     public function Customer_Update(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             "name" =>  [
                 'required',
@@ -154,7 +159,7 @@ class CustomerController extends Controller
             "phone" => [
                 'required',
                 'numeric',
-                "digits:10",
+                "phone:countrycode",
                 Rule::unique('CustomerAndShopkeeper', 'phone')->ignore($request->id),
             ],
             "email" => [
@@ -168,7 +173,7 @@ class CustomerController extends Controller
             "country" => "required",
             "pincode" => "required|numeric|digits:6",
             "gender" => "required",
-        ]);
+        ], ['phone.phone' => "Enter Currect Phone Number"]);
 
         $customer = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
 
@@ -183,6 +188,9 @@ class CustomerController extends Controller
             "pincode" => $request->pincode,
             "gender" => $request->gender,
         ]);
+
+        $customer->countrycode = $request->countrycode;
+        $customer->save();
 
         Session::put("customeremail", $customer->email);
 

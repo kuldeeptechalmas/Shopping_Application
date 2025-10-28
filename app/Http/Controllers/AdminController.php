@@ -71,7 +71,7 @@ class AdminController extends Controller
                 "phone" => [
                     'required',
                     'numeric',
-                    "digits:10",
+                    "phone:countrycode",
                     Rule::unique('CustomerAndShopkeeper', 'phone')->ignore($request->id),
                 ],
                 "address" => "required",
@@ -81,6 +81,7 @@ class AdminController extends Controller
                 "pincode" => "required|numeric|digits:6",
                 "gender" => "required",
             ], [
+                "phone.phone" => "Enter Currect phone number. ",
                 "name.required" => "Enter Name is Required.",
                 "email.required" => "Enter email is Required.",
                 "phone.required" => "Enter phone is Required.",
@@ -107,6 +108,8 @@ class AdminController extends Controller
                 "pincode" => $request->pincode,
                 "gender" => $request->gender,
             ]);
+            $customer->countrycode = $request->countrycode;
+            $customer->save();
 
             $success = "";
         }
@@ -119,7 +122,10 @@ class AdminController extends Controller
             $content = File::get(public_path('countries.json'));
             $contryList = json_decode($content, true);
 
-            return view("Admin.Page.User.useredit", ["save" => $success, "usereditdata" => $userEdit, "country" => $contryList]);
+            $countrycode = File::get(public_path('countryandcode.json'));
+            $contrycodelist = json_decode($countrycode, true);
+
+            return view("Admin.Page.User.useredit", ["save" => $success, "usereditdata" => $userEdit, "country" => $contryList, 'countrycode' => $contrycodelist]);
         }
     }
 

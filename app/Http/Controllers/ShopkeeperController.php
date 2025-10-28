@@ -69,7 +69,7 @@ class ShopkeeperController extends Controller
             "phone" => [
                 'required',
                 'numeric',
-                "digits:10",
+                "phone:countrycode",
                 Rule::unique('CustomerAndShopkeeper', 'phone')->ignore($request->id),
             ],
             "email" => [
@@ -99,6 +99,9 @@ class ShopkeeperController extends Controller
             "gender" => $request->gender,
         ]);
 
+        $customer->countrycode = $request->countrycode;
+        $customer->save();
+
         Session::put("shopkeeperid", $customer->name);
         Session::put("shopkeeperemail", $customer->email);
 
@@ -114,6 +117,8 @@ class ShopkeeperController extends Controller
         // contry data
         $content = File::get(public_path('countries.json'));
         $contrylist = json_decode($content, true);
+        $countrycode = File::get(public_path('countryandcode.json'));
+        $contrycodelist = json_decode($countrycode, true);
 
         // profile user
         $shopkeeper_profile = CustomerAndShopkeeper::where("email", Session::get('shopkeeperemail'))->first();
@@ -122,7 +127,7 @@ class ShopkeeperController extends Controller
         // all catagory
         $catagory = CategoryProduct::all();
 
-        return view("Shopkeeper.Profile.shopkeeperprofile", ["catagory" => $catagory, "contrylist" => $contrylist, "shopkeeper_profile" => $shopkeeper_profile]);
+        return view("Shopkeeper.Profile.shopkeeperprofile", ["catagory" => $catagory, "contrylist" => $contrylist, "shopkeeper_profile" => $shopkeeper_profile, 'countrycode' => $contrycodelist]);
     }
 
     // Change Password
@@ -188,9 +193,12 @@ class ShopkeeperController extends Controller
         // contry data
         $content = File::get(public_path('countries.json'));
         $contrylist = json_decode($content, true);
+        $countrycode = File::get(public_path('countryandcode.json'));
+        $contrycodelist = json_decode($countrycode, true);
 
         $data = CustomerAndShopkeeper::where("email", $email)->first();
-        return view("Shopkeeper.Profile.viewuserprofile", ["data" => $data, "contrylist" => $contrylist]);
+
+        return view("Shopkeeper.Profile.viewuserprofile", ["data" => $data, "contrylist" => $contrylist, 'countrycode' => $contrycodelist]);
     }
 
     // Order List

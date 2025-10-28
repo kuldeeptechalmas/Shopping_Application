@@ -11,16 +11,16 @@ use App\Models\CustomerOrder;
 use App\Models\FavouriceProduct;
 use App\Models\Product;
 use App\Models\Rating;
+use App\Models\SubCatagory;
 use App\Models\UserCoupunData;
 use Exception;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules\Password as RulesPassword;
+use Illuminate\Validation\Rules\Password;
 use PhpParser\Node\Expr\Cast\Void_;
 
 class MainController extends Controller
@@ -95,7 +95,7 @@ class MainController extends Controller
                 Session::put("customeremail", $customer->email);
                 Session::forget("discountamount");
 
-                $cart = $request->cart;
+                $cart = Session::get('gest_addtocart_data');
                 if (!empty($cart)) {
                     foreach ($cart as $key => $value) {
 
@@ -121,10 +121,11 @@ class MainController extends Controller
                             $cart->save();
                         }
                     }
+                    Session::forget('gest_addtocart_data');
                     return redirect()->route("addtocart_get_all");
                 }
 
-                $cartBuyNow = $request->cartBuyNow;
+                $cartBuyNow = Session::get('gest_CartBuyNow');
                 if ($cartBuyNow) {
 
                     $productIdSession = Session::get('productId');
@@ -140,7 +141,7 @@ class MainController extends Controller
                         $productData->save();
                     }
                     $ExistAddToCart = AddToCart::where("product_id", $productIdSession)->where("user_id", $customer->id)->first();
-                    // dd($ExistAddToCart);
+
                     if (!$ExistAddToCart) {
                         $cart = new AddToCart();
                         $cart->user_id = $customer->id;
@@ -148,7 +149,7 @@ class MainController extends Controller
                         $cart->quantity = $cartBuyNow[$productIdSession]['quantity'];
                         $cart->save();
                     }
-                    // dd($cart->id);
+                    Session::forget('gest_CartBuyNow');
                     return redirect()->route("buy.Now.Summary", ['productId' => Session::get('productId')]);
                 }
                 return redirect()->route("MainIndex");
@@ -168,6 +169,8 @@ class MainController extends Controller
 
         $content = File::get(public_path('countries.json'));
         $contrylist = json_decode($content, true);
+        $countrycode = File::get(public_path('countryandcode.json'));
+        $contrycodelist = json_decode($countrycode, true);
 
         if ($request->isMethod("post")) {
 
@@ -179,18 +182,14 @@ class MainController extends Controller
                 ],
                 "password" => [
                     "required",
-                    RulesPassword::min(8)
+                    Password::min(8)
                         ->mixedCase()
                         ->symbols()
-                        ->numbers()
+                        ->numbers(),
                 ],
                 "conformpassword" => [
                     "required",
                     "same:password",
-                    RulesPassword::min(8)
-                        ->mixedCase()
-                        ->symbols()
-                        ->numbers()
                 ],
                 'email' => [
                     'required',
@@ -198,7 +197,8 @@ class MainController extends Controller
                     'unique:CustomerAndShopkeeper,email',
                     'regex:/^[a-zA-Z0-9._%+-]+@(gmail|yahoo)\.com$/'
                 ],
-                "phone" => "required|numeric|digits:10|unique:CustomerAndShopkeeper,phone",
+                "countrycode" => 'string|size:2',
+                "phone" => "required|numeric|unique:CustomerAndShopkeeper,phone|phone:countrycode",
                 "address" => "required",
                 "city" => "required",
                 "state" => "required",
@@ -206,6 +206,28 @@ class MainController extends Controller
                 "pincode" => "required|numeric|digits:6",
                 "gender" => "required",
             ], [
+                "name.required" => 'Enter Name is Required.',
+                "name.not_regex" => 'Enter Name Format is valid.',
+
+                "password.required" => 'Enter Password is Required.',
+                "password.min" => 'Enter Password Min 8 Letter.',
+                'password.mixed' => 'Enter password must contain At least One Uppercase and One Lowercase letter.',
+                "password.symbols" => 'Enter Password Symbols.',
+                "password.numbers" => 'Enter Password Number.',
+
+                "conformpassword.required" => 'Enter ConForm password is Required.',
+                "conformpassword.same" => 'Enter ConForm password is Not Same Password.',
+
+                "phone.required" => 'Enter Phone is Required.',
+                "phone.phone" => 'Enter Currect Phone number .',
+
+                "address.required" => 'Enter Address is Required.',
+                "city.required" => 'Enter City is Required.',
+                "state.required" => 'Enter State is Required.',
+                "country.required" => 'Enter Country is Required.',
+                "pincode.required" => 'Enter Pincode is Required.',
+                "gender.required" => 'Enter Gender is Required.',
+
                 'email.required' => 'Enter Email is Required.',
                 'email.email' => 'Enter Email Must Be A Valid Email Address.',
                 'email.regex' => 'The email must be from an allowed domain (gmail.com, yahoo.com).',
@@ -223,11 +245,12 @@ class MainController extends Controller
             $customer->country = $request->country;
             $customer->pincode = $request->pincode;
             $customer->gender = $request->gender;
+            $customer->countrycode = $request->countrycode;
             $customer->save();
 
             return redirect()->route("login");
         }
-        return view("Main.registration", ["contrylist" => $contrylist]);
+        return view("Main.registration", ["contrylist" => $contrylist, 'countrycode' => $contrycodelist]);
     }
 
     // Forget Password
@@ -262,14 +285,14 @@ class MainController extends Controller
                 "confpassword" => [
                     "required",
                     "same:newpassword",
-                    RulesPassword::min(8)
+                    Password::min(8)
                         ->mixedCase()
                         ->symbols()
                         ->numbers()
                 ],
                 "newpassword" => [
                     "required",
-                    RulesPassword::min(8)
+                    Password::min(8)
                         ->mixedCase()
                         ->symbols()
                         ->numbers()
@@ -575,6 +598,7 @@ class MainController extends Controller
     // Get Product data to Category Wise
     public function get_category_wise_product($categoryname, Request $request)
     {
+
         // Search Product
         if ($request->isMethod("post")) {
             if ($request->action == "Search") {
@@ -612,7 +636,61 @@ class MainController extends Controller
                 ]
             );
         } else {
+
             $category_data = CategoryProduct::where("category_name", $categoryname)->get();
+            $all_category_data = CategoryProduct::all();
+
+            return view(
+                "IndexProductShow.categorywiseproductshow",
+                [
+                    "data" => $category_data,
+                    "alldata" => $all_category_data,
+                ]
+            );
+        }
+    }
+
+    // Get Product Data to Sub Category Wise
+    public function get_sub_category_wise_product($subcategoryname, Request $request)
+    {
+        // Search Product
+        if ($request->isMethod("post")) {
+            if ($request->action == "Search") {
+
+                $data_of_input = $request->search_data;
+                if ($data_of_input == '') {
+                    return redirect()->back();
+                }
+
+                // Favourite Product
+                if (Session::get("customeremail")) {
+                    $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+                    $wishlist = FavouriceProduct::where("user_id", $user_data->id)->get();
+                    $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
+                    return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input, "wishlist" => $wishlist]);
+                } else
+                    $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
+                return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input]); {
+                }
+            }
+        }
+
+        if (Session::get("customeremail")) {
+            $category_data = SubCatagory::where("name", $subcategoryname)->get();
+            $all_category_data = CategoryProduct::all();
+            $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+            $favourite_product_list = FavouriceProduct::where("user_id", $user_data->id)->get();
+            // dd($favourite_product_list);
+            return view(
+                "IndexProductShow.categorywiseproductshow",
+                [
+                    "data" => $category_data,
+                    "alldata" => $all_category_data,
+                    "wishlist" => $favourite_product_list
+                ]
+            );
+        } else {
+            $category_data = SubCatagory::where("name", $subcategoryname)->get();
             $all_category_data = CategoryProduct::all();
 
             return view(
@@ -730,8 +808,6 @@ class MainController extends Controller
             $findCartData = AddToCart::where("user_id", $UserExist->id)
                 ->where("product_id", $productId)->first();
 
-            // Session::put("productId", $productId);
-
             if ($findCartData) {
                 return redirect()->route('buy.Now.Summary', ['productId' => $productId]);
             } else {
@@ -757,7 +833,9 @@ class MainController extends Controller
                 'quantity' => 1,
             ];
             Session::put("productId", $productId);
-            return redirect()->route("login", ['cartBuyNow' => $cart]);
+            Session::put("gest_CartBuyNow", $cart);
+
+            return redirect()->route("login");
         }
     }
 
