@@ -5,15 +5,16 @@
 <ul class="d-flex justify-content-around" style="list-style: none; box-shadow: 0px 3px 15px #afafaf; padding: 10px;">
     @foreach ($alldata as $item1)
     <div class="hover-trigger position-relative">
-        {{ $item1->category_name }}
+        <a style="text-decoration: none;color:black;" href="/getcategroywiseproduct/{{ $item1->category_name }}">
+            {{ $item1->category_name }}
+        </a>
         <div class="show-on-hover position-absolute" style="right: 0px;left: -49px; width: 222px; background: white;border-radius: 15px;">
-            <div class="shadow p-3 bg-body rounded">
+            <div class="shadow bg-body rounded">
                 @foreach ($item1->subcategory as $subcat)
-                <a href="/subgetcategroywiseproduct/{{ $subcat->name }}" style="color: black;text-decoration: none;margin-left: 14px;">
+                <a class="sub_catagory" href="/subgetcategroywiseproduct/{{ $subcat->name }}">
 
                     {{ $subcat->name }}
                 </a>
-                <hr>
                 @endforeach
             </div>
         </div>
@@ -21,7 +22,7 @@
     @endforeach
 </ul>
 @foreach ($data as $item1)
-<div class="row w-100" style="margin-left: 15px;">
+<div class="row w-100" style="margin-left: 15px;display: flex;justify-content: center;">
     @if ($item1->productsdata->isNotEmpty())
 
     @foreach ($item1->productsdata as $item)
@@ -51,7 +52,7 @@
 
             <a href="/ProductDetails/{{$item->id}}">
                 <div style="height: 300px; width: 100%;">
-                    <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->image) }}" alt="Image">
+                    <img style="width: 100%; height: 100%; object-fit: contain;" src="{{ asset('storage/UploadeFile/' . $item->image) }}" alt="Image">
                 </div>
             </a>
         </div>
@@ -93,7 +94,7 @@
     <div style="display: flex;justify-content: center;margin-top: 116px;">
         <div>
             <div style="width: 100px; height: auto; display: flex;justify-content: center;">
-                <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/not_found_result_image.WEBP') }}" alt="Image">
+                <img style="width: 100%; height: 100%; object-fit: contain;" src="{{ asset('storage/UploadeFile/not_found_result_image.WEBP') }}" alt="Image">
             </div>
         </div>
     </div>
@@ -115,7 +116,7 @@
 <div style="display: flex;justify-content: center;margin-top: 116px;">
     <div>
         <div style="width: 100px; height: auto; display: flex;justify-content: center;">
-            <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/not_found_result_image.WEBP') }}" alt="Image">
+            <img style="width: 100%; height: 100%; object-fit: contain;" src="{{ asset('storage/UploadeFile/not_found_result_image.WEBP') }}" alt="Image">
         </div>
     </div>
 </div>

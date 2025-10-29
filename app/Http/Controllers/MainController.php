@@ -17,6 +17,7 @@ use Exception;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -219,7 +220,7 @@ class MainController extends Controller
                 "conformpassword.same" => 'Enter ConForm password is Not Same Password.',
 
                 "phone.required" => 'Enter Phone is Required.',
-                "phone.phone" => 'Enter Currect Phone number .',
+                "phone.phone" => 'Enter Currect Phone number to ' . $request->countrycode . '.',
 
                 "address.required" => 'Enter Address is Required.',
                 "city.required" => 'Enter City is Required.',
@@ -351,6 +352,15 @@ class MainController extends Controller
         }
         $data = CategoryProduct::with('productsdata')->get();
 
+        // Top Five Record to Rated
+        $Top_Products_With_Ratings = DB::table('products')
+            ->select('products.id', 'products.name', 'products.description', 'products.price', 'products.image', 'products.discount', DB::raw('AVG(rating_product.rate) as average_rating'))
+            ->RightJoin('rating_product', 'products.id', '=', 'rating_product.product_id')
+            ->groupBy('products.id', 'products.name')
+            ->orderBy('average_rating', 'DESC')
+            ->take(5)
+            ->get();
+
         if (Session::get("customeremail") != null) {
 
             // cart count
@@ -361,9 +371,9 @@ class MainController extends Controller
             $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
             $wishlist = FavouriceProduct::where("user_id", $user_data->id)->get();
 
-            return view("IndexProductShow.productshow", ["cartcount" => $addtocart->count(), "data" => $data, "wishlist" => $wishlist]);
+            return view("IndexProductShow.productshow", ["cartcount" => $addtocart->count(), "data" => $data, "wishlist" => $wishlist, "TopRateProduct" => $Top_Products_With_Ratings]);
         } else {
-            return view("IndexProductShow.productshow", ["data" => $data]);
+            return view("IndexProductShow.productshow", ["data" => $data, "TopRateProduct" => $Top_Products_With_Ratings]);
         }
     }
 

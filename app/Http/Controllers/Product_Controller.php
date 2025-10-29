@@ -19,6 +19,7 @@ class Product_Controller extends Controller
     // Product Add and Update
     public function product_add_and_update(Request $request)
     {
+        // Edit to Product
         $product = Product::find($request->id);
         if ($product) {
 
@@ -121,7 +122,7 @@ class Product_Controller extends Controller
                     $image->save();
                 }
             }
-            return redirect()->back();
+            return redirect()->back()->with("edit", "ok");
         } else {
 
             $validator = Validator::make(

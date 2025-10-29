@@ -6,24 +6,6 @@
 
 @if ($data->isNotEmpty())
 <ul class="d-flex justify-content-around" style="list-style: none; box-shadow: 0px 3px 15px #afafaf; padding: 10px;">
-    {{-- @foreach ($data as $item1)
-    <a href="/getcategroywiseproduct/{{$item1->category_name}}" style="text-decoration: none;color:black;">
-    <li>{{$item1->category_name}}</li>
-    </a>
-    @endforeach --}}
-    {{-- @foreach ($data as $item1)
-    <div class="hover-trigger position-relative">
-        {{ $item1->category_name }}
-    <div class="show-on-hover position-absolute" style="right: 0px;left: -49px; width: 222px; background: white;border-radius: 15px;">
-        <div class="shadow p-3 bg-body rounded">
-            @foreach ($item1->subcategory as $subcat)
-            {{ $subcat->name }}
-            <br>
-            @endforeach
-        </div>
-    </div>
-    </div>
-    @endforeach --}}
     <li>
         <a href="/getcategroywiseproduct/Electronics" style="text-decoration: none;color:black;">
             <div style="width: 52px;margin-left: 10px;">
@@ -73,6 +55,75 @@
         </a>
     </li>
 </ul>
+
+{{-- Top Rating Product Show --}}
+
+<h2 style="margin-left: 58px;">Top Rated</h2>
+<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner" style="padding-left:60px;width: 91%;height: 400px;margin: 11px 54px 7px 54px;background: white;margin-right: 55px;border-radius: 20px;">
+
+        @if (isset($TopRateProduct))
+        @foreach ($TopRateProduct as $key=>$item)
+
+        <div class="carousel-item {{ $key==0 ? 'active':'' }}">
+            <div class="row">
+                <div class="col-6" style="margin-top: 51px;">
+                    <div class="offer" style="top: 1%;left: -5%;margin-left: 0px;height: 47px;width: 51px;">
+                    </div>
+                    <div class="offer-text" style="margin-left: -54px;margin-top: -56px;">
+                        <span>
+                            {{ $item->discount }}% <br>
+                            OFF
+                        </span>
+                    </div>
+                    <div style="display: flex; align-items: center;justify-content: center;">
+                        <a href="/ProductDetails/{{$item->id}}">
+                            <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/'.$item->image) }}" alt="Image">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-6" style="margin-top: 51px;padding-right: 77px;">
+                    <a href="/ProductDetails/{{$item->id}}" style="text-decoration: none;color:black;">
+                        <h5>{{ $item->name }}</h5><br>
+                    </a>
+
+                    <div style="display: flex;">
+                        <div style="background: #388e3c;width: 49px;height: 22px;color:white;border-radius: 4px;display: flex;justify-content: center;align-items: center;">
+                            {{round( $item->average_rating,1) }}
+                            <i class="fa-solid fa-star" style="font-size: 11px;margin-top: 4px;margin-left: 2px;"></i>
+                        </div>
+                    </div><br>
+
+                    @php
+                    $dataString = $item->description;
+                    $items = explode('-', $dataString);
+                    @endphp
+
+                    <h5>
+                        @foreach($items as $its)
+                        {{ $its }} <br>
+                        @endforeach
+                    </h5>
+
+                    <p class="card-text" style="width: 100%;text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
+                        <h3>₹{{round($item->price- ($item->price * $item->discount /100))}}</h3>
+                        <div style="color: green"><del>₹{{$item->price}}</del> {{$item->discount}}% off</div>
+                    </p>
+                </div>
+            </div>
+        </div>
+        @endforeach
+        @endif
+    </div>
+    <button class="carousel-control-prev" style="width: 148px;" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" style="background-color: wheat;" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+        <span class="carousel-control-next-icon" style="background-color: wheat;margin-right:-27px;" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
 @foreach ($data as $item1)
 
 <h1 class="ps-3">{{$item1->category_name}}</h1>

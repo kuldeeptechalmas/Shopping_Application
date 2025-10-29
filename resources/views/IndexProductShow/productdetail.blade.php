@@ -24,22 +24,22 @@
                 @endforeach
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                <span style="height: 50px; width: 50px; background-color: #000; border-radius: 50px; font-size: 30px;" class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span style="height: 50px; width: 50px; background-color: #c36fb3; border-radius: 50px; font-size: 30px;" class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
             <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                <span style="height: 50px; width: 50px; background-color: #000; border-radius: 50px; font-size: 30px;" class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span style="height: 50px; width: 50px; background-color: #c36fb3; border-radius: 50px; font-size: 30px;" class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
         </div>
         @if ($productdatails->stock > 0)
         <div class="row" style="margin-top: 21px;margin-left: 70px;">
-            <a href="/addtocart_desbord/{{$productdatails->id}}" class="col" style="border-radius: 8px;text-align: center;background: #ae708c;margin-right: 11px;text-decoration: none;  color:white;">
+            <a href="/addtocart_desbord/{{$productdatails->id}}" class="col" style="border-radius: 8px;text-align: center;background: #c36fb3;margin-right: 11px;text-decoration: none;  color:white;">
                 <p class="m-3">
                     ADD TO CART
                 </p>
             </a>
-            <a href="/BuyNow/{{$productdatails->id}}" class="col" style="border-radius: 8px;text-align: center;background: #ae708c;text-decoration: none;  color:white;">
+            <a href="/BuyNow/{{$productdatails->id}}" class="col" style="border-radius: 8px;text-align: center;background: #c36fb3;text-decoration: none;  color:white;">
                 <p class="m-3">
                     BUY NOW
                 </p>
@@ -49,12 +49,12 @@
         @else
 
         <div class="row" style="margin-top: 21px; margin-left: 70px;">
-            <a class="col" style="cursor: not-allowed;border-radius: 8px;text-align: center;background: #ae708c;margin-right: 11px;text-decoration: none;  color:white;">
+            <a class="col" style="cursor: not-allowed;border-radius: 8px;text-align: center;background: #c36fb3;margin-right: 11px;text-decoration: none;  color:white;">
                 <p class="m-3">
                     ADD TO CART
                 </p>
             </a>
-            <a class="col" style="cursor: not-allowed;border-radius: 8px;text-align: center;background: #ae708c;text-decoration: none;  color:white;">
+            <a class="col" style="cursor: not-allowed;border-radius: 8px;text-align: center;background: #c36fb3;text-decoration: none;  color:white;">
                 <p class="m-3">
                     BUY NOW
                 </p>
@@ -186,7 +186,6 @@
                     </div>
                     @endif
                 </div>
-
             </div>
         </div>
     </div>

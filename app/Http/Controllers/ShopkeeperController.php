@@ -72,9 +72,10 @@ class ShopkeeperController extends Controller
                 "phone:countrycode",
                 Rule::unique('CustomerAndShopkeeper', 'phone')->ignore($request->id),
             ],
-            "email" => [
-                "required",
-                "email:rfc,dns",
+            'email' => [
+                'required',
+                'email:rfc,dns',
+                'regex:/^[a-zA-Z0-9._%+-]+@(gmail|yahoo)\.com$/',
                 Rule::unique('CustomerAndShopkeeper', 'email')->ignore($request->id),
             ],
             "address" => "required",
@@ -83,6 +84,23 @@ class ShopkeeperController extends Controller
             "country" => "required",
             "pincode" => "required|numeric|digits:6",
             "gender" => "required",
+        ], [
+            "name.required" => 'Enter Name is Required.',
+            "name.not_regex" => 'Enter Name Format is valid.',
+
+            "phone.required" => 'Enter Phone is Required.',
+            "phone.phone" => 'Enter Currect Phone number to ' . $request->countrycode . '.',
+
+            "address.required" => 'Enter Address is Required.',
+            "city.required" => 'Enter City is Required.',
+            "state.required" => 'Enter State is Required.',
+            "country.required" => 'Enter Country is Required.',
+            "pincode.required" => 'Enter Pincode is Required.',
+            "gender.required" => 'Enter Gender is Required.',
+
+            'email.required' => 'Enter Email is Required.',
+            'email.email' => 'Enter Email Must Be A Valid Email Address.',
+            'email.regex' => 'The email must be from an allowed domain (gmail.com, yahoo.com).',
         ]);
 
         $customer = CustomerAndShopkeeper::where("email", Session::get("shopkeeperemail"))->first();

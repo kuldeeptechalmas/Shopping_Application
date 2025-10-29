@@ -27,15 +27,15 @@
     </div> --}}
     <div class="d-flex flex-row align-items-center mb-4">
         <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
-            <select class="form-select" name="countrycode" id="countrycode" disabled style="width: 26%;position: absolute;top: 32px;">
+            <select class="form-select" name="countrycode" disabled style="width: 26%;position: absolute;top: 32px;">
                 @foreach ($countrycode as $item)
                 <option value="{{ $item['countryCode'] }}" {{$customer_profile->countrycode == $item['countryCode'] ? 'selected' : ''}}>{{ $item['Iso'] }}({{ $item['name'] }})</option>
                 @endforeach
             </select>
             <label class="form-label" for="form3Example1c">Phone No</label>
-            <input type="text" id="phone" readonly value="{{$customer_profile->phone}}" style="padding-left: 100px;" name="phone" class="form-control" />
+            <input type="text" readonly value="{{$customer_profile->phone}}" style="padding-left: 100px;" name="phone" class="form-control" />
 
-            <div style="color:red;" id="ephone" hidden></div>
+            <div style="color:red;" hidden></div>
 
         </div>
     </div>

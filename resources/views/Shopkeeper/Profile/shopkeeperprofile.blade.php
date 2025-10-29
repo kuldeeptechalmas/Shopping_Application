@@ -29,15 +29,15 @@
     </div> --}}
     <div class="d-flex flex-row align-items-center mb-4">
         <div data-mdb-input-init class="form-outline flex-fill mb-0" style="position: relative;">
-            <select class="form-select" name="countrycode" id="countrycode" style="width: 33%;position: absolute;top: 32px;">
+            <select class="form-select" disabled name="countrycode" style="width: 33%;position: absolute;top: 32px;">
                 @foreach ($countrycode as $item)
                 <option value="{{ $item['countryCode'] }}" {{$shopkeeper_profile->countrycode == $item['countryCode'] ? 'selected' : ''}}>{{ $item['Iso'] }}({{ $item['name'] }})</option>
                 @endforeach
             </select>
             <label class="form-label" for="form3Example1c">Phone No</label>
-            <input type="text" id="phone" value="{{$shopkeeper_profile->phone}}" style="padding-left: 95px;" name="phone" class="form-control" />
+            <input type="text" disabled value="{{$shopkeeper_profile->phone}}" style="padding-left: 95px;" name="phone" class="form-control" />
 
-            <div style="color:red;" id="ephone" hidden></div>
+            <div style="color:red;" hidden></div>
 
         </div>
     </div>
@@ -151,5 +151,56 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="{{ asset('js/shopkeeper/shopkeeperprofile.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        var oldcountry = "{{$shopkeeper_profile->country}}";
+        if (oldcountry) {
+            var oldstate = "{{$shopkeeper_profile->state}}";
+            const selectElement = $('#upstate');
+            selectElement.empty();
+            $.ajax({
+                type: "get"
+                , url: "/getstate"
+                , data: {
+                    data: $('#upcountry').val()
+                , }
+                , success: function(res) {
+                    $("#upstate").append(`<option value="">Select</option>`);
+                    $.each(res["statelist"], function(indexInArray, valueOfElement) {
+                        var selectstate = (oldstate == valueOfElement["id"]) ? "selected" : "";
+                        $("#upstate").append(`<option value="${valueOfElement["id"]}" ${selectstate} >${valueOfElement["name"]}</option>`);
+                    });
+                }
+                , error: function(e) {
+                    console.log(e);
+                }
+            , })
+            if (oldstate) {
+                var oldcity = "{{$shopkeeper_profile->city}}";
+                const selectElement = $('#upcity');
+                selectElement.empty();
+                $.ajax({
+                    type: "get"
+                    , url: "/getcity"
+                    , data: {
+                        data: oldstate
+                    , }
+                    , success: function(res) {
+                        $("#upcity").append(`<option value="">Select</option>`);
+                        $.each(res["citylist"], function(indexInArray, valueOfElement) {
+                            var selectcity = (oldcity == valueOfElement["id"]) ? "selected" : "";
+                            $("#upcity").append(`<option value="${valueOfElement["id"]}" ${selectcity}>${valueOfElement["name"]}</option>`);
+
+                        });
+                    }
+                    , error: function(e) {
+                        console.log(e);
+                    }
+                , })
+            }
+        }
+    })
+
+</script>
 
 @endsection

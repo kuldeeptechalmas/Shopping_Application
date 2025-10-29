@@ -5,11 +5,9 @@ function getprofileuser(email) {
             , type: "get"
             , success: function(res) {
                 $("#userprofilebody").html(res);
-
             }
             , error: function(e) {
                 console.log(e);
-
             }
         })
 

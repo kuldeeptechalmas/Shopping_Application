@@ -81,7 +81,7 @@ class AdminController extends Controller
                 "pincode" => "required|numeric|digits:6",
                 "gender" => "required",
             ], [
-                "phone.phone" => "Enter Currect phone number. ",
+                "phone.phone" => "Enter Currect phone number to " . $request->countrycode . ".",
                 "name.required" => "Enter Name is Required.",
                 "email.required" => "Enter email is Required.",
                 "phone.required" => "Enter phone is Required.",
@@ -409,6 +409,7 @@ class AdminController extends Controller
         $Product_data = Product::whereHas('rates', function ($query) {
             $query->where('rate', '>', 0);
         })->paginate(15);
+
         if ($Product_data) {
             return view("Admin.Page.ProductRating.showproductrating", ['data' => $Product_data]);
         } else {

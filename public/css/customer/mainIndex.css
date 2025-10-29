@@ -156,11 +156,11 @@
     }
 
     .coupon-header {
-        background-color: #ff6347;
+        background-color: #4f6eb5;
         /* Tomato color */
         color: white;
         padding: 15px 0;
-        border-bottom: 2px solid #e0523a;
+        border-bottom: 2px solid #4f6eb5;
     }
 
     .coupon-header h2 {
@@ -204,7 +204,7 @@
     .code-value {
         font-size: 1.2em;
         font-weight: bold;
-        color: #ff6347;
+        color: #4f6eb5;
     }
 
     .expiration {
@@ -256,4 +256,21 @@
         text-align: center;
         top: 18%;
         font-size: 15px;
+    }
+
+    .sub_catagory{
+        display: flex;
+        color: black;
+        text-decoration: none;
+        padding: 15px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .sub_catagory:hover{
+        background-color: #2874f0;
+        color: #fff;
+    }
+
+    .sub_catagory:last-child{
+        border-bottom: 0px;
     }

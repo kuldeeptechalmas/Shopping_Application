@@ -7,7 +7,13 @@
 {{ toastify() -> warning('Admin Update Product Details !') }}
 @endif
 @endif
+
+@session('edit')
+{{ toastify() -> success('Update Product Ditail !') }}
+@endsession
+
 @toastifyJs
+
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <h1 style="text-align: center">Product Edit</h1>
@@ -130,22 +136,6 @@
 @push("shopkeeper_script")
 
 <script>
-    // function statuscheck_viewproduct() {
-    //     if (document.getElementById('pstock').value == "0") {
-    //         document.getElementById('pstatus').value = "out of stock";
-    //     } else {
-    //         if (document.getElementById('pstock').value > 0) {
-    //             document.getElementById('pstatus').value = "in stock";
-    //         } else {
-    //             if (document.getElementById('vpstock').value < 0) {
-    //                 document.getElementById('vpstatus').value = "out of stock";
-    //             } else {
-    //                 document.getElementById('vpstatus').value = "";
-    //             }
-    //         }
-    //     }
-    // }
-
     // status change
     // done
     function statuscheck_viewproduct() {

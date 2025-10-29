@@ -152,4 +152,62 @@
         }
     }
 
+    $("#country").on("change", function() {
+        var oldstate = "{{$data->state}}";
+
+        const selectElement = $('#state');
+        selectElement.empty();
+
+        $.ajax({
+            type: "get"
+            , url: "/getstate"
+            , data: {
+                data: document.getElementById("country").value
+            , }
+            , success: function(res) {
+                console.log(res);
+
+                $("#state").append(`<option value="">Select</option>`);
+                $.each(res["statelist"], function(indexInArray, valueOfElement) {
+                    var selectstate = (oldstate == valueOfElement["id"]) ? "selected" : "";
+                    $("#state").append(`<option value="${valueOfElement["id"]}" >${valueOfElement["name"]}</option>`);
+                });
+            }
+            , error: function(e) {
+                console.log(e);
+
+            }
+        , })
+
+
+    });
+
+
+    $("#state").on("change", function() {
+
+        var oldcity = "{{$data->city}}";
+        const selectElement = $('#city');
+        selectElement.empty();
+        $.ajax({
+            type: "get"
+            , url: "/getcity"
+            , data: {
+                data: document.getElementById("state").value
+            , }
+            , success: function(res) {
+
+                $("#city").append(`<option value="">Select</option>`);
+                $.each(res["citylist"], function(indexInArray, valueOfElement) {
+                    var selectcity = (oldcity == valueOfElement["id"]) ? "selected" : "";
+                    $("#city").append(`<option value="${valueOfElement["id"]}" ${selectcity}>${valueOfElement["name"]}</option>`);
+
+                });
+            }
+            , error: function(e) {
+                console.log(e);
+
+            }
+        , })
+    });
+
 </script>

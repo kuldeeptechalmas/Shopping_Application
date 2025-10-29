@@ -52,8 +52,9 @@ Route::middleware("customerCheck")->group(function () {
     Route::match(['get', 'post'], '/wishlist', [MainController::class, 'wishlist'])->name("wishlist");
 
     Route::get('/removewishlist/{productid}', [MainController::class, 'remove_wishlist_item']);
+    Route::match(['get', 'post'], '/CheckOut', [MainController::class, 'Checkout_Product'])->name("checkout_product");
+    Route::match(['get', 'post'], '/BuyNowSummary', [MainController::class, 'Buy_Now_Summary'])->name('buy.Now.Summary');
     Route::match(["post", "get"], '/order', [MainController::class, 'order_product'])->name('order.Product');
-
     Route::match(['get', 'post'], '/OrderRating', [RatingController::class, 'Order_Rating_Store'])->name('Order_Rating_Store');
 });
 Route::get('/logout', [CustomerController::class, 'logout'])->name('customerlogout');
@@ -69,10 +70,11 @@ Route::match(['get', 'post'], '/Login', [MainController::class, 'Login'])->name(
 Route::match(["post", "get"], '/ForgetPassword', [MainController::class, "Forget_Password_Email_Find"])->name("forget.Password");
 Route::match(["get", "post"], '/ForgetPasswords', [MainController::class, "Forget_Password"])->name("forget.Password.Data");
 Route::match(['get', 'post'], "/MyShop", [MainController::class, "Index"])->name("MainIndex");
+
 Route::get('/ProductDetails/{productid}', [MainController::class, 'Product_id_Detail']);
+
 Route::get('/SummryOfProduct', [MainController::class, 'Summry_Product_Detail'])->name("summryproductdetail");
 Route::get('/deletecartsummry/{cartid}', [MainController::class, 'delete_cart_summry']);
-Route::match(['get', 'post'], '/CheckOut', [MainController::class, 'Checkout_Product'])->name("checkout_product");
 Route::post('/search', [MainController::class, 'search_product_name']);
 Route::match(['get', 'post'], '/getcategroywiseproduct/{categoryname}', [MainController::class, 'get_category_wise_product']);
 Route::match(['get', 'post'], '/subgetcategroywiseproduct/{categoryname}', [MainController::class, 'get_sub_category_wise_product']);
@@ -81,7 +83,7 @@ Route::get('/removediscount/{productid}', [MainController::class, 'remove_discou
 Route::get('/favourite/{productid}', [MainController::class, 'add_to_favourite']);
 Route::get('/CartCount', [MainController::class, 'Cart_Count']);
 Route::match(['get', 'post'], '/BuyNow/{productId}', [MainController::class, 'Buy_Now_Functionality_Customer']);
-Route::match(['get', 'post'], '/BuyNowSummary', [MainController::class, 'Buy_Now_Summary'])->name('buy.Now.Summary');
+
 
 
 // Email Check (Ajax)
@@ -107,9 +109,14 @@ Route::middleware("shopkeeperCheck")->group(function () {
     Route::match(['get', 'post'], '/ShopkeeperOrderList', [ShopkeeperController::class, "Shopkeeper_Order_List"])->name("shopkeeper.Order.List");
 
     Route::get('/RemoveImage/{ImageId}/{ProductId}', [ShopkeeperController::class, "Remove_Image_Product"]);
+
+    Route::match(['get', 'post'], '/shopkeeperprofile', [ShopkeeperController::class, "shopkeeper_profile"])->name("Shopkeeper.Profile");
+    Route::post('/shopkeeperupdate', [ShopkeeperController::class, "updateuser"]);
+
+    Route::match(['get', 'post'], '/productaddshop/{category_name}', [Product_Controller::class, 'product_add_show'])->name("product.Add.Show");
+    Route::match(['get', 'post'], '/productview/{productid}', [Product_Controller::class, 'product_view']);
 });
-Route::post('/shopkeeperupdate', [ShopkeeperController::class, "updateuser"]);
-Route::match(['get', 'post'], '/shopkeeperprofile', [ShopkeeperController::class, "shopkeeper_profile"])->name("Shopkeeper.Profile");
+
 
 
 // Error
@@ -122,9 +129,9 @@ Route::get('/error', function () {
 Route::post('/productadd', [Product_Controller::class, 'product_add_and_update'])->name("product_add_update");
 Route::post('/editproduct', [Product_Controller::class, 'product_edit']);
 Route::post('/deleteproduct', [Product_Controller::class, 'Product_Delete']);
-Route::match(['get', 'post'], '/productaddshop/{category_name}', [Product_Controller::class, 'product_add_show'])->name("product.Add.Show");
+
 Route::get('/ProductDetailsShow/{productid}', [Product_Controller::class, 'product_details']);
-Route::match(['get', 'post'], '/productview/{productid}', [Product_Controller::class, 'product_view']);
+
 Route::match(['get', 'post'], '/AddProductPage/{catagoryid}', [Product_Controller::class, 'Add_Product_Page']);
 
 
