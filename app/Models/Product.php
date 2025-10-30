@@ -48,4 +48,9 @@ class Product extends Model
     {
         return $this->hasMany(Rating::class);
     }
+
+    public function ratesByone()
+    {
+        return $this->belongsTo(Rating::class, 'product_id');
+    }
 }

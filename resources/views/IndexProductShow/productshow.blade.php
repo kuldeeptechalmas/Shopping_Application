@@ -77,9 +77,11 @@
                         </span>
                     </div>
                     <div style="display: flex; align-items: center;justify-content: center;">
-                        <a href="/ProductDetails/{{$item->id}}">
-                            <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/'.$item->image) }}" alt="Image">
-                        </a>
+                        <div style="height: 314px;">
+                            <a href="/ProductDetails/{{$item->id}}">
+                                <img style="width: 100%; height: 100%; object-fit: contain;" src="{{ asset('storage/UploadeFile/'.$item->image) }}" alt="Image">
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div class="col-6" style="margin-top: 51px;padding-right: 77px;">
@@ -152,7 +154,7 @@
         <div style="margin: 13px;">
             <a href="/ProductDetails/{{$item->id}}">
                 <div style="height: 300px; width: 100%;">
-                    <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->image) }}" alt="Image">
+                    <img style="width: 100%; height: 100%; object-fit: contain;" src="{{ asset('storage/UploadeFile/' . $item->image) }}" alt="Image">
                 </div>
             </a>
         </div>
@@ -176,6 +178,7 @@
             }
 
             @endphp
+
             <div style="display: flex;">
                 <div style="background: #388e3c;width: 49px;height: 22px;color:white;border-radius: 4px;display: flex;justify-content: center;align-items: center;">
                     {{round( $rateConversion,1) }}

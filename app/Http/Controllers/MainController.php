@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use PhpParser\Node\Expr\Cast\Void_;
+use App\Services\SmsService;
 
 class MainController extends Controller
 {
@@ -361,6 +362,7 @@ class MainController extends Controller
             ->take(5)
             ->get();
 
+
         if (Session::get("customeremail") != null) {
 
             // cart count
@@ -402,8 +404,11 @@ class MainController extends Controller
             // Favourite Product
             $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
             $wishlist = FavouriceProduct::where("user_id", $user_data->id)->get();
+            $rating_data = Rating::where('user_id', $user_data->id)
+                ->where("product_id", $productid)
+                ->get();
 
-            return view("IndexProductShow.productdetail", ["productdatails" => $data, "coupen" => $couper, "coupenuserdata" => $coupondata, "wishlist" => $wishlist, "wishlistProduct" => $wishlistProduct, 'SuggestionProduct' => $SuggestionProduct]);
+            return view("IndexProductShow.productdetail", ['ratingdata' => $rating_data, "productdatails" => $data, "coupen" => $couper, "coupenuserdata" => $coupondata, "wishlist" => $wishlist, "wishlistProduct" => $wishlistProduct, 'SuggestionProduct' => $SuggestionProduct]);
         }
         return view("IndexProductShow.productdetail", ["productdatails" => $data, "coupen" => $couper, 'SuggestionProduct' => $SuggestionProduct]);
     }
@@ -448,12 +453,13 @@ class MainController extends Controller
         $contrylist = json_decode($contentcountry, true);
 
         // cart record are get
+
         $data1 = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
         if (isset($request->productId)) {
             $addtocart = AddToCart::where("user_id", $data1->id)
                 ->where("product_id", $request->productId)->get();
 
-            Session::put("productId", $addtocart[0]->product_id);
+            // Session::put("productId", $addtocart[0]->product_id);
         } else {
             $addtocart = AddToCart::where("user_id", $data1->id)->get();
         }
@@ -518,6 +524,7 @@ class MainController extends Controller
                 return view("IndexProductShow.Order.ordershow", ["order" => $data, "couponuserdata" => $coupon]);
             }
         }
+
         if ($request->isMethod("post")) {
 
             $validator = Validator::make(
@@ -550,11 +557,17 @@ class MainController extends Controller
             if ($validator->fails()) {
                 return redirect()->back()->withInput()->withErrors($validator);
             }
-            // dd($request->all());
+
             if (Session::get("productId")) {
-                $addtocart = AddToCart::where("user_id", $data1->id)->where("product_id", Session::get("productId"))->get();
+                $addtocart_buy_data = AddToCart::where("user_id", $data1->id)->where("product_id", Session::get("productId"))->get();
+                Session::forget("productId");
             } else {
-                $addtocart = AddToCart::where("user_id", $data1->id)->get();
+                $addtocart_add_to_cart = AddToCart::where("user_id", $data1->id)->get();
+            }
+            if (isset($addtocart_buy_data)) {
+                $addtocart = $addtocart_buy_data;
+            } else {
+                $addtocart = $addtocart_add_to_cart;
             }
             foreach ($addtocart as $item) {
                 $order = new CustomerOrder();
@@ -585,9 +598,8 @@ class MainController extends Controller
         }
         $data = CustomerOrder::where("email", Session::get("customeremail"))->get();
         $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
-        $rating_data = Rating::where('user_id', $user_data->id)->get();
 
-        return view("IndexProductShow.Order.ordershow", ['ratingdata' => $rating_data, "order" => $data, "couponuserdata" => $coupon]);
+        return view("IndexProductShow.Order.ordershow", ["order" => $data, "couponuserdata" => $coupon]);
     }
 
     // Delete order
@@ -832,7 +844,6 @@ class MainController extends Controller
                 $product->stock = $product->stock - 1;
                 $product->save();
             }
-
 
             return redirect()->route('buy.Now.Summary', ['productId' => $productId]);
         } else {

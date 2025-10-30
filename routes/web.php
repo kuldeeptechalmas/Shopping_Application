@@ -136,7 +136,6 @@ Route::match(['get', 'post'], '/AddProductPage/{catagoryid}', [Product_Controlle
 
 
 
-
 // Add To Cart Functionality
 Route::get('/addtocart_desbord/{product_id}', [AddToCartController::class, 'index']);
 Route::match(['get', 'post'], '/addtocartget', [AddToCartController::class, 'addtocart_get_all'])->name("addtocart_get_all");

@@ -2,25 +2,8 @@
 
 @section('content')
 
-<div style="display: flex;justify-content: center;">
+<div style="display: flex;justify-content: center;padding-top:29px;">
     <h3>Buy Now</h3>
-</div>
-<div class="row">
-
-    <div class="col-2" style="color: white;background: blue;border-radius: 12px;margin-left: 31px;width: 35px;height: 35px;display: flex;justify-content: center;align-items: center;">
-        <h5 style="margin-top: 7px;">
-            1
-        </h5>
-    </div>
-    <div class="col-10" style="align-items: center;display:flex">Login Done<i class="fa-solid fa-check" style="margin-left: 10px;color: blue;"></i></div>
-</div>
-<div class="row" style="    margin-top: 20px;">
-    <div class="col-2" style="color: white;background: blue;border-radius: 12px;margin-left: 31px;width: 35px;height: 35px;display: flex;justify-content: center;align-items: center;">
-        <h5 style="margin-top: 7px;">
-            2
-        </h5>
-    </div>
-    <div class="col-10" style="align-items: center;display:flex">Order Summary </div>
 </div>
 <div class="row">
     <div class="col-2">

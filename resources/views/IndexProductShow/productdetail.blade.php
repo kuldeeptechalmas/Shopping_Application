@@ -1,9 +1,10 @@
 @extends('index')
 
 @section('content')
+
 @toastifyCss
 
-<div class="row">
+<div class="row" style="padding-top: 20px;">
     <div class="col">
         <div id="carouselExample" class="carousel slide">
             <div class="carousel-inner">
@@ -139,6 +140,42 @@
             </div>
             <div style="margin-left:13px">{{ $productdatails->rates->count() }} Ratings</div>
         </div>
+        <div>
+            <p style="margin-top: 10px;">
+                Rating
+            </p>
+            @if (Session::get("customeremail"))
+            @if (isset($ratingdata[0]->rate))
+
+            @foreach (range(1,$ratingdata[0]->rate) as $it)
+            <i class="fa-solid fa-star star active" data-value="{{ $it }}" data-pid="{{ $productdatails->id }}" data-toggle="tooltip" data-placement="top" title="Very Bad"></i>
+            @endforeach
+
+            @if ($ratingdata[0]->rate!=5)
+            @foreach (range($ratingdata[0]->rate+1,5) as $it)
+            <i class="fa-solid fa-star star" data-value="{{ $it }}" data-pid="{{ $productdatails->id }}" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Very Bad"></i>
+            @endforeach
+            @endif
+
+            @else
+            <i class="fa-solid fa-star star" data-value="1" data-pid="{{ $productdatails->id }}" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Very Bad"></i>
+            <i class="fa-solid fa-star star" data-value="2" data-pid="{{ $productdatails->id }}" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Bad"></i>
+            <i class="fa-solid fa-star star" data-value="3" data-pid="{{ $productdatails->id }}" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Good"></i>
+            <i class="fa-solid fa-star star" data-value="4" data-pid="{{ $productdatails->id }}" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Very Good"></i>
+            <i class="fa-solid fa-star star" data-value="5" data-pid="{{ $productdatails->id }}" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Excellent"></i>
+            @endif
+            @else
+            <a href="/Login" style="text-decoration: none;">
+
+                <i class="fa-solid fa-star" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Very Bad"></i>
+                <i class="fa-solid fa-star" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Bad"></i>
+                <i class="fa-solid fa-star" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Good"></i>
+                <i class="fa-solid fa-star" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Very Good"></i>
+                <i class="fa-solid fa-star" style="color:#e0e0e0" data-toggle="tooltip" data-placement="top" title="Excellent"></i>
+            </a>
+            @endif
+
+        </div>
         @php
         $dataString = $productdatails->description;
         $items = explode('-', $dataString);
@@ -263,4 +300,7 @@
 </div>
 @endif
 @toastifyJs
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ asset('js/customer/ordershow.js') }}"></script>
 @endsection

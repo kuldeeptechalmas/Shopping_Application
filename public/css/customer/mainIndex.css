@@ -90,7 +90,6 @@
 
     .offer {
         position: absolute;
-        margin-left: -12px;
         background-color: #fff;
         border-radius: 10px 0px;
         padding: 15px;
@@ -103,11 +102,9 @@
         font-size: 11px;
         color: white;
         position: absolute;
-        /* right: 10px; */
-        /* background-color: #fff; */
         border-radius: 10px;
         padding: 15px;
-        margin-left: -14px;
+        margin-left: -4px;
         margin-top: -11px;
     }
 
@@ -273,4 +270,12 @@
 
     .sub_catagory:last-child{
         border-bottom: 0px;
+    }
+
+    .form-control{
+        padding-left: 40px;
+    }
+
+    .profile-item:hover{
+        background-color: #f1f3f6;
     }

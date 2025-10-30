@@ -29,7 +29,7 @@
             <a href="/ProductDetails/{{$item->id}}">
                 <div style="height: 300px; width: 100%;">
 
-                    <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->image) }}" alt="Image">
+                    <img style="width: 100%; height: 100%; object-fit: contain;" src="{{ asset('storage/UploadeFile/' . $item->image) }}" alt="Image">
                 </div>
             </a>
         </div>

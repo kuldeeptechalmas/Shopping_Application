@@ -14,7 +14,7 @@
                 <div class="row">
                     <div class="col-4" style="height: 100px; width: 111px;">
                         <a href="/ProductDetails/{{$item->product->id}}">
-                            <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->product->image) }}" alt="Image">
+                            <img style="width: 100%; height: 100%; object-fit: contain;" src="{{ asset('storage/UploadeFile/' . $item->product->image) }}" alt="Image">
                         </a>
                     </div>
                     <div class="col-6">
@@ -43,8 +43,9 @@
                             </p>
                             @if (isset($item->rates))
                             @foreach (range(1,$item->rates->rate) as $it)
-                            <i class="fa-solid fa-star star" data-value="{{ $it }}" data-pid="{{ $item->product->id }}" style="color:#ffe11b" data-toggle="tooltip" data-placement="top" title="Very Bad"></i>
+                            <i class="fa-solid fa-star star active" data-value="{{ $it }}" data-pid="{{ $item->product->id }}" data-toggle="tooltip" data-placement="top" title="Very Bad"></i>
                             @endforeach
+
 
                             @if ($item->rates->rate!=5)
                             @foreach (range($item->rates->rate+1,5) as $it)

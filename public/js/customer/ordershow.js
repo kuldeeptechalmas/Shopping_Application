@@ -26,7 +26,7 @@ $(document).ready(function() {
                     , rate: rating
                 }
                 , success: function(res) {
-                    console.log(res);
+                
                 }
                 , error: function(e) {
                     console.log(e);

@@ -22,15 +22,15 @@
         <div class="container">
             <div style="width: 100px; height: auto;">
                 <a href="/MyShop">
-                    <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/logo.png') }}" alt="Image">
+                    <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/logo1.png') }}" alt="Image">
                 </a>
             </div>
             <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
                 <form class="d-flex dropdown_search_main" method="post" role="search" style="width: 387px;">
                     @csrf
                     <input type="text" name="action" value="Search" hidden id="">
-                    <input class="form-control dropdown_search me-2" type="search" id="search_id" placeholder="Search" aria-label="Search" name="search_data" value="{{isset($inputdata) ? $inputdata : ''}}" />
-                    <button type="submit" class="btn btn-primary" name="submit">Search</button>
+                    <input class="form-control search_navbar dropdown_search me-2" type="search" id="search_id" placeholder="Search" aria-label="Search" name="search_data" value="{{isset($inputdata) ? $inputdata : ''}}" />
+                    <button type="submit" style="background: transparent; border: none; position: absolute; top: 50%; left: 20px; transform: translate(-50%, -50%);" name="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                     <div class="dropdown_search_content" style="text-decoration: none; color: #000;" id="searchdataname" hidden>
 
                     </div>
@@ -62,29 +62,46 @@
                             {{session('customerid')}}
                             <div class="show-on-hover position-absolute" style="right: 0px; width: 222px; background: white;border-radius: 15px;">
 
-                                <div class="shadow p-3 bg-body rounded" style="text-align: left;">
-                                    <div style="padding: 10px; border-bottom: 1px solid #555;">
-                                        <a style="text-decoration: none;  color: #000;" href="/CustomerProfile">
-                                            Profile
-                                        </a>
-                                    </div>
-                                    <div style="padding: 10px; border-bottom: 1px solid #555;">
-                                        <a style="text-decoration: none;  color: #000;" href="/customerchangepassword/{{session('customeremail')}}">
-                                            Change Password
-                                        </a>
-                                    </div>
-                                    <div style="padding: 10px; border-bottom: 1px solid #555;">
-                                        <a style="text-decoration: none;  color: #000;" href="/order">
-                                            My Order
-                                        </a>
-                                    </div>
-                                    <div style="padding: 10px; border-bottom: 1px solid #555;">
-                                        <a style="text-decoration: none;  color: #000;" href="/wishlist">
-                                            Wishlist
-                                        </a>
-                                    </div>
+                                <div class="shadow p-3 bg-body" style="text-align: left;border-radius: 1.25rem;">
 
-                                    <a style="text-decoration: none;  color: #000;" href="/logout">
+                                    <a class="profile-item" style="text-decoration: none;  color: #000;display: flex;align-items: center;" href="/CustomerProfile">
+                                        <div style="width: 17px;height: 17px;">
+                                            <img style="width: 100%; height: 100%; object-fit: cover;margin-top: -8px;" src="{{ asset('storage/UploadeFile/user.png') }}" alt="Image">
+                                        </div>
+                                        <div style="padding: 10px;">
+                                            Profile
+                                        </div>
+                                    </a>
+                                    <a class="profile-item" style="text-decoration: none;  color: #000;display: flex;align-items: center;" href="/customerchangepassword/{{session('customeremail')}}">
+                                        <div style="width: 29px;height: 17px;margin-left: -6px;margin-right: -7px;">
+                                            <img style="width: 100%; height: 100%; object-fit: cover;margin-top: -8px;" src="{{ asset('storage/UploadeFile/changepassword-icon.png') }}" alt="Image">
+                                        </div>
+                                        <div style="padding: 10px;">
+                                            Change Password
+                                        </div>
+                                    </a>
+                                    <a class="profile-item" style="text-decoration: none;  color: #000;display: flex;align-items: center;" href="/order">
+                                        <div style="width: 20px;height: 16px;margin-left: -1px;margin-right: -1px;">
+                                            <img style="width: 100%; height: 100%; object-fit: cover;margin-top: -8px;" src="{{ asset('storage/UploadeFile/logistics.png') }}" alt="Image">
+                                        </div>
+                                        <div class="profile-item" style="padding: 10px;">
+                                            My Order
+                                        </div>
+                                    </a>
+                                    <a class="profile-item" style="text-decoration: none;  color: #000;display: flex;align-items: center;" href="/wishlist">
+                                        <div style="width: 17px;height: 17px;margin-left: 1px;margin-right: -1px;">
+                                            <img style="width: 100%; height: 100%; object-fit: cover;margin-top: -8px;" src="{{ asset('storage/UploadeFile/heart.png') }}" alt="Image">
+                                        </div>
+                                        <div style="padding: 10px;">
+                                            Wishlist
+                                        </div>
+                                    </a>
+
+                                    <a class="profile-item" style="text-decoration: none;  color: #000;display: flex;align-items: center;" href="/logout">
+
+                                        <div style="width: 19px;height: 17px;margin-left: 1px;margin-right: -1px;">
+                                            <img style="width: 100%; height: 100%; object-fit: cover;margin-top: -8px;" src="{{ asset('storage/UploadeFile/power-off.png') }}" alt="Image">
+                                        </div>
                                         <div style="padding: 10px;color:red;">
                                             Logout
                                         </div>
