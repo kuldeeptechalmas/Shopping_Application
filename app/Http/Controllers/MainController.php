@@ -331,6 +331,7 @@ class MainController extends Controller
     public function Index(Request $request)
     {
         if ($request->isMethod("post")) {
+
             // Search Product 
             if ($request->action == "Search") {
 
@@ -338,17 +339,57 @@ class MainController extends Controller
                 if ($data_of_input == '') {
                     return redirect()->route("MainIndex");
                 }
+                if (ucfirst($data_of_input) == "Men") {
+                    $find_Categories = Cat
+                }
+
+                $product = Product::where("name", "like", "%{$data_of_input}%")
+                    ->orWhere("brand", "like", "%{$data_of_input}%")
+                    ->get();
+
+                $productData = $product->first();
+                $categoryname = $productData->category->category_name ?? '';
+                $subcategoryname = $productData->subcategory->name ?? '';
+
+                if ($subcategoryname != "") {
+
+                    $Brand_Name_Get = SubCatagory::where('name', $subcategoryname)->first();
+                    $Brand_name_Product = Product::select('brand', DB::raw("count(*) as total"))
+                        ->groupBy('brand')
+                        ->where("sub_category_id", $Brand_Name_Get->id)
+                        ->get();
+                } else {
+                    $Brand_name_Product = "";
+                }
 
                 // Favourite Product
                 if (Session::get("customeremail")) {
                     $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
                     $wishlist = FavouriceProduct::where("user_id", $user_data->id)->get();
-                    $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
-                    return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input, "wishlist" => $wishlist]);
-                } else {
-                    $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
-                    return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input]);
+
+                    return view(
+                        "IndexProductShow.Search.searchproduct",
+                        [
+                            "data" => $product,
+                            "brandproduct" => $Brand_name_Product,
+                            "categoryname" => $categoryname,
+                            "subcategoryname" => $subcategoryname,
+                            "inputdata" => $data_of_input,
+                            "wishlist" => $wishlist
+                        ]
+                    );
                 }
+                // $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
+                return view(
+                    "IndexProductShow.Search.searchproduct",
+                    [
+                        "data" => $product,
+                        "brandproduct" => $Brand_name_Product,
+                        "categoryname" => $categoryname,
+                        "subcategoryname" => $subcategoryname,
+                        "inputdata" => $data_of_input
+                    ]
+                );
             }
         }
         $data = CategoryProduct::with('productsdata')->get();
@@ -630,15 +671,41 @@ class MainController extends Controller
                     return redirect()->back();
                 }
 
+                $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
+                $productData = Product::where("name", "like", "%" . $data_of_input . "%")->first();
+
+                if (isset($productData)) {
+                    $categoryname = $productData->category->category_name;
+                    $subcategoryname = $productData->subcategory->name;
+                } else {
+                    $categoryname = "";
+                    $subcategoryname = "";
+                }
                 // Favourite Product
                 if (Session::get("customeremail")) {
                     $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
                     $wishlist = FavouriceProduct::where("user_id", $user_data->id)->get();
-                    $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
-                    return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input, "wishlist" => $wishlist]);
+                    return view(
+                        "IndexProductShow.Search.searchproduct",
+                        [
+                            "data" => $product,
+                            "inputdata" => $data_of_input,
+                            "categoryname" => $categoryname,
+                            "subcategoryname" => $subcategoryname,
+                            "wishlist" => $wishlist
+                        ]
+                    );
                 } else
                     $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
-                return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input]); {
+                return view(
+                    "IndexProductShow.Search.searchproduct",
+                    [
+                        "data" => $product,
+                        "categoryname" => $categoryname,
+                        "subcategoryname" => $subcategoryname,
+                        "inputdata" => $data_of_input
+                    ]
+                ); {
                 }
             }
         }
@@ -648,11 +715,14 @@ class MainController extends Controller
             $all_category_data = CategoryProduct::all();
             $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
             $favourite_product_list = FavouriceProduct::where("user_id", $user_data->id)->get();
-            // dd($favourite_product_list);
+
+            // dd($category_data);
+
             return view(
                 "IndexProductShow.categorywiseproductshow",
                 [
                     "data" => $category_data,
+                    "categoryname" => $categoryname,
                     "alldata" => $all_category_data,
                     "wishlist" => $favourite_product_list
                 ]
@@ -666,6 +736,7 @@ class MainController extends Controller
                 "IndexProductShow.categorywiseproductshow",
                 [
                     "data" => $category_data,
+                    "categoryname" => $categoryname,
                     "alldata" => $all_category_data,
                 ]
             );
@@ -684,30 +755,55 @@ class MainController extends Controller
                     return redirect()->back();
                 }
 
+                $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
+                $productData = Product::where("name", "like", "%" . $data_of_input . "%")->first();
+
                 // Favourite Product
                 if (Session::get("customeremail")) {
                     $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
                     $wishlist = FavouriceProduct::where("user_id", $user_data->id)->get();
-                    $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
-                    return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input, "wishlist" => $wishlist]);
+
+                    return view(
+                        "IndexProductShow.Search.searchproduct",
+                        [
+                            "data" => $product,
+                            "categoryname" => $productData->category->category_name,
+                            "subcategoryname" => $productData->subcategory->name,
+                            "inputdata" => $data_of_input,
+                            "wishlist" => $wishlist
+                        ]
+                    );
                 } else
                     $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
-                return view("IndexProductShow.Search.searchproduct", ["data" => $product, "inputdata" => $data_of_input]); {
+                return view(
+                    "IndexProductShow.Search.searchproduct",
+                    [
+                        "data" => $product,
+                        "categoryname" => $productData->category->category_name,
+                        "subcategoryname" => $productData->subcategory->name,
+                        "inputdata" => $data_of_input
+                    ]
+                ); {
                 }
             }
         }
 
+
+        $category_data = SubCatagory::where("name", $subcategoryname)->get();
+        $find_Category_name = CategoryProduct::find($category_data[0]->catagroy_id);
+
+
         if (Session::get("customeremail")) {
-            $category_data = SubCatagory::where("name", $subcategoryname)->get();
             $all_category_data = CategoryProduct::all();
             $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
             $favourite_product_list = FavouriceProduct::where("user_id", $user_data->id)->get();
-            // dd($favourite_product_list);
+
             return view(
                 "IndexProductShow.categorywiseproductshow",
                 [
                     "data" => $category_data,
                     "alldata" => $all_category_data,
+                    "categoryname" => $find_Category_name->category_name,
                     "wishlist" => $favourite_product_list
                 ]
             );
@@ -719,6 +815,7 @@ class MainController extends Controller
                 "IndexProductShow.categorywiseproductshow",
                 [
                     "data" => $category_data,
+                    "categoryname" => $find_Category_name->category_name,
                     "alldata" => $all_category_data,
                 ]
             );

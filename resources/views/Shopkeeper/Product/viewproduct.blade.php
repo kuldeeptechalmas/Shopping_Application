@@ -30,6 +30,15 @@
     @enderror
 
     <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Brand Name </label>
+        <input type="text" class="form-control" value="{{ old('brand', $product_data->brand ?? '') }}" name="brand" aria-describedby="emailHelp">
+    </div>
+    @error('brand')
+
+    <div style="color:red;">{{$message}}</div>
+    @enderror
+
+    <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Description</label>
         <textarea type="text" style="resize: none;" rows="5" class="form-control" id="vpdescription" name="description">{{ old('description', $product_data->description ?? '') }}</textarea>
     </div>

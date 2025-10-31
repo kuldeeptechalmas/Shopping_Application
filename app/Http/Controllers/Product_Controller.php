@@ -37,8 +37,11 @@ class Product_Controller extends Controller
                     "status" => "required",
                     "file.*" => "image|mimes:png,jpg|max:2048",
                     "catagory" => "required",
+                    "brand" => "required|alpha",
                 ],
                 [
+                    "brand.required" => "Enter Brand Name Are Required.",
+                    "brand.alpha" => "Enter Only String Brand Name is Required.",
                     "name.required" => "Enter Name Are Required.",
                     "name.not_regex" => "Enter Not only Numeric Required.",
                     "description.required" => "Enter Description Are Required.",
@@ -94,6 +97,7 @@ class Product_Controller extends Controller
                 "status" => $request->status,
                 "sub_category_id" => $request->catagory,
                 "discount" => $discountVar,
+                "brand" => $request->brand,
             ]);
 
             if ($admin) {

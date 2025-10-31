@@ -130,7 +130,7 @@
                         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 card" style="width: 18rem; margin: 10px;">
                             <a href="/ProductDetailsShow/{{$item->id}}">
                                 <div style="height: 300px; width: 100%;">
-                                    <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/' . $item->image) }}" alt="Image">
+                                    <img style="width: 100%; height: 100%; object-fit: contain;" src="{{ asset('storage/UploadeFile/' . $item->image) }}" alt="Image">
                                 </div>
                             </a>
                             <div class="card-body">
@@ -218,7 +218,7 @@
         <div style="display: flex;justify-content: center;margin-top: 116px;">
             <div>
                 <div style="width: 100px; height: auto; display: flex;justify-content: center;">
-                    <img style="width: 100%; height: 100%; object-fit: cover;" src="{{ asset('storage/UploadeFile/not_found_result_image.WEBP') }}" alt="Image">
+                    <img style="width: 100%; height: 100%; object-fit: contain;" src="{{ asset('storage/UploadeFile/not_found_result_image.WEBP') }}" alt="Image">
                 </div>
             </div>
         </div>

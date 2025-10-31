@@ -130,7 +130,17 @@
 
 <h1 class="ps-3">{{$item1->category_name}}</h1>
 <div class="row w-100" style="padding-left: 27px;">
+
+    @php
+    $ct=1;
+    @endphp
     @foreach ($item1->productsdata as $item)
+    @php
+    if($ct>8)
+    {
+    break;
+    }
+    @endphp
     <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-12 card" style="border-radius: 10px;width: 18rem; margin: 10px;">
         <div class="likes">
             @if (isset($wishlist))
@@ -192,6 +202,9 @@
             </p>
         </div>
     </div>
+    @php
+    $ct++;
+    @endphp
     @endforeach
     <br>
 </div>

@@ -23,6 +23,7 @@ class Product extends Model
         "sub_category_id",
         "admin_id",
         "discount",
+        "brand",
     ];
 
     public function category()
@@ -42,7 +43,7 @@ class Product extends Model
 
     public function subcategory()
     {
-        return $this->belongsTo(SubCatagory::class);
+        return $this->belongsTo(SubCatagory::class, 'sub_category_id');
     }
     public function rates()
     {
