@@ -38,7 +38,7 @@
                 @endforeach
             </select>
             <label class="form-label" for="form3Example1c">Phone No</label>
-            <input type="text" id="phone" value="{{$usereditdata->phone}}" style="padding-left:95px;" name="phone" class="form-control" />
+            <input type="text" id="phone" value="{{old("phone",$usereditdata->phone)}}" style="padding-left:95px;" name="phone" class="form-control" />
 
             @error('phone')
 

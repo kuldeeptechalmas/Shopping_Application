@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\AddToCart;
 use App\Models\CategoryProduct;
 use App\Models\CustomerAndShopkeeper;
+use App\Models\FavouriceProduct;
 use App\Models\Product;
+use App\Models\SubCatagory;
 use App\Models\UserCoupunData;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class AddToCartController extends Controller
@@ -53,6 +56,7 @@ class AddToCartController extends Controller
             $cart->user_id = $data->id;
             $cart->product_id = $product_id;
             $cart->quantity = 1;
+            $cart->message = "";
             $cart->save();
 
             $product = Product::find($product_id);
@@ -84,13 +88,61 @@ class AddToCartController extends Controller
 
             // Search Add To Cart Data
             if ($request->isMethod("post")) {
-                $search_data = $request->search_data;
-                if ($request->action == "Search") {
-                    $searchAddtocart = AddToCart::whereHas("product", function ($query) use ($search_data) {
-                        $query->where("name", "like", "%" . $search_data . "%");
-                    })->where("user_id", $data1->id)->get();
 
-                    return view("IndexProductShow.AddToCart.addtocartindex", ["datacart" => $searchAddtocart, "usercoupondata" => $couponuserdata]);
+                if ($request->action == "Search") {
+
+                    $data_of_input = $request->search_data;
+                    if ($data_of_input == '') {
+                        return redirect()->route("MainIndex");
+                    }
+
+                    $product = Product::where("name", "like", "%{$data_of_input}%")
+                        ->orWhere("brand", "like", "%{$data_of_input}%")
+                        ->get();
+                    $productData = $product->first();
+
+                    $categoryname = $productData->category->category_name ?? '';
+                    $subcategoryname = $productData->subcategory->name ?? '';
+
+                    if ($subcategoryname != "") {
+
+                        $Brand_Name_Get = SubCatagory::where('name', $subcategoryname)->first();
+                        $Brand_name_Product = Product::select('brand', DB::raw("count(*) as total"))
+                            ->groupBy('brand')
+                            ->where("sub_category_id", $Brand_Name_Get->id)
+                            ->get();
+                    } else {
+                        $Brand_name_Product = "";
+                    }
+
+                    // Favourite Product
+                    if (Session::get("customeremail")) {
+                        $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
+                        $wishlist = FavouriceProduct::where("user_id", $user_data->id)->get();
+
+                        return view(
+                            "IndexProductShow.Search.searchproduct",
+                            [
+                                "data" => $product,
+                                "brandproduct" => $Brand_name_Product,
+                                "categoryname" => $categoryname,
+                                "subcategoryname" => $subcategoryname,
+                                "inputdata" => $data_of_input,
+                                "wishlist" => $wishlist
+                            ]
+                        );
+                    }
+                    // $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
+                    return view(
+                        "IndexProductShow.Search.searchproduct",
+                        [
+                            "data" => $product,
+                            "brandproduct" => $Brand_name_Product,
+                            "categoryname" => $categoryname,
+                            "subcategoryname" => $subcategoryname,
+                            "inputdata" => $data_of_input
+                        ]
+                    );
                 }
             }
 

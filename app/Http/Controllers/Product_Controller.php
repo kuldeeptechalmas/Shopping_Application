@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AddToCart;
 use App\Models\Admin;
 use App\Models\CategoryProduct;
 use App\Models\CustomerAndShopkeeper;
@@ -34,6 +35,7 @@ class Product_Controller extends Controller
                     "description" => "required",
                     "price" => "required|numeric|gt:0",
                     "stock" => "required|numeric|gt:-1",
+                    "mainstock" => "required|numeric|gt:-1",
                     "status" => "required",
                     "file.*" => "image|mimes:png,jpg|max:2048",
                     "catagory" => "required",
@@ -51,6 +53,9 @@ class Product_Controller extends Controller
                     "stock.required" => "Enter Stock Are Required.",
                     "stock.numeric" => "Enter Stock Is Numeric Required.",
                     "stock.gt" => "Enter Stock Is Greater Then -1 Required.",
+                    "mainstock.required" => "Enter MainStock Are Required.",
+                    "mainstock.numeric" => "Enter MainStock Is Numeric Required.",
+                    "mainstock.gt" => "Enter MainStock Is Greater Then -1 Required.",
                     "status.required" => "Enter Status Are Required.",
                     'file.*.image' => 'The uploaded file must be an image.',
                     'file.*.mimes' => 'Only JPEG, PNG, JPG images are allowed.',
@@ -99,6 +104,26 @@ class Product_Controller extends Controller
                 "discount" => $discountVar,
                 "brand" => $request->brand,
             ]);
+            $loop_var = 0;
+            $product->main_stock = $request->mainstock;
+            $product->save();
+
+            $addToCart = AddToCart::where("product_id", $product->id)
+                ->orderBy("created_at", "ASC")->get();
+
+            foreach ($addToCart as $value) {
+                if ($request->mainstock == 0) {
+                    $value->message = "notallow";
+                } else {
+                    if ($loop_var == $request->mainstock) {
+                        $value->message = "notallow";
+                    } else {
+                        $value->message = "allow";
+                    }
+                }
+                $value->save();
+                $loop_var++;
+            }
 
             if ($admin) {
                 $product->admin_id = $admin->id;

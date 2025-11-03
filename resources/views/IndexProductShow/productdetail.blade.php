@@ -135,10 +135,12 @@
         @endphp
         <div style="display: flex;">
             <div style="background: #388e3c;width: 49px;height: 22px;color:white;border-radius: 4px;display: flex;justify-content: center;align-items: center;">
-                {{round( $rateConversion,1) }}
+                <div id="ratingsStar">
+                    {{round( $rateConversion,1) }}
+                </div>
                 <i class="fa-solid fa-star" style="font-size: 11px;margin-top: 4px;margin-left: 2px;"></i>
             </div>
-            <div style="margin-left:13px">{{ $productdatails->rates->count() }} Ratings</div>
+            <div style="margin-left:13px" id="ratingsUser">{{ $productdatails->rates->count() }} Ratings</div>
         </div>
         <div>
             <p style="margin-top: 10px;">

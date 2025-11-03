@@ -50,7 +50,28 @@
             <br>
             @endforeach --}}
             @endif
+            @if (isset($brandproduct))
+            <div>
+                <h6>BRAND</h6>
+                @foreach ($brandproduct as $item)
+                @if ($item->brand==ucfirst(strtolower($inputdata)))
+
+                <div style="color: white;background: cornflowerblue;width: 100%;height: 40px;align-items: center;display: flex;justify-content: start;">
+                    <input type="checkbox" name="" checked id="" style="margin-right: 10px;">
+                    {{ $item->brand }}
+                </div>
+                @else
+
+                <div style="width: 100%;height: 40px;align-items: center;display: flex;justify-content: start;">
+                    <input type="checkbox" name="" id="" style="margin-right: 10px;">
+                    {{ $item->brand }}
+                </div>
+                @endif
+                @endforeach
+            </div>
+            @endif
         </div>
+
     </div>
     <div class="col-9">
 

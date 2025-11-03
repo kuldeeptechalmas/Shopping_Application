@@ -26,7 +26,9 @@ $(document).ready(function() {
                     , rate: rating
                 }
                 , success: function(res) {
-                
+                    document.getElementById("ratingsStar").textContent=res['rateConversion'];
+                    document.getElementById("ratingsUser").textContent=res['totalPeopel']+" Ratings";
+                    
                 }
                 , error: function(e) {
                     console.log(e);

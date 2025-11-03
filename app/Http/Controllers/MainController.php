@@ -339,15 +339,21 @@ class MainController extends Controller
                 if ($data_of_input == '') {
                     return redirect()->route("MainIndex");
                 }
-                if (ucfirst($data_of_input) == "Men") {
-                    $find_Categories = Cat
+
+                $subcategories_Search_Product_Data = SubCatagory::where("name", ucfirst($data_of_input))->first();
+                if ($subcategories_Search_Product_Data == null) {
+                    $sub_id = 0;
+                } else {
+                    $sub_id = $subcategories_Search_Product_Data->id;
                 }
 
                 $product = Product::where("name", "like", "%{$data_of_input}%")
                     ->orWhere("brand", "like", "%{$data_of_input}%")
+                    ->orWhere("sub_category_id", $sub_id)
                     ->get();
 
                 $productData = $product->first();
+
                 $categoryname = $productData->category->category_name ?? '';
                 $subcategoryname = $productData->subcategory->name ?? '';
 
@@ -379,7 +385,7 @@ class MainController extends Controller
                         ]
                     );
                 }
-                // $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
+
                 return view(
                     "IndexProductShow.Search.searchproduct",
                     [
@@ -558,6 +564,7 @@ class MainController extends Controller
             if ($order) {
                 $product = Product::find($order->product_id);
                 $product->stock = $product->stock + $order->quantity;
+                $product->main_stock = $product->main_stock + $order->quantity;
                 $product->save();
                 $order->delete();
                 $data = CustomerOrder::where("email", Session::get("customeremail"))->get();
@@ -605,6 +612,7 @@ class MainController extends Controller
             } else {
                 $addtocart_add_to_cart = AddToCart::where("user_id", $data1->id)->get();
             }
+
             if (isset($addtocart_buy_data)) {
                 $addtocart = $addtocart_buy_data;
             } else {
@@ -628,6 +636,10 @@ class MainController extends Controller
                 $order->delivery_date = now()->addDays(7);
                 $order->rate_id = 0;
                 $order->save();
+
+                $product_Stock_Change = Product::find($item->product_id);
+                $product_Stock_Change->main_stock = $product_Stock_Change->main_stock - $item->quantity;
+                $product_Stock_Change->save();
             }
             foreach ($addtocart as $item) {
                 $deleteFind = AddToCart::find($item->id);
@@ -671,8 +683,19 @@ class MainController extends Controller
                     return redirect()->back();
                 }
 
-                $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
-                $productData = Product::where("name", "like", "%" . $data_of_input . "%")->first();
+                $subcategories_Search_Product_Data = SubCatagory::where("name", ucfirst($data_of_input))->first();
+                if ($subcategories_Search_Product_Data == null) {
+                    $sub_id = 0;
+                } else {
+                    $sub_id = $subcategories_Search_Product_Data->id;
+                }
+
+                $product = Product::where("name", "like", "%{$data_of_input}%")
+                    ->orWhere("brand", "like", "%{$data_of_input}%")
+                    ->orWhere("sub_category_id", $sub_id)
+                    ->get();
+
+                $productData = $product->first();
 
                 if (isset($productData)) {
                     $categoryname = $productData->category->category_name;
@@ -681,6 +704,21 @@ class MainController extends Controller
                     $categoryname = "";
                     $subcategoryname = "";
                 }
+
+                // find Brand Name
+                if ($subcategoryname != "") {
+
+                    $Brand_Name_Get = SubCatagory::where('name', $subcategoryname)->first();
+                    $Brand_name_Product = Product::select('brand', DB::raw("count(*) as total"))
+                        ->groupBy('brand')
+                        ->where("sub_category_id", $Brand_Name_Get->id)
+                        ->get();
+                } else {
+                    $Brand_name_Product = "";
+                }
+
+                // dd($Brand_name_Product);
+
                 // Favourite Product
                 if (Session::get("customeremail")) {
                     $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
@@ -690,22 +728,24 @@ class MainController extends Controller
                         [
                             "data" => $product,
                             "inputdata" => $data_of_input,
+                            "brandproduct" => $Brand_name_Product,
                             "categoryname" => $categoryname,
                             "subcategoryname" => $subcategoryname,
                             "wishlist" => $wishlist
                         ]
                     );
                 } else
-                    $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
-                return view(
-                    "IndexProductShow.Search.searchproduct",
-                    [
-                        "data" => $product,
-                        "categoryname" => $categoryname,
-                        "subcategoryname" => $subcategoryname,
-                        "inputdata" => $data_of_input
-                    ]
-                ); {
+
+                    return view(
+                        "IndexProductShow.Search.searchproduct",
+                        [
+                            "data" => $product,
+                            "categoryname" => $categoryname,
+                            "brandproduct" => $Brand_name_Product,
+                            "subcategoryname" => $subcategoryname,
+                            "inputdata" => $data_of_input
+                        ]
+                    ); {
                 }
             }
         }
@@ -755,8 +795,31 @@ class MainController extends Controller
                     return redirect()->back();
                 }
 
-                $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
-                $productData = Product::where("name", "like", "%" . $data_of_input . "%")->first();
+                $subcategories_Search_Product_Data = SubCatagory::where("name", ucfirst($data_of_input))->first();
+                if ($subcategories_Search_Product_Data == null) {
+                    $sub_id = 0;
+                } else {
+                    $sub_id = $subcategories_Search_Product_Data->id;
+                }
+
+                $product = Product::where("name", "like", "%{$data_of_input}%")
+                    ->orWhere("brand", "like", "%{$data_of_input}%")
+                    ->orWhere("sub_category_id", $sub_id)
+                    ->get();
+
+                $productData = $product->first();
+
+                // find Brand Name
+                if ($subcategoryname != "") {
+
+                    $Brand_Name_Get = SubCatagory::where('name', $subcategoryname)->first();
+                    $Brand_name_Product = Product::select('brand', DB::raw("count(*) as total"))
+                        ->groupBy('brand')
+                        ->where("sub_category_id", $Brand_Name_Get->id)
+                        ->get();
+                } else {
+                    $Brand_name_Product = "";
+                }
 
                 // Favourite Product
                 if (Session::get("customeremail")) {
@@ -770,20 +833,22 @@ class MainController extends Controller
                             "categoryname" => $productData->category->category_name,
                             "subcategoryname" => $productData->subcategory->name,
                             "inputdata" => $data_of_input,
+                            "brandproduct" => $Brand_name_Product,
                             "wishlist" => $wishlist
                         ]
                     );
                 } else
-                    $product = Product::where("name", "like", "%" . $data_of_input . "%")->get();
-                return view(
-                    "IndexProductShow.Search.searchproduct",
-                    [
-                        "data" => $product,
-                        "categoryname" => $productData->category->category_name,
-                        "subcategoryname" => $productData->subcategory->name,
-                        "inputdata" => $data_of_input
-                    ]
-                ); {
+
+                    return view(
+                        "IndexProductShow.Search.searchproduct",
+                        [
+                            "data" => $product,
+                            "brandproduct" => $Brand_name_Product,
+                            "categoryname" => $productData->category->category_name,
+                            "subcategoryname" => $productData->subcategory->name,
+                            "inputdata" => $data_of_input
+                        ]
+                    ); {
                 }
             }
         }
@@ -930,7 +995,8 @@ class MainController extends Controller
             if ($findCartData) {
                 return redirect()->route('buy.Now.Summary', ['productId' => $productId]);
             } else {
-
+                Session::put("productId", $productId);
+                // dd(Session::get("productId"));
                 $cart = new AddToCart();
                 $cart->user_id = $UserExist->id;
                 $cart->product_id = $productId;
@@ -941,7 +1007,6 @@ class MainController extends Controller
                 $product->stock = $product->stock - 1;
                 $product->save();
             }
-
             return redirect()->route('buy.Now.Summary', ['productId' => $productId]);
         } else {
             $cart = array();

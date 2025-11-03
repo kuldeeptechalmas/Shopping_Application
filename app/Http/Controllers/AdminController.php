@@ -176,9 +176,11 @@ class AdminController extends Controller
                     "status" => "required",
                     "file.*" => "image|mimes:png,jpg|max:2048",
                     "catagory" => "required",
-                    "discount" => "required",
+                    "brand" => "required|alpha",
                 ],
                 [
+                    "brand.required" => "Enter Brand Name Are Required.",
+                    "brand.alpha" => "Enter Only String Brand Name is Required.",
                     "name.required" => "Enter Name Are Required.",
                     "name.not_regex" => "Not Enter Number only Required.",
                     "description.required" => "Enter Description Are Required.",
@@ -193,9 +195,10 @@ class AdminController extends Controller
                     'file.*.mimes' => 'Only JPEG, PNG, JPG images are allowed.',
                     'file.*.max' => 'Each image must not exceed 2MB in size.',
                     "catagory.required" => "Enter Catagory Are Required.",
-                    "discount.required" => "Enter Discount Are Required.",
                 ]
             );
+
+            // dd($validator->errors());
 
             if ($validator->fails()) {
                 return redirect()->back()->withErrors($validator)->withInput();
@@ -211,7 +214,7 @@ class AdminController extends Controller
                 "stock" => $request->stock,
                 "status" => $request->status,
                 "sub_category_id" => $request->catagory,
-                "discount" => $request->discount,
+                "brand" => $request->brand,
             ]);
 
             if ($admin) {

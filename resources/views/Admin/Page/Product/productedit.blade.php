@@ -24,6 +24,14 @@
     @enderror
 
     <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Brand Name </label>
+        <input type="text" class="form-control" value="{{ old('brand', $productData->brand ?? '') }}" name="brand" aria-describedby="emailHelp">
+    </div>
+    @error('brand')
+    <div class="alert alert-danger">{{$message}}</div>
+    @enderror
+
+    <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Description</label>
         <textarea type="text" style="resize: none;" rows="5" class="form-control" id="vpdescription" name="description">{{old("description",$productData->description)}}</textarea>
     </div>
@@ -111,15 +119,6 @@
         </select>
     </div>
     @error('status')
-
-    <div class="alert alert-danger">{{$message}}</div>
-    @enderror
-
-    <div class="mb-3">
-        <label for="exampleInputPassword1" class="form-label">Discount</label>
-        <input type="text" class="form-control" id="vpstock" value="{{old("discount",$productData->discount)}}" name="discount">
-    </div>
-    @error('discount')
 
     <div class="alert alert-danger">{{$message}}</div>
     @enderror

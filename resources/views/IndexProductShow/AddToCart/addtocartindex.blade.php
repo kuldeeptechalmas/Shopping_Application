@@ -8,6 +8,7 @@
     @if (Session::get("customeremail"))
     <div class="row">
         <div class="col-8">
+
             @if ($datacart->isNotEmpty())
             @foreach ($datacart as $item)
             @php
@@ -80,12 +81,13 @@
                                     <input type="text" hidden value="{{$item->product->id}}">
                                 </div>
                             </div>
+                            @if ($item->message=="notallow")
+
+                            <div class="col-8" style="color: red;margin-top: 17px;">Current this Product Out of Stock</div>
+                            @endif
+
                             <div class="row mt-2">
-                                @if ($item->product->stock==0)
-                                <div class="col-8" style="color: red;margin-top: 17px;">Now Limited Stock <br>Other Stock Come Then Notify</div>
-                                @else
                                 <div class="col-8"></div>
-                                @endif
 
                                 <div class="col-4 d-flex justify-content-end">
                                     <div style="border-radius: 8px;text-align: center;margin-right: 11px;text-decoration: none;font-weight: bold;">
