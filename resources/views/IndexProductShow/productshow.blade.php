@@ -1,7 +1,17 @@
 @extends('index')
 
 @section('content')
+<style>
+    .likes {
+        position: absolute;
+        right: 0px;
+        background-color: #e9ecef;
+        border-radius: 32px;
+        padding: 15px;
+        margin-top: 0px;
+    }
 
+</style>
 @toastifyCss
 
 @if ($data->isNotEmpty())
@@ -126,22 +136,49 @@
         <span class="visually-hidden">Next</span>
     </button>
 </div>
+{{--
+<div class="slider-container" style="width: 95%;margin-left: 30px;">
+    <div class="slider-title">Best of Electronics</div>
+    <div class="arrow left" onclick="scrollSlider(-1074)">&#10094;</div>
+    <div class="arrow right" onclick="scrollSlider(1074)">&#10095;</div>
+
+    <div class="product-slider" id="slider">
+        @foreach ($data as $item1)
+        @foreach ($item1->productsdata as $item)
+
+        <div class="product">
+            <img src="{{ asset('storage/UploadeFile/' . $item->image) }}" alt="">
+<h4>{{ $item->name }}</h4>
+<p>₹{{ $item->price }}</p>
+</div>
+@endforeach
+@endforeach
+
+</div>
+</div> --}}
+
 @foreach ($data as $item1)
 
-<h1 class="ps-3">{{$item1->category_name}}</h1>
-<div class="row w-100" style="padding-left: 27px;">
+
+<div class="row" style="margin: 20px 20px 0px 20px;background: white;">
+    <div style="display: flex;align-items: center;justify-content: space-between;">
+        <div class="slider-title" style="margin: 20px 0px 20px 0px;">Best of {{$item1->category_name}}</div>
+        <a href="/getcategroywiseproduct/{{$item1->category_name}}">
+            <div style="margin-right: 17px;background-color: blue;width: 25px;color: white;border-radius: 15px;text-align: center;">&#10095;</div>
+        </a>
+    </div>
 
     @php
     $ct=1;
     @endphp
     @foreach ($item1->productsdata as $item)
     @php
-    if($ct>8)
+    if($ct>10)
     {
     break;
     }
     @endphp
-    <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-12 card" style="border-radius: 10px;width: 18rem; margin: 10px;">
+    <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-12 card" style="border: none;width: 14rem; margin: 10px;">
         <div class="likes">
             @if (isset($wishlist))
             @if ($wishlist->contains('product_id', $item->id))
@@ -161,9 +198,9 @@
                 OFF
             </span>
         </div>
-        <div style="margin: 13px;">
+        <div style="margin: 13px;height: 213px; width: 100%;">
             <a href="/ProductDetails/{{$item->id}}">
-                <div style="height: 300px; width: 100%;">
+                <div class="imagehover" style="height: 196px;width: 96%;margin-top: 20px;margin-left: -7px;">
                     <img style="width: 100%; height: 100%; object-fit: contain;" src="{{ asset('storage/UploadeFile/' . $item->image) }}" alt="Image">
                 </div>
             </a>
@@ -196,10 +233,12 @@
                 </div>
                 <div style="margin-left:13px">{{ $item->rates->count() }} Ratings</div>
             </div>
-            <p class="card-text" style="width: 100%;text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
-                <h3>₹{{round($item->price- ($item->price * $item->discount /100))}}</h3>
-                <div style="color: green"><del>₹{{$item->price}}</del> {{$item->discount}}% off</div>
-            </p>
+            <a href="/ProductDetails/{{$item->id}}" style="color:black;text-decoration:none;">
+                <p class="card-text" style="width: 100%;text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
+                    <h4>₹{{round($item->price- ($item->price * $item->discount /100))}}</h4>
+                    <div style="color: green"><del>₹{{$item->price}}</del> {{$item->discount}}% off</div>
+                </p>
+            </a>
         </div>
     </div>
     @php

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\welcomeEmail;
+use App\Models\AddToCart;
 use App\Models\Admin;
 use App\Models\CategoryProduct;
 use App\Models\Customer;
@@ -36,7 +37,11 @@ class AdminController extends Controller
 
             // Search Data
             if ($request->action == "searchDataAdmin") {
-                $customerandshopkeeper = CustomerAndShopkeeper::where("name", "like", "%" . $request->searchData . "%")->paginate(15);
+                $customerandshopkeeper = CustomerAndShopkeeper::where("name", "like", "%" . $request->searchData . "%")
+                    ->orWhere("email", "like", "%" . $request->searchData . "%")
+                    ->orWhere("rols", "like", "%" . $request->searchData . "%")
+                    ->paginate(15);
+
                 return view("Admin.Page.User.usershow", ["data" => $customerandshopkeeper, "searchData" => $request->searchData]);
             }
 
@@ -173,6 +178,7 @@ class AdminController extends Controller
                     "description" => "required",
                     "price" => "required|numeric|gt:0",
                     "stock" => "required|numeric|gt:-1",
+                    "mainstock" => "required|numeric|gt:-1",
                     "status" => "required",
                     "file.*" => "image|mimes:png,jpg|max:2048",
                     "catagory" => "required",
@@ -190,6 +196,9 @@ class AdminController extends Controller
                     "stock.required" => "Enter Stock Are Required.",
                     "stock.numeric" => "Enter Stock Is Numeric Required.",
                     "stock.gt" => "Enter Stock Is Greater Then -1 Required.",
+                    "mainstock.required" => "Enter MainStock Are Required.",
+                    "mainstock.numeric" => "Enter MainStock Is Numeric Required.",
+                    "mainstock.gt" => "Enter MainStock Is Greater Then -1 Required.",
                     "status.required" => "Enter Status Are Required.",
                     'file.*.image' => 'The uploaded file must be an image.',
                     'file.*.mimes' => 'Only JPEG, PNG, JPG images are allowed.',
@@ -216,6 +225,26 @@ class AdminController extends Controller
                 "sub_category_id" => $request->catagory,
                 "brand" => $request->brand,
             ]);
+            $loop_var = 0;
+            $product->main_stock = $request->mainstock;
+            $product->save();
+
+            $addToCart = AddToCart::where("product_id", $product->id)
+                ->orderBy("created_at", "ASC")->get();
+
+            foreach ($addToCart as $value) {
+                if ($request->mainstock == 0) {
+                    $value->message = "notallow";
+                } else {
+                    if ($loop_var == $request->mainstock) {
+                        $value->message = "notallow";
+                    } else {
+                        $value->message = "allow";
+                    }
+                }
+                $value->save();
+                $loop_var++;
+            }
 
             if ($admin) {
                 $product->admin_id = $admin->id;
@@ -274,7 +303,9 @@ class AdminController extends Controller
                 $search = $request->searchData;
                 $orderData = CustomerOrder::whereHas('product', function ($query) use ($search) {
                     $query->where('name', "like", "%" . $search . "%");
-                })->orWhere("name", "like", "%" . $request->searchData . "%")->paginate(15);
+                })->orWhere("name", "like", "%" . $request->searchData . "%")
+                    ->orWhere("email", "like", "%" . $request->searchData . "%")
+                    ->paginate(15);
 
                 return view("Admin.Page.Order.ordershow", ["order" => $orderData, "searchData" => $request->searchData]);
             }
@@ -297,8 +328,24 @@ class AdminController extends Controller
                 return redirect()->back();
             }
         }
+
+        $Top_Five_Order_User =
+            CustomerAndShopkeeper::select(
+                "customerandshopkeeper.name",
+                "customerandshopkeeper.email",
+                DB::raw("SUM(customerorder.quantity) AS TotalOrder")
+            )
+            ->join("customerorder", "customerorder.customer_id", "=", "customerandshopkeeper.id")
+            ->groupBy('customerandshopkeeper.id', 'customerandshopkeeper.name')
+            ->whereNull("customerorder.deleted_at")
+            ->orderByDesc("TotalOrder")
+            ->take(5)
+            ->get();
+
+        // dd($Top_Five_Order_User);
+
         $order = CustomerOrder::paginate(15);
-        return view("Admin.Page.Order.ordershow", ["order" => $order]);
+        return view("Admin.Page.Order.ordershow", ["order" => $order, "Top_Five_Order_User" => $Top_Five_Order_User]);
     }
 
     // Admin Product Detail show

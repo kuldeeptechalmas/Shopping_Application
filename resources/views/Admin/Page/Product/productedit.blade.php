@@ -68,11 +68,18 @@
     @enderror
 
     <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Main Stock</label>
+        <input type="text" class="form-control" value="{{old("mainstock",$productData->main_stock)}}" name="mainstock">
+    </div>
+    @error('mainstock')
+    <div class="alert alert-danger">{{$message}}</div>
+    @enderror
+
+    <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Stock</label>
         <input type="text" class="form-control" id="vpstock" value="{{old("stock",$productData->stock)}}" oninput="statuscheck_viewproduct()" name="stock">
     </div>
     @error('stock')
-
     <div class="alert alert-danger">{{$message}}</div>
     @enderror
 

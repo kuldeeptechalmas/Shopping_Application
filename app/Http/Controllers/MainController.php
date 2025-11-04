@@ -1000,6 +1000,7 @@ class MainController extends Controller
                 $cart = new AddToCart();
                 $cart->user_id = $UserExist->id;
                 $cart->product_id = $productId;
+                $cart->message = "";
                 $cart->quantity = 1;
                 $cart->save();
 

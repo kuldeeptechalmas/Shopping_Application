@@ -79,7 +79,7 @@
         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12" style="background-color: #ffffff;width: 100%;border-bottom: 1px solid #f0f0f0;">
             <div class="row">
                 <div class="col-4">
-                    <div class="likes" style="margin-top: -6px !important;position: absolute;right: 51% !important;background-color: transparent;border-radius: 32px;">
+                    <div class="likes" style="position: absolute;right: 51% !important;background-color: transparent;margin-top: 10px;">
 
                         @if (isset($wishlist))
                         @if ($wishlist->contains('product_id', $item->id))

@@ -12,7 +12,12 @@ function favourite_product_data_save(rs, productid) {
                     window.location.href = res.url;
                 } else {
                     $(rs)[0].style.color = "red";
-                    toastify().success('Add to Wishlist !!!', {
+                    console.log("boom");
+                    
+                    toastify().success('✅ Added to your Wishlist', {
+                        color: "green",
+                        backgroundColor: "black",
+                        gravity: "bottom",
                         position: 'center'
                     , });
                 }
@@ -31,7 +36,10 @@ function favourite_product_data_save(rs, productid) {
                     window.location.href = res.url;
                 } else {
                     $(rs)[0].style.color = "#c2c2c2";
-                    toastify().error('Remove in Wishlist', {
+                    toastify().error('✅ Removed from your Wishlist', {
+                        color: "red",
+                        backgroundColor: "black",
+                        gravity: "bottom",
                         position: 'center'
                     , });
                 }

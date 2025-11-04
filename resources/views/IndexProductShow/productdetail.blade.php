@@ -3,7 +3,17 @@
 @section('content')
 
 @toastifyCss
+<style>
+    .likes {
+        position: absolute;
+        right: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 0px;
+    }
 
+</style>
 <div class="row" style="padding-top: 20px;">
     <div class="col">
         <div id="carouselExample" class="carousel slide">
@@ -235,7 +245,7 @@
     <h3 style="padding-left: 27px;margin-top: 23px;">Similar Products</h3>
     @foreach ($SuggestionProduct as $item)
     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 card" style="border-radius: 10px;width: 18rem; margin: 10px;">
-        <div class="likes">
+        <div class="likes" style="right: 1px">
             @if (isset($wishlist))
             @if ($wishlist->contains('product_id', $item->id))
             <i class="fa-solid fa-heart" onclick="favourite_product_data_save(this,'{{$item->id}}')" style="color: red;"></i>

@@ -81,7 +81,7 @@
 
                 </ul>
                 <div style="margin-right: 62px;">
-                    <form class="d-flex" method="post">
+                    <form class="d-flex" method="post" style="width: 400px;">
                         @csrf
                         <input type="text" name="action" hidden value="searchDataAdmin" id="">
                         <input class="form-control me-2" name="searchData" value="{{ isset($searchData)?$searchData:'' }}" id="searchproductid" type="search" placeholder="Search" aria-label="Search">

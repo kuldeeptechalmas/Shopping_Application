@@ -1,7 +1,7 @@
 @extends('index')
 
 @section('content')
-
+@toastifyCss
 @if ($data->isNotEmpty())
 <div class="row w-100" style="margin-left: 0px;display: flex;justify-content: center;padding-top: 10px;">
     {{-- @if ($item1->productsdata->isNotEmpty()) --}}
@@ -56,7 +56,7 @@
         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12" style="background-color: #ffffff;width: 100%;border-bottom: 1px solid #f0f0f0;">
             <div class="row">
                 <div class="col-4">
-                    <div class="likes" style="margin-top: -6px !important;position: absolute;right: 51% !important;background-color: transparent;border-radius: 32px;">
+                    <div class="likes" style="margin-top: 10px !important;position: absolute;right: 51% !important;background-color: transparent;border-radius: 32px;">
 
                         @if (isset($wishlist))
                         @if ($wishlist->contains('product_id', $item->id))
@@ -174,4 +174,7 @@
         </div>
     </div>
     @endif
+    @toastifyJs
+    {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="{{ asset('js/customer/mainindex.js') }}"></script> --}}
     @endsection

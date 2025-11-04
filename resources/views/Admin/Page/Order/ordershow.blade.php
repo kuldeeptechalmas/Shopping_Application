@@ -11,6 +11,23 @@
 @endsection
 
 @section('content')
+@if (isset($Top_Five_Order_User))
+<h2>Show Top Five Customer to Order</h2>
+<table class="table table-striped table-hover">
+    <tr>
+        <td>Name</td>
+        <td>Email</td>
+        <td>Total Order</td>
+    </tr>
+    @foreach ($Top_Five_Order_User as $item)
+    <tr>
+        <td>{{ $item->name }}</td>
+        <td>{{ $item->email }}</td>
+        <td>{{ $item->TotalOrder }}</td>
+    </tr>
+    @endforeach
+</table>
+@endif
 
 @if (isset($order))
 @if ($order->isNotEmpty())

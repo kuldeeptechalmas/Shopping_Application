@@ -68,7 +68,7 @@
                             @if ($item->status == "Pending")
                             <i class="fa-solid fa-circle text-warning" style="font-size: 10px;"></i>
                             <span>{{$item->status}}</span>
-                            @elseif ($item->status == "Processing" || $item->status == "Shipped")
+                            @elseif ($item->status == "Processing" || $item->status == "Shipping")
                             <i class="fa-solid fa-circle text-info" style="font-size: 10px;"></i>
                             <span>{{$item->status}}</span>
                             @elseif ($item->status == "Delivered")
@@ -77,6 +77,7 @@
                             @endif
                         </div>
                     </div>
+                    @if ($item->status != "Delivered")
                     <div class="col-2">
                         <div class="d-flex justify-content-end">
                             <div style="border-radius: 8px;text-align: center;margin-right: 11px;text-decoration: none;font-weight: bold;">
@@ -86,6 +87,7 @@
                             </div>
                         </div>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>
