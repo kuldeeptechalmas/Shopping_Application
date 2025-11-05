@@ -136,15 +136,14 @@
         <span class="visually-hidden">Next</span>
     </button>
 </div>
-{{--
-<div class="slider-container" style="width: 95%;margin-left: 30px;">
+
+{{-- <div class="slider-container" style="width: 95%;margin-left: 30px;">
     <div class="slider-title">Best of Electronics</div>
     <div class="arrow left" onclick="scrollSlider(-1074)">&#10094;</div>
     <div class="arrow right" onclick="scrollSlider(1074)">&#10095;</div>
 
     <div class="product-slider" id="slider">
-        @foreach ($data as $item1)
-        @foreach ($item1->productsdata as $item)
+        @foreach ($Top_Fore_Order_Product as $item)
 
         <div class="product">
             <img src="{{ asset('storage/UploadeFile/' . $item->image) }}" alt="">
@@ -152,10 +151,72 @@
 <p>₹{{ $item->price }}</p>
 </div>
 @endforeach
-@endforeach
 
 </div>
 </div> --}}
+
+<div class="row" style="margin: 0px 20px;">
+    <div class="col-4" style="padding: 0px 10px 0px 0px;">
+        <div style="background-color: white;">
+            <div style="padding: 10px 10px 10px 21px; font-size: 20px;">
+                Best Top Order
+            </div>
+
+            <div class="row" style="padding: 22px 12px 17px 29px; display: flex; flex-wrap: wrap;">
+                @foreach ($Top_Fore_Order_Product as $key => $value)
+                @if ($key == 2)
+                <br>
+                @endif
+
+                <a href="/ProductDetails/{{$value->id}}" style="color: black; text-decoration: none; width: 45%; margin: 5px; border: 1px solid rgb(235,235,235); border-radius: 4px; display: block; background-color: #fff;">
+
+                    <div style="display: flex; justify-content: center; align-items: center; height: 144px; width: 100%; margin-top: 19px;">
+                        <img src="{{ asset('storage/UploadeFile/' . $value->image) }}" style="height: 100%; width: 100%; object-fit: contain;" alt="">
+                    </div>
+
+                    <div style="display: block; width: 86%; margin: 10px auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        {{ $value->name }}
+                    </div>
+                </a>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+    <div class="col-4" style="padding: 0px">
+        <div style="background-color: white;">
+            <div style="padding: 10px 10px 10px 21px; font-size: 20px;">
+                Best quality
+            </div>
+
+            <div class="row" style="padding: 22px 12px 17px 29px; display: flex; flex-wrap: wrap;">
+                @foreach ($Top_Five_Product_Rendom as $key => $value)
+                @if ($key == 2)
+                <br>
+                @endif
+
+                <a href="/ProductDetails/{{$value->id}}" style="color: black; text-decoration: none; width: 45%; margin: 5px; border: 1px solid rgb(235,235,235); border-radius: 4px; display: block; background-color: #fff;">
+
+                    <div style="display: flex; justify-content: center; align-items: center; height: 144px; width: 100%; margin-top: 19px;">
+                        <img src="{{ asset('storage/UploadeFile/' . $value->image) }}" style="height: 100%; width: 100%; object-fit: contain;" alt="">
+                    </div>
+
+                    <div style="display: block; width: 86%; margin: 10px auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        {{ $value->name }}
+                    </div>
+                </a>
+                @endforeach
+            </div>
+        </div>
+    </div>
+    <div class="col-4" style="padding: 0px 0px 0px 10px;">
+        <a href="{{ route('fashion.Product')}}">
+            <div style="background: white;height: 525px;">
+                <img src="{{ asset('storage/UploadeFile/fasion.png') }}" style="height: 100%;width: 100%;object-fit: cover;" alt="">
+            </div>
+        </a>
+    </div>
+</div>
 
 @foreach ($data as $item1)
 
@@ -178,7 +239,7 @@
     break;
     }
     @endphp
-    <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-12 card" style="border: none;width: 14rem; margin: 10px;">
+    <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5 col-12 card divhover" style="border: none;width: 14rem; margin: 10px;">
         <div class="likes">
             @if (isset($wishlist))
             @if ($wishlist->contains('product_id', $item->id))
@@ -200,14 +261,14 @@
         </div>
         <div style="margin: 13px;height: 213px; width: 100%;">
             <a href="/ProductDetails/{{$item->id}}">
-                <div class="imagehover" style="height: 196px;width: 96%;margin-top: 20px;margin-left: -7px;">
+                <div style="height: 196px;width: 96%;margin-top: 20px;margin-left: -7px;">
                     <img style="width: 100%; height: 100%; object-fit: contain;" src="{{ asset('storage/UploadeFile/' . $item->image) }}" alt="Image">
                 </div>
             </a>
         </div>
-        <div class="card-body">
+        <div class="card-body div2hover">
             <p class="card-text" style="text-wrap-mode: nowrap;overflow: hidden;text-overflow: ellipsis;">
-                <a class="productnamehover" href="/ProductDetails/{{$item->id}}" style="color:black;text-decoration:none;">
+                <a href="/ProductDetails/{{$item->id}}" style="color:black;text-decoration:none;">
                     {{$item->name}}
                 </a>
             </p>

@@ -71,6 +71,8 @@ Route::match(["post", "get"], '/ForgetPassword', [MainController::class, "Forget
 Route::match(["get", "post"], '/ForgetPasswords', [MainController::class, "Forget_Password"])->name("forget.Password.Data");
 Route::match(['get', 'post'], "/MyShop", [MainController::class, "Index"])->name("MainIndex");
 
+Route::match(['get', 'post'], "/fashion", [MainController::class, "fashion_Product"])->name("fashion.Product");
+
 Route::get('/ProductDetails/{productid}', [MainController::class, 'Product_id_Detail']);
 
 Route::get('/SummryOfProduct', [MainController::class, 'Summry_Product_Detail'])->name("summryproductdetail");

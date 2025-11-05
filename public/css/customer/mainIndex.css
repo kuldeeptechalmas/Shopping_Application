@@ -180,10 +180,6 @@
         margin-top: -10px;
     } 
 
-    .productnamehover:hover {
-        color: rgba(0, 0, 255, 0.575) !important;
-    }
-
 /* productdetail.blade.php  */
 
     .carousel-control-prev-icon,
@@ -292,15 +288,37 @@
 
 /* productshow.blade.php */
 
-    .imagehover:hover{
-        height: 205px !important;
-         width: 100% !important;
+    .divhover:hover {
+        box-shadow: 0 3px 16px 0 rgba(0, 0, 0, .11);
     }
+
+    .div2hover:hover{
+        position: absolute;
+        background-color: white;
+        width: 94%;
+        top: 50%;
+    }
+
+    /* .divhover:hover,
+.div2hover:hover {
+    color: #cc0c39 !important;
+    box-shadow: 0 3px 16px 0 rgba(0, 0, 0, .11);
+} */
+
+/* Specific .div2hover hover styles */
+/* .div2hover:hover,
+.divhover:hover + .div2hover {
+    position: absolute;
+    background-color: white;
+    width: 94%;
+    top: 50%;
+} */
+
 
    #back-to-top {
         display: none;
         position: fixed;
-        left: 50%;
+        left: 44%;
         z-index: 99;
         border: none;
         outline: none;

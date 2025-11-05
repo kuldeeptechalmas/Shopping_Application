@@ -120,6 +120,7 @@ class MainController extends Controller
                             $cart->user_id = $customer->id;
                             $cart->product_id = $key;
                             $cart->quantity = $value['quantity'];
+                            $cart->message = "";
                             $cart->save();
                         }
                     }
@@ -400,6 +401,23 @@ class MainController extends Controller
         }
         $data = CategoryProduct::with('productsdata')->get();
 
+        $Top_Five_Product_Rendom = Product::inRandomOrder()->limit(4)->get();
+
+        $Top_Fore_Order_Product =
+            Product::select(
+                "products.id",
+                "products.name",
+                "products.image",
+                "products.price",
+                DB::raw("SUM(customerorder.quantity) AS TotalOrder")
+            )
+            ->join("customerorder", "customerorder.product_id", "=", "products.id")
+            ->groupBy('products.name', 'products.image', 'products.id', 'products.price')
+            ->whereNull("customerorder.deleted_at")
+            ->orderByDesc("TotalOrder")
+            ->take(4)
+            ->get();
+
         // Top Five Record to Rated
         $Top_Products_With_Ratings = DB::table('products')
             ->select('products.id', 'products.name', 'products.description', 'products.price', 'products.image', 'products.discount', DB::raw('AVG(rating_product.rate) as average_rating'))
@@ -420,9 +438,21 @@ class MainController extends Controller
             $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
             $wishlist = FavouriceProduct::where("user_id", $user_data->id)->get();
 
-            return view("IndexProductShow.productshow", ["cartcount" => $addtocart->count(), "data" => $data, "wishlist" => $wishlist, "TopRateProduct" => $Top_Products_With_Ratings]);
+            return view("IndexProductShow.productshow", [
+                "Top_Five_Product_Rendom" => $Top_Five_Product_Rendom,
+                "Top_Fore_Order_Product" => $Top_Fore_Order_Product,
+                "cartcount" => $addtocart->count(),
+                "data" => $data,
+                "wishlist" => $wishlist,
+                "TopRateProduct" => $Top_Products_With_Ratings
+            ]);
         } else {
-            return view("IndexProductShow.productshow", ["data" => $data, "TopRateProduct" => $Top_Products_With_Ratings]);
+            return view("IndexProductShow.productshow", [
+                "Top_Five_Product_Rendom" => $Top_Five_Product_Rendom,
+                "Top_Fore_Order_Product" => $Top_Fore_Order_Product,
+                "data" => $data,
+                "TopRateProduct" => $Top_Products_With_Ratings
+            ]);
         }
     }
 
@@ -910,7 +940,7 @@ class MainController extends Controller
         $user_data = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
         if ($user_data) {
 
-            $favourite_product_list = FavouriceProduct::where("user_id", $user_data->id)->get();
+            $favourite_product_list = FavouriceProduct::where("user_id", $user_data->id)->orderByDesc("created_at")->get();
             if ($request->isMethod("post")) {
 
                 // Search Wish List in Data
@@ -1033,52 +1063,18 @@ class MainController extends Controller
         return view("IndexProductShow.BuyNow.OrderSummary", ["datacart" => $addtocart, "usercoupondata" => $couponuserdata]);
     }
 
-    // Email Check - Login
-    //  public function Login_Email_Check(Request $request)
-    // {
-    //     $validator = Validator::make(
-    //         $request->all(),
-    //         [
-    //             'searchData' => ['regex:/^.+\.com$/i'],
-    //         ]
-    //     );
-    //     if ($validator->fails()) {
-    //         return Response()->json(["emailError" => "notShow"]);
-    //     }
+    public function fashion_Product(Request $request)
+    {
+        $product = Product::where("category_id", "3")
+            ->orWhere("category_id", "4")
+            ->get();
 
-    //     $validator2 = Validator::make(
-    //         $request->all(),
-    //         [
-    //             'searchData' => ['email'],
-    //         ]
-    //     );
-    //     if ($validator2->fails()) {
-    //         return Response()->json(["emailError" => "Enter Email Must Be A Valid Email Address."]);
-    //     }
-
-    //     $validator1 = Validator::make(
-    //         $request->all(),
-    //         [
-    //             'searchData' => ['regex:/^[a-zA-Z0-9._%+-]+@(gmail|yahoo)\.com$/'],
-    //         ]
-    //     );
-    //     if ($validator1->fails()) {
-    //         return Response()->json(["emailError" => "The email must be from an allowed domain (gmail.com, yahoo.com)."]);
-    //     }
-
-    //     $userData = CustomerAndShopkeeper::where("email", "like", "%" . $request->searchData . "%")->get();
-
-    //     if ($userData->count() == 0) {
-
-    //         $adminData = Admin::where("email", "like", "%" . $request->searchData . "%")->get();
-
-    //         if ($adminData->count() == 0) {
-    //             return Response()->json(["emailError" => "Email User Not Exist !"]);
-    //         } else {
-    //             return Response()->json(["emailError" => "notShow"]);
-    //         }
-    //     } else {
-    //         return Response()->json(["emailError" => "notShow"]);
-    //     }
-    // }
+        return view(
+            "IndexProductShow.Search.searchproductbutcart",
+            [
+                "data" => $product,
+                "categoryname" => "Men & Women",
+            ]
+        );
+    }
 }

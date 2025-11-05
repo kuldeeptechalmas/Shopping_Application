@@ -83,7 +83,7 @@ class AddToCartController extends Controller
 
         if (Session::get("customeremail")) {
             $data1 = CustomerAndShopkeeper::where("email", Session::get("customeremail"))->first();
-            $addtocart = AddToCart::where("user_id", $data1->id)->get();
+            $addtocart = AddToCart::where("user_id", $data1->id)->orderBy("created_at", "ASC")->get();
             $couponuserdata = UserCoupunData::where("user_id", $data1->id)->get();
 
             // Search Add To Cart Data
